@@ -1,91 +1,31 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Портфолио</title>
+    <title>Моё портфолио</title>
     <style>
-        body {
+        body, html {
             margin: 0;
-            font-family: sans-serif;
-            display: flex;
-            min-height: 100vh;
-        }
-        /* Боковое меню */
-        .menu {
-            width: 80px;
-            background: #111;
-            padding: 20px 0;
-            position: fixed;
-            height: 100%;
-        }
-        .menu ul {
-            list-style: none;
             padding: 0;
-            margin: 0;
-            text-align: center;
+            height: 100%;
+            background: #f0f0f0;
         }
-        .menu li {
-            margin-bottom: 30px;
-        }
-        .menu a {
-            color: #aaa;
-            text-decoration: none;
-            font-size: 12px;
-            display: block;
-            padding: 5px;
-        }
-        .menu a:hover {
-            color: white;
-        }
-        /* Область слайда */
-        .content {
-            flex: 1;
-            margin-left: 80px;
+        .slide {
+            width: 100%;
+            height: 100vh; /* На весь экран */
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
-            background: #f8f8f8;
-        }
-        .slide {
-            max-width: 90%;
-            max-height: 90vh;
-            box-shadow: 0 5px 25px rgba(0,0,0,0.1);
         }
         .slide img {
-            width: 100%;
-            height: auto;
-            display: block;
+            max-width: 95%;
+            max-height: 95vh;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
         }
     </style>
 </head>
 <body>
-    <!-- МЕНЮ -->
-    <nav class="menu">
-        <ul>
-            <li><a href="#slide1">Главная</a></li>
-            <!-- Остальные пункты пока неактивны -->
-            <li><a style="color:#555">До/После</a></li>
-            <li><a style="color:#555">Инфографика</a></li>
-        </ul>
-    </nav>
-
-    <!-- СЛАЙД -->
-    <main class="content">
-        <div class="slide" id="slide1">
-            <img src="Слайд1.jpg" alt="Главная">
-        </div>
-    </main>
-
-    <script>
-        // Простая прокрутка к первому слайду
-        document.querySelector('a[href="#slide1"]').addEventListener('click', function(e) {
-            e.preventDefault();
-            document.getElementById('slide1').scrollIntoView({
-                behavior: 'smooth'
-            });
-        });
-    </script>
+    <div class="slide">
+        <img src="Слайд1.jpg" alt="Моё портфолио">
+    </div>
 </body>
 </html>
