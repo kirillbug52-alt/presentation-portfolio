@@ -30,7 +30,6 @@
         area:hover {
             opacity: 0.7;
         }
-        /* Модальное окно */
         .modal {
             display: none;
             position: fixed;
@@ -42,10 +41,7 @@
             align-items: center;
             animation: fadeIn 0.3s;
         }
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         .modal-content {
             max-width: 90%;
             max-height: 90vh;
@@ -62,9 +58,7 @@
             cursor: pointer;
             transition: 0.3s;
         }
-        .close:hover {
-            color: #ccc;
-        }
+        .close:hover { color: #ccc; }
         .modal-caption {
             position: absolute;
             bottom: 30px;
@@ -81,13 +75,12 @@
     <section class="slide" id="main-menu">
         <img src="Слайд1.JPG" alt="Главное меню" usemap="#main-menu-map">
         <map name="main-menu-map">
-            <!-- Координаты ВЗЯТЫ С ВАШЕЙ ЦВЕТНОЙ РАЗМЕТКИ -->
-            <area shape="rect" coords="0,220,470,300" href="#main-menu" alt="Обо мне" title="Обо мне">
-            <area shape="rect" coords="0,305,470,385" href="#before-after" alt="До/после" title="До/после">
-            <area shape="rect" coords="0,390,470,470" href="#infographics-gallery" alt="Инфографика" title="Инфографика">
-            <area shape="rect" coords="0,475,470,555" href="#lab" alt="Лаборатория" title="Лаборатория">
-            <area shape="rect" coords="0,560,470,640" href="#templates-gallery" alt="Готовые решения" title="Готовые решения">
-            <area shape="rect" coords="0,645,470,725" href="#contacts" alt="Контакты" title="Контакты">
+            <area shape="rect" coords="0,170,470,250" href="#main-menu" alt="Обо мне" title="Обо мне">
+            <area shape="rect" coords="0,255,470,335" href="#before-after" alt="До/после" title="До/после">
+            <area shape="rect" coords="0,340,470,420" href="#infographics-gallery" alt="Инфографика" title="Инфографика">
+            <area shape="rect" coords="0,425,470,505" href="#lab" alt="Лаборатория" title="Лаборатория">
+            <area shape="rect" coords="0,510,470,590" href="#templates-gallery" alt="Готовые решения" title="Готовые решения">
+            <area shape="rect" coords="0,595,470,675" href="#contacts" alt="Контакты" title="Контакты">
         </map>
     </section>
     
@@ -180,12 +173,9 @@
         document.querySelectorAll('.zoom-image').forEach(area => {
             area.addEventListener('click', function(e) {
                 e.preventDefault();
-                const largeImage = this.getAttribute('data-large');
-                const altText = this.getAttribute('alt');
-                
                 document.getElementById('imageModal').style.display = 'flex';
-                document.getElementById('imageCaption').textContent = altText;
-                document.getElementById('zoomedImage').src = largeImage;
+                document.getElementById('imageCaption').textContent = this.getAttribute('alt');
+                document.getElementById('zoomedImage').src = this.getAttribute('data-large');
             });
         });
         
