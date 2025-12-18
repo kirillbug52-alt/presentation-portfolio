@@ -1,61 +1,239 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Портфолио презентаций | [Ваше Имя]</title>
+    <title>Портфолио дизайнера презентаций</title>
     <style>
-        /* Сбрасываем все отступы и делаем плавный скролл */
         body, html {
             margin: 0;
             padding: 0;
-            scroll-behavior: smooth; /* Плавная прокрутка для якорных ссылок */
+            scroll-behavior: smooth;
+            font-family: sans-serif;
         }
-        /* Каждый слайд занимает 100% экрана */
         .slide {
             width: 100vw;
             height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
+            background: #f5f5f5;
         }
-        /* Картинка слайда подстраивается под экран */
         .slide img {
             max-width: 100%;
             max-height: 100vh;
             display: block;
         }
+        area {
+            cursor: pointer;
+            outline: none;
+        }
+        area:hover {
+            opacity: 0.8;
+        }
+        /* Модальное окно */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0; top: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.95);
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .modal-content {
+            max-width: 90%;
+            max-height: 90vh;
+            border-radius: 8px;
+            box-shadow: 0 0 40px rgba(255,255,255,0.1);
+        }
+        .close {
+            position: absolute;
+            top: 25px;
+            right: 35px;
+            color: white;
+            font-size: 45px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .close:hover {
+            color: #ccc;
+        }
+        .modal-caption {
+            position: absolute;
+            bottom: 30px;
+            color: white;
+            text-align: center;
+            width: 100%;
+            font-size: 16px;
+        }
     </style>
 </head>
 <body>
-    <!-- СЛАЙД 1 -->
-    <section class="slide">
-        <img src="Слайд1.JPG" alt="Титульный слайд">
+    <!-- ===== ГЛАВНОЕ МЕНЮ (Слайд 1) ===== -->
+    <section class="slide" id="main-menu">
+        <img src="Слайд1.JPG" alt="Главное меню" usemap="#main-menu-map">
+        <map name="main-menu-map">
+            <!-- ЗАМЕНИТЕ КООРДИНАТЫ НА РЕАЛЬНЫЕ -->
+            <area shape="rect" coords="100,150,300,200" href="#main-menu" alt="Обо мне">
+            <area shape="rect" coords="100,220,300,270" href="#before-after" alt="До/после">
+            <area shape="rect" coords="100,290,300,340" href="#infographics-gallery" alt="Инфографика">
+            <area shape="rect" coords="100,360,300,410" href="#lab" alt="Лаборатория">
+            <area shape="rect" coords="100,430,300,480" href="#templates-gallery" alt="Готовые решения">
+            <area shape="rect" coords="100,500,300,550" href="#contacts" alt="Контакты">
+        </map>
     </section>
     
-    <!-- СЛАЙД 2 -->
+    <!-- ===== РАЗДЕЛ: ДО/ПОСЛЕ (Слайды 2-3) ===== -->
+    <section class="slide" id="before-after">
+        <img src="Слайд2.JPG" alt="До/После 1">
+    </section>
     <section class="slide">
-        <img src="Слайд2.JPG" alt="До и После">
+        <img src="Слайд3.JPG" alt="До/После 2">
     </section>
     
-    <!-- СЛАЙД 3 -->
-    <section class="slide">
-        <img src="Слайд3.JPG" alt="Инфографика">
+    <!-- ===== РАЗДЕЛ: ИНФОГРАФИКА (ГАЛЕРЕЯ) ===== -->
+    <!-- Слайд 4: 4 миниатюры -->
+    <section class="slide" id="infographics-gallery">
+        <img src="Слайд4.JPG" alt="Инфографика - Галерея 1" usemap="#infographics-map-1">
+        <map name="infographics-map-1">
+            <!-- Миниатюра 1 → Слайд12 -->
+            <area shape="rect" coords="50,100,250,300" data-large="Слайд12.JPG" class="zoom-image" alt="Инфографика 1">
+            <!-- Миниатюра 2 → Слайд13 -->
+            <area shape="rect" coords="300,100,500,300" data-large="Слайд13.JPG" class="zoom-image" alt="Инфографика 2">
+            <!-- Миниатюра 3 → Слайд14 -->
+            <area shape="rect" coords="50,350,250,550" data-large="Слайд14.JPG" class="zoom-image" alt="Инфографика 3">
+            <!-- Миниатюра 4 → Слайд15 -->
+            <area shape="rect" coords="300,350,500,550" data-large="Слайд15.JPG" class="zoom-image" alt="Инфографика 4">
+        </map>
     </section>
     
-    <!-- ОСТАВЛЯЕМ ВСЕ ОСТАЛЬНЫЕ СЛАЙДЫ (4-36) ТАК ЖЕ -->
-    <!-- Для экономии места здесь показан шаблон -->
+    <!-- Слайд 5: 3 миниатюры -->
     <section class="slide">
-        <img src="Слайд4.JPG" alt="Слайд 4">
+        <img src="Слайд5.JPG" alt="Инфографика - Галерея 2" usemap="#infographics-map-2">
+        <map name="infographics-map-2">
+            <!-- Миниатюра 5 → Слайд16 -->
+            <area shape="rect" coords="50,100,250,300" data-large="Слайд16.JPG" class="zoom-image" alt="Инфографика 5">
+            <!-- Миниатюра 6 → Слайд17 -->
+            <area shape="rect" coords="300,100,500,300" data-large="Слайд17.JPG" class="zoom-image" alt="Инфографика 6">
+            <!-- Миниатюра 7 → Слайд18 -->
+            <area shape="rect" coords="175,350,375,550" data-large="Слайд18.JPG" class="zoom-image" alt="Инфографика 7">
+        </map>
     </section>
     
+    <!-- ===== РАЗДЕЛ: ЛАБОРАТОРИЯ (Слайды 6-7) ===== -->
+    <section class="slide" id="lab">
+        <img src="Слайд6.JPG" alt="Лаборатория 1">
+    </section>
     <section class="slide">
-        <img src="Слайд5.JPG" alt="Слайд 5">
+        <img src="Слайд7.JPG" alt="Лаборатория 2">
     </section>
     
-    <!-- ... и так далее до Слайд36.JPG -->
-    
-    <!-- СЛАЙД 36 -->
-    <section class="slide">
-        <img src="Слайд36.JPG" alt="Контакты">
+    <!-- ===== РАЗДЕЛ: ГОТОВЫЕ РЕШЕНИЯ (ГАЛЕРЕЯ ШАБЛОНОВ) ===== -->
+    <!-- Слайд 8: 6 миниатюр -->
+    <section class="slide" id="templates-gallery">
+        <img src="Слайд8.JPG" alt="Шаблоны - Галерея 1" usemap="#templates-map-1">
+        <map name="templates-map-1">
+            <!-- Миниатюра 1 → Слайд19 -->
+            <area shape="rect" coords="50,100,250,300" data-large="Слайд19.JPG" class="zoom-image" alt="Шаблон 1">
+            <!-- Миниатюра 2 → Слайд20 -->
+            <area shape="rect" coords="300,100,500,300" data-large="Слайд20.JPG" class="zoom-image" alt="Шаблон 2">
+            <!-- Миниатюра 3 → Слайд21 -->
+            <area shape="rect" coords="550,100,750,300" data-large="Слайд21.JPG" class="zoom-image" alt="Шаблон 3">
+            <!-- Миниатюра 4 → Слайд22 -->
+            <area shape="rect" coords="50,350,250,550" data-large="Слайд22.JPG" class="zoom-image" alt="Шаблон 4">
+            <!-- Миниатюра 5 → Слайд23 -->
+            <area shape="rect" coords="300,350,500,550" data-large="Слайд23.JPG" class="zoom-image" alt="Шаблон 5">
+            <!-- Миниатюра 6 → Слайд24 -->
+            <area shape="rect" coords="550,350,750,550" data-large="Слайд24.JPG" class="zoom-image" alt="Шаблон 6">
+        </map>
     </section>
+    
+    <!-- Слайд 9: 6 миниатюр -->
+    <section class="slide">
+        <img src="Слайд9.JPG" alt="Шаблоны - Галерея 2" usemap="#templates-map-2">
+        <map name="templates-map-2">
+            <!-- Миниатюра 7 → Слайд25 -->
+            <area shape="rect" coords="50,100,250,300" data-large="Слайд25.JPG" class="zoom-image" alt="Шаблон 7">
+            <!-- Миниатюра 8 → Слайд26 -->
+            <area shape="rect" coords="300,100,500,300" data-large="Слайд26.JPG" class="zoom-image" alt="Шаблон 8">
+            <!-- Миниатюра 9 → Слайд27 -->
+            <area shape="rect" coords="550,100,750,300" data-large="Слайд27.JPG" class="zoom-image" alt="Шаблон 9">
+            <!-- Миниатюра 10 → Слайд28 -->
+            <area shape="rect" coords="50,350,250,550" data-large="Слайд28.JPG" class="zoom-image" alt="Шаблон 10">
+            <!-- Миниатюра 11 → Слайд29 -->
+            <area shape="rect" coords="300,350,500,550" data-large="Слайд29.JPG" class="zoom-image" alt="Шаблон 11">
+            <!-- Миниатюра 12 → Слайд30 -->
+            <area shape="rect" coords="550,350,750,550" data-large="Слайд30.JPG" class="zoom-image" alt="Шаблон 12">
+        </map>
+    </section>
+    
+    <!-- Слайд 10: 6 миниатюр -->
+    <section class="slide">
+        <img src="Слайд10.JPG" alt="Шаблоны - Галерея 3" usemap="#templates-map-3">
+        <map name="templates-map-3">
+            <!-- Миниатюра 13 → Слайд31 -->
+            <area shape="rect" coords="50,100,250,300" data-large="Слайд31.JPG" class="zoom-image" alt="Шаблон 13">
+            <!-- Миниатюра 14 → Слайд32 -->
+            <area shape="rect" coords="300,100,500,300" data-large="Слайд32.JPG" class="zoom-image" alt="Шаблон 14">
+            <!-- Миниатюра 15 → Слайд33 -->
+            <area shape="rect" coords="550,100,750,300" data-large="Слайд33.JPG" class="zoom-image" alt="Шаблон 15">
+            <!-- Миниатюра 16 → Слайд34 -->
+            <area shape="rect" coords="50,350,250,550" data-large="Слайд34.JPG" class="zoom-image" alt="Шаблон 16">
+            <!-- Миниатюра 17 → Слайд35 -->
+            <area shape="rect" coords="300,350,500,550" data-large="Слайд35.JPG" class="zoom-image" alt="Шаблон 17">
+            <!-- Миниатюра 18 → Слайд36 -->
+            <area shape="rect" coords="550,350,750,550" data-large="Слайд36.JPG" class="zoom-image" alt="Шаблон 18">
+        </map>
+    </section>
+    
+    <!-- ===== КОНТАКТЫ (Слайд 11) ===== -->
+    <section class="slide" id="contacts">
+        <img src="Слайд11.JPG" alt="Контакты">
+    </section>
+    
+    <!-- ===== МОДАЛЬНОЕ ОКНО ===== -->
+    <div id="imageModal" class="modal">
+        <span class="close">&times;</span>
+        <img class="modal-content" id="zoomedImage">
+        <div class="modal-caption" id="imageCaption"></div>
+    </div>
+
+    <script>
+        // Обработчик для ВСЕХ кликабельных миниатюр
+        document.querySelectorAll('.zoom-image').forEach(area => {
+            area.addEventListener('click', function(e) {
+                e.preventDefault();
+                const largeImage = this.getAttribute('data-large');
+                const altText = this.getAttribute('alt');
+                
+                document.getElementById('zoomedImage').src = largeImage;
+                document.getElementById('imageCaption').textContent = altText;
+                document.getElementById('imageModal').style.display = 'flex';
+            });
+        });
+        
+        // Закрытие модального окна
+        document.querySelector('.close').addEventListener('click', function() {
+            document.getElementById('imageModal').style.display = 'none';
+        });
+        
+        document.getElementById('imageModal').addEventListener('click', function(e) {
+            if(e.target === this) {
+                this.style.display = 'none';
+            }
+        });
+        
+        document.addEventListener('keydown', function(e) {
+            if(e.key === 'Escape') {
+                document.getElementById('imageModal').style.display = 'none';
+            }
+        });
+    </script>
 </body>
 </html>
