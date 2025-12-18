@@ -74,11 +74,6 @@
             font-size: 16px;
             padding: 0 20px;
         }
-        /* Индикатор загрузки для модального окна */
-        .loading {
-            color: white;
-            font-size: 20px;
-        }
     </style>
 </head>
 <body>
@@ -86,18 +81,18 @@
     <section class="slide" id="main-menu">
         <img src="Слайд1.JPG" alt="Главное меню" usemap="#main-menu-map">
         <map name="main-menu-map">
-            <!-- 1. Обо мне (красный) -->
-            <area shape="rect" coords="42,216,470,298" href="#main-menu" alt="Обо мне" title="Обо мне">
+            <!-- 1. Обо мне (красный) - ОТ КРАЯ СЛЕВА -->
+            <area shape="rect" coords="0,216,470,298" href="#main-menu" alt="Обо мне" title="Обо мне">
             <!-- 2. До/после (синий) -->
-            <area shape="rect" coords="42,303,470,385" href="#before-after" alt="До/после" title="До/после">
+            <area shape="rect" coords="0,303,470,385" href="#before-after" alt="До/после" title="До/после">
             <!-- 3. Инфографика (зелёный) -->
-            <area shape="rect" coords="42,390,470,472" href="#infographics-gallery" alt="Инфографика" title="Инфографика">
+            <area shape="rect" coords="0,390,470,472" href="#infographics-gallery" alt="Инфографика" title="Инфографика">
             <!-- 4. Лаборатория (жёлтый) -->
-            <area shape="rect" coords="42,477,470,559" href="#lab" alt="Лаборатория" title="Лаборатория">
+            <area shape="rect" coords="0,477,470,559" href="#lab" alt="Лаборатория" title="Лаборатория">
             <!-- 5. Готовые решения (фиолетовый) -->
-            <area shape="rect" coords="42,564,470,646" href="#templates-gallery" alt="Готовые решения" title="Готовые решения">
+            <area shape="rect" coords="0,564,470,646" href="#templates-gallery" alt="Готовые решения" title="Готовые решения">
             <!-- 6. Контакты (оранжевый) -->
-            <area shape="rect" coords="42,651,470,733" href="#contacts" alt="Контакты" title="Контакты">
+            <area shape="rect" coords="0,651,470,733" href="#contacts" alt="Контакты" title="Контакты">
         </map>
     </section>
     
@@ -114,13 +109,9 @@
     <section class="slide" id="infographics-gallery">
         <img src="Слайд4.JPG" alt="Инфографика - Галерея 1" usemap="#infographics-map-1">
         <map name="infographics-map-1">
-            <!-- Миниатюра 1 → Слайд12 -->
             <area shape="rect" coords="67,185,387,398" data-large="Слайд12.JPG" class="zoom-image" alt="Инфографика 1" title="Увеличить">
-            <!-- Миниатюра 2 → Слайд13 -->
             <area shape="rect" coords="498,185,818,398" data-large="Слайд13.JPG" class="zoom-image" alt="Инфографика 2" title="Увеличить">
-            <!-- Миниатюра 3 → Слайд14 -->
             <area shape="rect" coords="67,484,387,697" data-large="Слайд14.JPG" class="zoom-image" alt="Инфографика 3" title="Увеличить">
-            <!-- Миниатюра 4 → Слайд15 -->
             <area shape="rect" coords="498,484,818,697" data-large="Слайд15.JPG" class="zoom-image" alt="Инфографика 4" title="Увеличить">
         </map>
     </section>
@@ -129,11 +120,8 @@
     <section class="slide">
         <img src="Слайд5.JPG" alt="Инфографика - Галерея 2" usemap="#infographics-map-2">
         <map name="infographics-map-2">
-            <!-- Миниатюра 5 → Слайд16 -->
             <area shape="rect" coords="67,185,387,398" data-large="Слайд16.JPG" class="zoom-image" alt="Инфографика 5" title="Увеличить">
-            <!-- Миниатюра 6 → Слайд17 -->
             <area shape="rect" coords="498,185,818,398" data-large="Слайд17.JPG" class="zoom-image" alt="Инфографика 6" title="Увеличить">
-            <!-- Миниатюра 7 → Слайд18 -->
             <area shape="rect" coords="282,484,602,697" data-large="Слайд18.JPG" class="zoom-image" alt="Инфографика 7" title="Увеличить">
         </map>
     </section>
@@ -151,55 +139,37 @@
     <section class="slide" id="templates-gallery">
         <img src="Слайд8.JPG" alt="Шаблоны - Галерея 1" usemap="#templates-map-1">
         <map name="templates-map-1">
-            <!-- Миниатюра 1 → Слайд19 -->
             <area shape="rect" coords="67,188,320,401" data-large="Слайд19.JPG" class="zoom-image" alt="Шаблон 1" title="Увеличить">
-            <!-- Миниатюра 2 → Слайд20 -->
             <area shape="rect" coords="349,188,602,401" data-large="Слайд20.JPG" class="zoom-image" alt="Шаблон 2" title="Увеличить">
-            <!-- Миниатюра 3 → Слайд21 -->
             <area shape="rect" coords="631,188,884,401" data-large="Слайд21.JPG" class="zoom-image" alt="Шаблон 3" title="Увеличить">
-            <!-- Миниатюра 4 → Слайд22 -->
             <area shape="rect" coords="67,484,320,697" data-large="Слайд22.JPG" class="zoom-image" alt="Шаблон 4" title="Увеличить">
-            <!-- Миниатюра 5 → Слайд23 -->
             <area shape="rect" coords="349,484,602,697" data-large="Слайд23.JPG" class="zoom-image" alt="Шаблон 5" title="Увеличить">
-            <!-- Миниатюра 6 → Слайд24 -->
             <area shape="rect" coords="631,484,884,697" data-large="Слайд24.JPG" class="zoom-image" alt="Шаблон 6" title="Увеличить">
         </map>
     </section>
     
-    <!-- Слайд 9: 6 миниатюр (по аналогии со слайдом 8) -->
+    <!-- Слайд 9: 6 миниатюр -->
     <section class="slide">
         <img src="Слайд9.JPG" alt="Шаблоны - Галерея 2" usemap="#templates-map-2">
         <map name="templates-map-2">
-            <!-- Миниатюра 7 → Слайд25 -->
             <area shape="rect" coords="67,188,320,401" data-large="Слайд25.JPG" class="zoom-image" alt="Шаблон 7" title="Увеличить">
-            <!-- Миниатюра 8 → Слайд26 -->
             <area shape="rect" coords="349,188,602,401" data-large="Слайд26.JPG" class="zoom-image" alt="Шаблон 8" title="Увеличить">
-            <!-- Миниатюра 9 → Слайд27 -->
             <area shape="rect" coords="631,188,884,401" data-large="Слайд27.JPG" class="zoom-image" alt="Шаблон 9" title="Увеличить">
-            <!-- Миниатюра 10 → Слайд28 -->
             <area shape="rect" coords="67,484,320,697" data-large="Слайд28.JPG" class="zoom-image" alt="Шаблон 10" title="Увеличить">
-            <!-- Миниатюра 11 → Слайд29 -->
             <area shape="rect" coords="349,484,602,697" data-large="Слайд29.JPG" class="zoom-image" alt="Шаблон 11" title="Увеличить">
-            <!-- Миниатюра 12 → Слайд30 -->
             <area shape="rect" coords="631,484,884,697" data-large="Слайд30.JPG" class="zoom-image" alt="Шаблон 12" title="Увеличить">
         </map>
     </section>
     
-    <!-- Слайд 10: 6 миниатюр (по аналогии со слайдом 8) -->
+    <!-- Слайд 10: 6 миниатюр -->
     <section class="slide">
         <img src="Слайд10.JPG" alt="Шаблоны - Галерея 3" usemap="#templates-map-3">
         <map name="templates-map-3">
-            <!-- Миниатюра 13 → Слайд31 -->
             <area shape="rect" coords="67,188,320,401" data-large="Слайд31.JPG" class="zoom-image" alt="Шаблон 13" title="Увеличить">
-            <!-- Миниатюра 14 → Слайд32 -->
             <area shape="rect" coords="349,188,602,401" data-large="Слайд32.JPG" class="zoom-image" alt="Шаблон 14" title="Увеличить">
-            <!-- Миниатюра 15 → Слайд33 -->
             <area shape="rect" coords="631,188,884,401" data-large="Слайд33.JPG" class="zoom-image" alt="Шаблон 15" title="Увеличить">
-            <!-- Миниатюра 16 → Слайд34 -->
             <area shape="rect" coords="67,484,320,697" data-large="Слайд34.JPG" class="zoom-image" alt="Шаблон 16" title="Увеличить">
-            <!-- Миниатюра 17 → Слайд35 -->
             <area shape="rect" coords="349,484,602,697" data-large="Слайд35.JPG" class="zoom-image" alt="Шаблон 17" title="Увеличить">
-            <!-- Миниатюра 18 → Слайд36 -->
             <area shape="rect" coords="631,484,884,697" data-large="Слайд36.JPG" class="zoom-image" alt="Шаблон 18" title="Увеличить">
         </map>
     </section>
@@ -217,62 +187,28 @@
     </div>
 
     <script>
-        // Обработчик для ВСЕХ кликабельных миниатюр
         document.querySelectorAll('.zoom-image').forEach(area => {
             area.addEventListener('click', function(e) {
                 e.preventDefault();
                 const largeImage = this.getAttribute('data-large');
                 const altText = this.getAttribute('alt');
                 
-                // Показываем модальное окно сразу
                 document.getElementById('imageModal').style.display = 'flex';
                 document.getElementById('imageCaption').textContent = altText;
-                
-                // Предзагрузка изображения
-                const img = new Image();
-                img.onload = function() {
-                    document.getElementById('zoomedImage').src = largeImage;
-                };
-                img.onerror = function() {
-                    document.getElementById('imageCaption').textContent = 'Изображение не найдено';
-                };
-                img.src = largeImage;
+                document.getElementById('zoomedImage').src = largeImage;
             });
         });
         
-        // Закрытие модального окна
         document.querySelector('.close').addEventListener('click', function() {
             document.getElementById('imageModal').style.display = 'none';
         });
         
         document.getElementById('imageModal').addEventListener('click', function(e) {
-            if(e.target === this) {
-                this.style.display = 'none';
-            }
+            if(e.target === this) this.style.display = 'none';
         });
         
-        // Закрытие клавишей ESC
         document.addEventListener('keydown', function(e) {
-            if(e.key === 'Escape') {
-                document.getElementById('imageModal').style.display = 'none';
-            }
-        });
-        
-        // Плавная прокрутка для всех якорных ссылок (на всякий случай)
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
-                const targetId = this.getAttribute('href');
-                if(targetId !== '#') {
-                    e.preventDefault();
-                    const targetElement = document.querySelector(targetId);
-                    if(targetElement) {
-                        targetElement.scrollIntoView({
-                            behavior: 'smooth',
-                            block: 'start'
-                        });
-                    }
-                }
-            });
+            if(e.key === 'Escape') document.getElementById('imageModal').style.display = 'none';
         });
     </script>
 </body>
