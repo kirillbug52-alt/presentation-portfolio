@@ -3,76 +3,87 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Портфолио дизайнера презентаций | [Ваше Имя]</title>
+    <title>Портфолио</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: sans-serif; background: #f5f5f5; }
-        .container { display: flex; min-height: 100vh; }
+        body {
+            margin: 0;
+            font-family: sans-serif;
+            display: flex;
+            min-height: 100vh;
+        }
         /* Боковое меню */
-        .sidebar {
-            width: 80px; background: #222; color: white;
-            padding: 20px 10px; position: fixed; height: 100%;
+        .menu {
+            width: 80px;
+            background: #111;
+            padding: 20px 0;
+            position: fixed;
+            height: 100%;
         }
-        .nav-links { list-style: none; }
-        .nav-links li { margin-bottom: 30px; text-align: center; }
-        .nav-links a { color: #ccc; text-decoration: none; font-size: 12px; }
-        .nav-links a:hover { color: white; }
-        /* Основная область */
-        .main-content {
-            margin-left: 80px; flex-grow: 1; padding: 20px;
+        .menu ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            text-align: center;
         }
-        .slide { 
-            max-width: 900px; margin: 0 auto 40px; 
-            background: white; border-radius: 8px; 
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1); 
-            overflow: hidden;
+        .menu li {
+            margin-bottom: 30px;
         }
-        .slide img { 
-            display: block; width: 100%; height: auto; 
+        .menu a {
+            color: #aaa;
+            text-decoration: none;
+            font-size: 12px;
+            display: block;
+            padding: 5px;
+        }
+        .menu a:hover {
+            color: white;
+        }
+        /* Область слайда */
+        .content {
+            flex: 1;
+            margin-left: 80px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: #f8f8f8;
+        }
+        .slide {
+            max-width: 90%;
+            max-height: 90vh;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.1);
+        }
+        .slide img {
+            width: 100%;
+            height: auto;
+            display: block;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <!-- БОКОВОЕ МЕНЮ -->
-        <nav class="sidebar">
-            <ul class="nav-links">
-                <li><a href="#slide1">Главная</a></li>
-                <li><a href="#slide2">До/После</a></li>
-                <li><a href="#slide3">Инфографика</a></li>
-                <li><a href="#slide4">Процесс</a></li>
-                <li><a href="#slide5">Принципы</a></li>
-                <li><a href="#slide6">Инструменты</a></li>
-                <li><a href="#slide7">Шаблоны</a></li>
-                <li><a href="#slide8">Контакты</a></li>
-            </ul>
-        </nav>
+    <!-- МЕНЮ -->
+    <nav class="menu">
+        <ul>
+            <li><a href="#slide1">Главная</a></li>
+            <!-- Остальные пункты пока неактивны -->
+            <li><a style="color:#555">До/После</a></li>
+            <li><a style="color:#555">Инфографика</a></li>
+        </ul>
+    </nav>
 
-        <!-- ОСНОВНАЯ ОБЛАСТЬ СО СЛАЙДАМИ -->
-        <main class="main-content">
-            <div class="slide" id="slide1">
-                <img src="01_title.jpg" alt="Титульный слайд">
-            </div>
-            <div class="slide" id="slide2">
-                <img src="02_before_after.jpg" alt="До и После">
-            </div>
-            <!-- ... и так далее для всех слайдов.
-                 ВАЖНО: Замените названия файлов (01_title.jpg) на ваши реальные имена картинок -->
-            <div class="slide" id="slide8">
-                <img src="08_contacts.jpg" alt="Контакты">
-            </div>
-        </main>
-    </div>
+    <!-- СЛАЙД -->
+    <main class="content">
+        <div class="slide" id="slide1">
+            <img src="Слайд1.jpg" alt="Главная">
+        </div>
+    </main>
 
     <script>
-        // Простой скрипт для плавной прокрутки к слайдам по клику в меню
-        document.querySelectorAll('.nav-links a').forEach(link => {
-            link.addEventListener('click', function(e) {
-                e.preventDefault();
-                const targetId = this.getAttribute('href').substring(1);
-                document.getElementById(targetId).scrollIntoView({
-                    behavior: 'smooth'
-                });
+        // Простая прокрутка к первому слайду
+        document.querySelector('a[href="#slide1"]').addEventListener('click', function(e) {
+            e.preventDefault();
+            document.getElementById('slide1').scrollIntoView({
+                behavior: 'smooth'
             });
         });
     </script>
