@@ -7,6 +7,7 @@
             margin: 0;
             padding: 0;
             scroll-behavior: smooth;
+            font-family: Arial, sans-serif;
         }
         .slide-page {
             width: 100%;
@@ -21,49 +22,113 @@
             max-height: 100vh;
             display: block;
         }
+        /* УМНОЕ БОКОВОЕ МЕНЮ */
+        .smart-menu {
+            position: fixed;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.7);
+            padding: 15px 5px;
+            border-radius: 0 10px 10px 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
+            opacity: 0.3;
+        }
+        .smart-menu:hover {
+            opacity: 1;
+            padding-right: 15px;
+        }
+        .smart-menu ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+        .smart-menu li {
+            margin-bottom: 8px;
+        }
+        .smart-menu a {
+            color: white;
+            text-decoration: none;
+            font-size: 12px;
+            white-space: nowrap;
+            display: block;
+            padding: 5px 10px;
+            border-radius: 3px;
+            transition: background 0.2s;
+        }
+        .smart-menu a:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        /* Скрываем стандартный скроллбар меню */
+        .smart-menu ul::-webkit-scrollbar {
+            width: 3px;
+        }
+        .smart-menu ul::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 3px;
+        }
     </style>
 </head>
 <body>
-    <!-- Слайд 1 -->
+    <!-- УМНОЕ МЕНЮ -->
+    <nav class="smart-menu">
+        <ul>
+            <li><a href="#slide1">Главная</a></li>
+            <li><a href="#slide2">До/После</a></li>
+            <li><a href="#slide3">Инфографика</a></li>
+            <li><a href="#slide4">Процесс</a></li>
+            <li><a href="#slide5">Принципы</a></li>
+            <li><a href="#slide6">Инструменты</a></li>
+            <li><a href="#slide7">Шаблоны</a></li>
+            <li><a href="#slide8">Контакты</a></li>
+            <!-- Добавьте остальные пункты по необходимости -->
+        </ul>
+    </nav>
+
+    <!-- СЛАЙД 1 -->
     <section class="slide-page" id="slide1">
         <img src="Слайд1.JPG" alt="Слайд 1">
     </section>
     
-    <!-- Слайд 2 -->
+    <!-- СЛАЙД 2 -->
     <section class="slide-page" id="slide2">
         <img src="Слайд2.JPG" alt="Слайд 2">
     </section>
     
-    <!-- Слайд 3 -->
+    <!-- СЛАЙД 3 -->
     <section class="slide-page" id="slide3">
         <img src="Слайд3.JPG" alt="Слайд 3">
     </section>
     
-    <!-- Слайд 4 -->
+    <!-- СЛАЙД 4 -->
     <section class="slide-page" id="slide4">
         <img src="Слайд4.JPG" alt="Слайд 4">
     </section>
     
-    <!-- Слайд 5 -->
+    <!-- СЛАЙД 5 -->
     <section class="slide-page" id="slide5">
         <img src="Слайд5.JPG" alt="Слайд 5">
     </section>
     
-    <!-- Слайд 6 -->
+    <!-- СЛАЙД 6 -->
     <section class="slide-page" id="slide6">
         <img src="Слайд6.JPG" alt="Слайд 6">
     </section>
     
-    <!-- Слайд 7 -->
+    <!-- СЛАЙД 7 -->
     <section class="slide-page" id="slide7">
         <img src="Слайд7.JPG" alt="Слайд 7">
     </section>
     
-    <!-- Слайд 8 -->
+    <!-- СЛАЙД 8 -->
     <section class="slide-page" id="slide8">
         <img src="Слайд8.JPG" alt="Слайд 8">
     </section>
     
+    <!-- ОСТАЛЬНЫЕ СЛАЙДЫ (с 9 по 36) остаются без изменений -->
     <!-- Слайд 9 -->
     <section class="slide-page" id="slide9">
         <img src="Слайд9.JPG" alt="Слайд 9">
