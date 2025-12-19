@@ -4,18 +4,21 @@
     <title>Портфолио дизайнера презентаций</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
+        /* БАЗОВЫЕ СТИЛИ */
         body, html {
             margin: 0;
             padding: 0;
             overflow: hidden;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #000;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: #0a0a0a;
             height: 100%;
+            perspective: 1200px; /* Для 3D-эффектов */
         }
         .slides-container {
             width: 100vw;
             height: 100vh;
             position: relative;
+            overflow: hidden;
         }
         .slide {
             position: absolute;
@@ -24,17 +27,35 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            opacity: 0;
-            transform: translateX(30px);
-            transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1), transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
             background: #000;
             pointer-events: none;
+            opacity: 0;
+            /* Исходное состояние для анимации ВХОДА */
+            transform: translateX(80px) scale(0.96) rotateY(-5deg);
+            filter: blur(8px);
+            transition: none; /* Анимация контролируется JS */
+            z-index: 1;
+            will-change: transform, opacity, filter;
         }
         .slide.active {
             opacity: 1;
-            transform: translateX(0);
+            transform: translateX(0) scale(1) rotateY(0deg);
+            filter: blur(0);
             pointer-events: all;
-            z-index: 1;
+            z-index: 3;
+            transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+                        opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+                        filter 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .slide.leaving {
+            /* Анимация для уходящего слайда (ВЫХОД) */
+            opacity: 0;
+            transform: translateX(-80px) scale(0.96) rotateY(5deg);
+            filter: blur(8px);
+            z-index: 2;
+            transition: transform 0.8s cubic-bezier(0.7, 0, 0.84, 0),
+                        opacity 0.7s cubic-bezier(0.7, 0, 0.84, 0),
+                        filter 0.7s cubic-bezier(0.7, 0, 0.84, 0);
         }
         .slide img {
             max-width: 100%;
@@ -45,70 +66,79 @@
             user-select: none;
             -webkit-user-select: none;
             -ms-user-select: none;
+            /* Лёгкая тень для отделения от фона */
+            filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.3));
         }
+        /* СТИЛИ ДЛЯ ИНТЕРАКТИВНЫХ ОБЛАСТЕЙ */
         area {
             cursor: pointer;
             outline: none;
-            transition: all 0.2s ease;
         }
         area:hover {
-            opacity: 0.8;
+            opacity: 0.85;
         }
+        /* МОДАЛЬНОЕ ОКНО (УЛУЧШЕННОЕ) */
         .modal {
             display: none;
             position: fixed;
             z-index: 1000;
             left: 0; top: 0;
             width: 100%; height: 100%;
-            background: rgba(0,0,0,0.95);
+            background: rgba(5, 5, 5, 0.97);
             justify-content: center;
             align-items: center;
-            animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            backdrop-filter: blur(8px);
+            animation: modalFadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            backdrop-filter: blur(12px) saturate(1.3);
         }
-        @keyframes fadeIn { 
-            from { opacity: 0; } 
-            to { opacity: 1; } 
+        @keyframes modalFadeIn {
+            from { opacity: 0; backdrop-filter: blur(0px); }
+            to { opacity: 1; backdrop-filter: blur(12px) saturate(1.3); }
         }
         .modal-content {
-            max-width: 90%;
-            max-height: 90vh;
-            border-radius: 4px;
-            box-shadow: 0 25px 70px rgba(0,0,0,0.5);
-            transform: scale(0.95);
-            animation: zoomIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+            max-width: 92%;
+            max-height: 92vh;
+            border-radius: 6px;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.7),
+                        inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+            transform: scale(0.94) translateY(10px);
+            animation: modalZoomIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0;
+            animation-delay: 0.1s;
         }
-        @keyframes zoomIn {
-            to { transform: scale(1); }
+        @keyframes modalZoomIn {
+            to { transform: scale(1) translateY(0); opacity: 1; }
         }
         .close {
             position: absolute;
-            top: 25px;
-            right: 35px;
-            color: white;
-            font-size: 45px;
+            top: 28px;
+            right: 38px;
+            color: rgba(255, 255, 255, 0.85);
+            font-size: 48px;
             font-weight: 300;
             cursor: pointer;
-            transition: 0.3s;
-            padding: 10px;
+            transition: all 0.3s ease;
+            padding: 12px;
             z-index: 1001;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
         }
-        .close:hover { 
-            color: #ccc; 
-            transform: scale(1.1);
+        .close:hover {
+            color: #fff;
+            transform: scale(1.15) rotate(90deg);
         }
         .modal-caption {
             position: absolute;
-            bottom: 40px;
-            color: white;
+            bottom: 45px;
+            color: rgba(255, 255, 255, 0.9);
             text-align: center;
             width: 100%;
-            font-size: 18px;
-            padding: 0 20px;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+            font-size: 19px;
+            font-weight: 400;
+            padding: 0 25px;
+            text-shadow: 0 2px 15px rgba(0,0,0,0.5);
+            letter-spacing: 0.3px;
         }
 
-        /* Стили для прелоадера */
+        /* ПРЕЛОАДЕР (СОХРАНИЛИ, НО УЛУЧШИЛИ) */
         .site-loader {
             position: fixed;
             top: 0; left: 0;
@@ -118,7 +148,7 @@
             justify-content: center;
             align-items: center;
             z-index: 9999;
-            transition: opacity 0.8s ease, visibility 0.8s ease;
+            transition: opacity 0.9s ease, visibility 0.9s ease;
         }
         .site-loader.hidden {
             opacity: 0;
@@ -126,32 +156,40 @@
         }
         .loader-content {
             text-align: center;
+            transform: translateY(-20px);
         }
         .loader-spinner {
-            width: 60px;
-            height: 60px;
-            margin: 0 auto 25px;
-            border: 3px solid rgba(255,255,255,0.1);
-            border-top-color: #fff;
+            width: 68px;
+            height: 68px;
+            margin: 0 auto 28px;
+            border: 2.5px solid transparent;
+            border-top-color: rgba(255, 255, 255, 0.95);
+            border-right-color: rgba(255, 255, 255, 0.3);
             border-radius: 50%;
-            animation: spin 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+            animation: spin 1.4s cubic-bezier(0.68, -0.55, 0.27, 1.55) infinite;
         }
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
         .loader-text {
-            color: #fff;
+            color: rgba(255, 255, 255, 0.8);
             font-family: 'Segoe UI', sans-serif;
-            letter-spacing: 2px;
-            font-size: 16px;
+            letter-spacing: 3px;
+            font-size: 17px;
             font-weight: 300;
             opacity: 0.9;
+            animation: pulse 2s ease-in-out infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 1; }
         }
 
-        /* Базовая адаптивность для мобильных */
+        /* АДАПТИВНОСТЬ ДЛЯ МОБИЛЬНЫХ */
         @media (max-width: 768px) {
             body, html {
                 overflow-y: auto;
+                perspective: none; /* Отключаем 3D на мобильных */
             }
             .slides-container {
                 overflow-y: auto;
@@ -161,48 +199,64 @@
             .slide {
                 position: relative;
                 min-height: 100vh;
-                padding: 15px 0;
-                transform: translateY(20px);
+                padding: 10px 0;
+                transform: translateY(25px) scale(0.98) !important;
+                filter: blur(4px) !important;
             }
             .slide.active {
-                transform: translateY(0);
+                transform: translateY(0) scale(1) !important;
+                filter: blur(0) !important;
+            }
+            .slide.leaving {
+                transform: translateY(-25px) scale(0.98) !important;
+                filter: blur(4px) !important;
             }
             .slide img {
-                max-width: 95vw;
+                max-width: 96vw;
                 max-height: none;
                 height: auto;
             }
             .close {
-                top: 15px;
-                right: 20px;
-                font-size: 40px;
+                top: 18px;
+                right: 22px;
+                font-size: 42px;
+                padding: 8px;
             }
             .modal-caption {
-                bottom: 25px;
+                bottom: 30px;
                 font-size: 16px;
+                padding: 0 15px;
             }
             .loader-spinner {
-                width: 50px;
-                height: 50px;
+                width: 54px;
+                height: 54px;
             }
             .loader-text {
                 font-size: 14px;
-                letter-spacing: 1px;
+                letter-spacing: 2px;
+            }
+            .nav-hint {
+                font-size: 12px;
+                padding: 8px;
+                bottom: 15px;
             }
         }
 
-        /* Индикатор навигации (для мобильных) */
+        /* ПОДСКАЗКА ДЛЯ МОБИЛЬНЫХ */
         .nav-hint {
             position: fixed;
-            bottom: 20px;
+            bottom: 25px;
             left: 0;
             right: 0;
             text-align: center;
-            color: rgba(255,255,255,0.4);
+            color: rgba(255, 255, 255, 0.35);
             font-size: 13px;
-            padding: 10px;
+            font-weight: 300;
+            padding: 12px;
             z-index: 99;
             font-family: 'Segoe UI', sans-serif;
+            letter-spacing: 1px;
+            pointer-events: none;
         }
         @media (min-width: 769px) {
             .nav-hint {
@@ -212,75 +266,55 @@
     </style>
 </head>
 <body>
-    <!-- Прелоадер -->
+    <!-- ПРЕЛОАДЕР -->
     <div id="site-loader" class="site-loader">
         <div class="loader-content">
             <div class="loader-spinner"></div>
-            <p class="loader-text">ЗАГРУЗКА ПОРТФОЛИО</p>
+            <p class="loader-text">ПОРТФОЛИО ПРЕЗЕНТАЦИЙ</p>
         </div>
     </div>
 
     <div class="slides-container">
-        <!-- СЛАЙД 1 -->
+        <!-- СЛАЙДЫ (остаются в том же порядке) -->
         <section class="slide active" id="main-menu">
             <img src="Слайд1.JPG" alt="Главное меню" usemap="#slide1-map">
         </section>
-        
-        <!-- СЛАЙД 2 -->
         <section class="slide" id="before-after">
             <img src="Слайд2.JPG" alt="До/После 1" usemap="#menu-map">
         </section>
-        
-        <!-- СЛАЙД 3 -->
         <section class="slide">
             <img src="Слайд3.JPG" alt="До/После 2" usemap="#menu-map">
         </section>
-        
-        <!-- СЛАЙД 4 - Инфографика 1 -->
         <section class="slide" id="infographics-gallery">
             <img src="Слайд4.JPG" alt="Инфографика - Галерея 1" usemap="#slide4-map">
         </section>
-        
-        <!-- СЛАЙД 5 - Инфографика 2 -->
         <section class="slide" id="infographics-gallery-2">
             <img src="Слайд5.JPG" alt="Инфографика - Галерея 2" usemap="#slide5-map">
         </section>
-        
-        <!-- СЛАЙД 6 - Лаборатория 1 -->
         <section class="slide" id="lab">
             <img src="Слайд6.JPG" alt="Лаборатория 1" usemap="#slide6-map">
         </section>
-        
-        <!-- СЛАЙД 7 - Лаборатория 2 -->
         <section class="slide" id="lab-2">
             <img src="Слайд7.JPG" alt="Лаборатория 2" usemap="#slide7-map">
         </section>
-        
-        <!-- СЛАЙД 8 - Шаблоны 1 -->
         <section class="slide" id="templates-gallery">
             <img src="Слайд8.JPG" alt="Шаблоны - Галерея 1" usemap="#slide8-map">
         </section>
-        
-        <!-- СЛАЙД 9 - Шаблоны 2 -->
         <section class="slide" id="templates-gallery-2">
             <img src="Слайд9.JPG" alt="Шаблоны - Галерея 2" usemap="#slide9-map">
         </section>
-        
-        <!-- СЛАЙД 10 - Шаблоны 3 -->
         <section class="slide" id="templates-gallery-3">
             <img src="Слайд10.JPG" alt="Шаблоны - Галерея 3" usemap="#slide10-map">
         </section>
-        
-        <!-- СЛАЙД 11 -->
         <section class="slide" id="contacts">
             <img src="Слайд11.JPG" alt="Контакты" usemap="#menu-map">
         </section>
     </div>
 
     <!-- Подсказка для мобильных -->
-    <div class="nav-hint">Используйте стрелки ← → на клавиатуре</div>
-    
-    <!-- Image Maps -->
+    <div class="nav-hint">← → на клавиатуре • ESC для выхода</div>
+
+    <!-- Image Maps (остаются БЕЗ ИЗМЕНЕНИЙ, как в предыдущем коде) -->
     <map name="slide1-map">
         <area shape="rect" coords="73,210,261,253" href="#" data-target="main-menu" class="nav-btn" alt="Обо мне" title="Обо мне">
         <area shape="rect" coords="73,270,261,313" href="#" data-target="before-after" class="nav-btn" alt="До/после" title="До/после">
@@ -289,7 +323,6 @@
         <area shape="rect" coords="73,430,261,473" href="#" data-target="templates-gallery" class="nav-btn" alt="Готовые решения" title="Готовые решения">
         <area shape="rect" coords="73,485,261,528" href="#" data-target="contacts" class="nav-btn" alt="Контакты" title="Контакты">
     </map>
-    
     <map name="menu-map">
         <area shape="rect" coords="73,210,261,253" href="#" data-target="main-menu" class="nav-btn" alt="Обо мне" title="Обо мне">
         <area shape="rect" coords="73,270,261,313" href="#" data-target="before-after" class="nav-btn" alt="До/после" title="До/после">
@@ -298,7 +331,6 @@
         <area shape="rect" coords="73,430,261,473" href="#" data-target="templates-gallery" class="nav-btn" alt="Готовые решения" title="Готовые решения">
         <area shape="rect" coords="73,485,261,528" href="#" data-target="contacts" class="nav-btn" alt="Контакты" title="Контакты">
     </map>
-    
     <map name="slide4-map">
         <area shape="rect" coords="73,210,261,253" href="#" data-target="main-menu" class="nav-btn" alt="Обо мне" title="Обо мне">
         <area shape="rect" coords="73,270,261,313" href="#" data-target="before-after" class="nav-btn" alt="До/после" title="До/после">
@@ -312,7 +344,6 @@
         <area shape="rect" coords="886,236,1206,417" data-large="Слайд15.JPG" class="zoom-image" alt="Инфографика 4" title="Увеличить">
         <area shape="rect" coords="1104,648,1203,673" href="#" data-target="infographics-gallery-2" class="nav-btn" alt="Далее" title="Далее">
     </map>
-    
     <map name="slide5-map">
         <area shape="rect" coords="73,210,261,253" href="#" data-target="main-menu" class="nav-btn" alt="Обо мне" title="Обо мне">
         <area shape="rect" coords="73,270,261,313" href="#" data-target="before-after" class="nav-btn" alt="До/после" title="До/после">
@@ -325,7 +356,6 @@
         <area shape="rect" coords="885,47,1207,227" data-large="Слайд16.JPG" class="zoom-image" alt="Инфографика 7" title="Увеличить">
         <area shape="rect" coords="1104,648,1203,673" href="#" data-target="infographics-gallery" class="nav-btn" alt="Назад" title="Назад">
     </map>
-    
     <map name="slide6-map">
         <area shape="rect" coords="73,210,261,253" href="#" data-target="main-menu" class="nav-btn" alt="Обо мне" title="Обо мне">
         <area shape="rect" coords="73,270,261,313" href="#" data-target="before-after" class="nav-btn" alt="До/после" title="До/после">
@@ -335,7 +365,6 @@
         <area shape="rect" coords="73,485,261,528" href="#" data-target="contacts" class="nav-btn" alt="Контакты" title="Контакты">
         <area shape="rect" coords="1104,648,1203,673" href="#" data-target="lab-2" class="nav-btn" alt="Далее" title="Далее">
     </map>
-    
     <map name="slide7-map">
         <area shape="rect" coords="73,210,261,253" href="#" data-target="main-menu" class="nav-btn" alt="Обо мне" title="Обо мне">
         <area shape="rect" coords="73,270,261,313" href="#" data-target="before-after" class="nav-btn" alt="До/после" title="До/после">
@@ -345,7 +374,6 @@
         <area shape="rect" coords="73,485,261,528" href="#" data-target="contacts" class="nav-btn" alt="Контакты" title="Контакты">
         <area shape="rect" coords="1104,648,1203,673" href="#" data-target="lab" class="nav-btn" alt="Назад" title="Назад">
     </map>
-    
     <map name="slide8-map">
         <area shape="rect" coords="73,210,261,253" href="#" data-target="main-menu" class="nav-btn" alt="Обо мне" title="Обо мне">
         <area shape="rect" coords="73,270,261,313" href="#" data-target="before-after" class="nav-btn" alt="До/после" title="До/после">
@@ -361,7 +389,6 @@
         <area shape="rect" coords="933,424,1252,603" data-large="Слайд24.JPG" class="zoom-image" alt="Шаблон 6" title="Увеличить">
         <area shape="rect" coords="1104,648,1203,673" href="#" data-target="templates-gallery-2" class="nav-btn" alt="Далее" title="Далее">
     </map>
-    
     <map name="slide9-map">
         <area shape="rect" coords="73,210,261,253" href="#" data-target="main-menu" class="nav-btn" alt="Обо мне" title="Обо мне">
         <area shape="rect" coords="73,270,261,313" href="#" data-target="before-after" class="nav-btn" alt="До/после" title="До/после">
@@ -378,7 +405,6 @@
         <area shape="rect" coords="289,650,390,672" href="#" data-target="templates-gallery" class="nav-btn" alt="Назад" title="Назад">
         <area shape="rect" coords="1104,648,1203,673" href="#" data-target="templates-gallery-3" class="nav-btn" alt="Далее" title="Далее">
     </map>
-    
     <map name="slide10-map">
         <area shape="rect" coords="73,210,261,253" href="#" data-target="main-menu" class="nav-btn" alt="Обо мне" title="Обо мне">
         <area shape="rect" coords="73,270,261,313" href="#" data-target="before-after" class="nav-btn" alt="До/после" title="До/после">
@@ -394,7 +420,7 @@
         <area shape="rect" coords="933,424,1252,603" data-large="Слайд36.JPG" class="zoom-image" alt="Шаблон 18" title="Увеличить">
         <area shape="rect" coords="1104,648,1203,673" href="#" data-target="templates-gallery-2" class="nav-btn" alt="Назад" title="Назад">
     </map>
-    
+
     <!-- МОДАЛЬНОЕ ОКНО -->
     <div id="imageModal" class="modal">
         <span class="close">&times;</span>
@@ -403,31 +429,67 @@
     </div>
 
     <script>
+        // ==================== ПОЛИФИЛ ДЛА ПЛАВНОСТИ ====================
+        (function() {
+            var lastTime = 0;
+            var vendors = ['ms', 'moz', 'webkit', 'o'];
+            for(var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
+                window.requestAnimationFrame = window[vendors[x]+'RequestAnimationFrame'];
+                window.cancelAnimationFrame = window[vendors[x]+'CancelAnimationFrame'] || window[vendors[x]+'CancelRequestAnimationFrame'];
+            }
+            if (!window.requestAnimationFrame)
+                window.requestAnimationFrame = function(callback, element) {
+                    var currTime = new Date().getTime();
+                    var timeToCall = Math.max(0, 16 - (currTime - lastTime));
+                    var id = window.setTimeout(function() { callback(currTime + timeToCall); }, timeToCall);
+                    lastTime = currTime + timeToCall;
+                    return id;
+                };
+            if (!window.cancelAnimationFrame)
+                window.cancelAnimationFrame = function(id) {
+                    clearTimeout(id);
+                };
+        }());
+
         // ==================== ПРЕЛОАДЕР ====================
         window.addEventListener('load', function() {
             setTimeout(function() {
                 const loader = document.getElementById('site-loader');
                 if (loader) {
                     loader.classList.add('hidden');
-                    setTimeout(function() {
-                        loader.remove();
-                    }, 800);
+                    setTimeout(() => loader.remove(), 900);
                 }
-            }, 600); // Минимальная задержка для плавности
+            }, 800);
         });
+
+        // ==================== ВОЛШЕБНАЯ ФУНКЦИЯ ПЕРЕХОДА ====================
+        function switchSlideWithMagic(newSlideId) {
+            const currentSlide = document.querySelector('.slide.active');
+            const newSlide = document.getElementById(newSlideId);
+            
+            if (!currentSlide || !newSlide || currentSlide === newSlide) return;
+            
+            // 1. Помечаем текущий слайд как "уходящий"
+            currentSlide.classList.remove('active');
+            currentSlide.classList.add('leaving');
+            
+            // 2. Через небольшой промежуток начинаем показ нового слайда
+            setTimeout(() => {
+                newSlide.classList.add('active');
+            }, 150); // Задержка для наложения анимаций
+            
+            // 3. Убираем класс "leaving" после завершения анимации
+            setTimeout(() => {
+                currentSlide.classList.remove('leaving');
+            }, 850);
+        }
 
         // ==================== НАВИГАЦИЯ ПО СЛАЙДАМ ====================
         document.querySelectorAll('.nav-btn').forEach(btn => {
             btn.addEventListener('click', function(e) {
                 e.preventDefault();
                 const targetId = this.getAttribute('data-target');
-                const currentSlide = document.querySelector('.slide.active');
-                const targetSlide = document.getElementById(targetId);
-                
-                if (targetSlide && currentSlide !== targetSlide) {
-                    currentSlide.classList.remove('active');
-                    targetSlide.classList.add('active');
-                }
+                switchSlideWithMagic(targetId);
             });
         });
 
@@ -436,28 +498,22 @@
             const slides = Array.from(document.querySelectorAll('.slide'));
             const currentIndex = slides.findIndex(slide => slide.classList.contains('active'));
             
-            if (event.key === 'ArrowRight' || event.key === 'PageDown') {
+            if (event.key === 'ArrowRight' || event.key === 'PageDown' || event.key === ' ') {
                 // Следующий слайд
                 const nextIndex = (currentIndex + 1) % slides.length;
-                switchSlide(slides[currentIndex], slides[nextIndex]);
+                switchSlideWithMagic(slides[nextIndex].id);
             } else if (event.key === 'ArrowLeft' || event.key === 'PageUp') {
                 // Предыдущий слайд
                 const prevIndex = (currentIndex - 1 + slides.length) % slides.length;
-                switchSlide(slides[currentIndex], slides[prevIndex]);
+                switchSlideWithMagic(slides[prevIndex].id);
             } else if (event.key === 'Home') {
                 // На первый слайд
-                switchSlide(slides[currentIndex], slides[0]);
+                switchSlideWithMagic(slides[0].id);
             } else if (event.key === 'End') {
                 // На последний слайд
-                switchSlide(slides[currentIndex], slides[slides.length - 1]);
+                switchSlideWithMagic(slides[slides.length - 1].id);
             }
         });
-
-        function switchSlide(currentSlide, nextSlide) {
-            if (!currentSlide || !nextSlide || currentSlide === nextSlide) return;
-            currentSlide.classList.remove('active');
-            nextSlide.classList.add('active');
-        }
 
         // ==================== ЗУМ ДЛЯ МИНИАТЮР ====================
         document.querySelectorAll('.zoom-image').forEach(area => {
@@ -469,49 +525,49 @@
                 
                 modal.style.display = 'flex';
                 caption.textContent = this.getAttribute('alt');
-                zoomedImg.src = this.getAttribute('data-large');
                 
-                // Предзагрузка изображения для плавного появления
+                // Плавная загрузка изображения
+                zoomedImg.style.opacity = '0';
                 const img = new Image();
+                img.onload = function() {
+                    zoomedImg.src = this.src;
+                    setTimeout(() => {
+                        zoomedImg.style.opacity = '1';
+                        zoomedImg.style.transition = 'opacity 0.4s ease';
+                    }, 10);
+                };
                 img.src = this.getAttribute('data-large');
             });
         });
 
         // ==================== ЗАКРЫТИЕ МОДАЛЬНОГО ОКНА ====================
-        document.querySelector('.close').addEventListener('click', function() {
-            document.getElementById('imageModal').style.display = 'none';
-        });
-        
+        document.querySelector('.close').addEventListener('click', closeModal);
         document.getElementById('imageModal').addEventListener('click', function(e) {
-            if (e.target === this) this.style.display = 'none';
+            if (e.target === this) closeModal();
         });
-        
         document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                document.getElementById('imageModal').style.display = 'none';
-            }
+            if (e.key === 'Escape') closeModal();
         });
-
-        // ==================== БЛОКИРОВКА ПРОКРУТКИ КОЛЕСИКОМ ====================
-        document.addEventListener('wheel', function(e) {
-            // Разрешаем прокрутку только на мобильных
-            if (window.innerWidth > 768) {
-                e.preventDefault();
-            }
-        }, { passive: false });
+        function closeModal() {
+            document.getElementById('imageModal').style.display = 'none';
+        }
 
         // ==================== ПЛАВНЫЙ СКРОЛЛ ДЛЯ МОБИЛЬНЫХ ====================
         if (window.innerWidth <= 768) {
             document.querySelectorAll('area').forEach(area => {
-                area.addEventListener('click', function(e) {
+                area.addEventListener('click', function() {
                     setTimeout(() => {
-                        window.scrollTo({
-                            top: 0,
-                            behavior: 'smooth'
-                        });
-                    }, 100);
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }, 300);
                 });
             });
+        }
+
+        // ==================== ОТКЛЮЧЕНИЕ ПРОКРУТКИ НА ДЕСКТОПЕ ====================
+        if (window.innerWidth > 768) {
+            document.addEventListener('wheel', function(e) {
+                e.preventDefault();
+            }, { passive: false });
         }
     </script>
 </body>
