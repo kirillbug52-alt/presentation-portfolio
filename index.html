@@ -17,33 +17,18 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            position: relative;
         }
         .slide img {
             max-width: 100%;
             max-height: 100vh;
             display: block;
         }
-        /* МЕНЮ НА КАЖДОМ СЛАЙДЕ */
-        .slide-menu {
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 470px;
-            height: 100vh;
-            z-index: 10;
-            opacity: 0.3;
-            transition: opacity 0.3s;
-        }
-        .slide-menu:hover {
-            opacity: 0.7;
-        }
-        .slide-menu map area {
+        area {
             cursor: pointer;
             outline: none;
         }
-        .slide-menu map area:hover {
-            opacity: 0.8;
+        area:hover {
+            opacity: 0.7;
         }
         .modal {
             display: none;
@@ -86,69 +71,41 @@
     </style>
 </head>
 <body>
-    <!-- СЛАЙД 1 -->
+    <!-- СЛАЙД 1 - с меню -->
     <section class="slide" id="main-menu">
-        <div class="slide-menu">
-            <img src="Слайд1.JPG" alt="Меню" usemap="#main-menu-map" style="width: 470px; height: 100vh; object-fit: cover; opacity: 0;">
-            <map name="main-menu-map">
-                <area shape="rect" coords="73,210,261,253" href="#main-menu" alt="Обо мне" title="Обо мне">
-                <area shape="rect" coords="73,270,261,313" href="#before-after" alt="До/после" title="До/после">
-                <area shape="rect" coords="73,325,261,368" href="#infographics-gallery" alt="Инфографика" title="Инфографика">
-                <area shape="rect" coords="73,379,261,422" href="#lab" alt="Лаборатория" title="Лаборатория">
-                <area shape="rect" coords="73,430,261,473" href="#templates-gallery" alt="Готовые решения" title="Готовые решения">
-                <area shape="rect" coords="73,485,261,528" href="#contacts" alt="Контакты" title="Контакты">
-            </map>
-        </div>
-        <img src="Слайд1.JPG" alt="Главное меню">
+        <img src="Слайд1.JPG" alt="Главное меню" usemap="#menu-map">
+        <map name="menu-map">
+            <area shape="rect" coords="73,210,261,253" href="#main-menu" alt="Обо мне" title="Обо мне">
+            <area shape="rect" coords="73,270,261,313" href="#before-after" alt="До/после" title="До/после">
+            <area shape="rect" coords="73,325,261,368" href="#infographics-gallery" alt="Инфографика" title="Инфографика">
+            <area shape="rect" coords="73,379,261,422" href="#lab" alt="Лаборатория" title="Лаборатория">
+            <area shape="rect" coords="73,430,261,473" href="#templates-gallery" alt="Готовые решения" title="Готовые решения">
+            <area shape="rect" coords="73,485,261,528" href="#contacts" alt="Контакты" title="Контакты">
+        </map>
     </section>
     
-    <!-- СЛАЙД 2 -->
+    <!-- СЛАЙД 2 - с теми же кнопками меню -->
     <section class="slide" id="before-after">
-        <div class="slide-menu">
-            <img src="Слайд1.JPG" alt="Меню" usemap="#main-menu-map" style="width: 470px; height: 100vh; object-fit: cover; opacity: 0;">
-            <map name="main-menu-map">
-                <area shape="rect" coords="73,210,261,253" href="#main-menu" alt="Обо мне" title="Обо мне">
-                <area shape="rect" coords="73,270,261,313" href="#before-after" alt="До/после" title="До/после">
-                <area shape="rect" coords="73,325,261,368" href="#infographics-gallery" alt="Инфографика" title="Инфографика">
-                <area shape="rect" coords="73,379,261,422" href="#lab" alt="Лаборатория" title="Лаборатория">
-                <area shape="rect" coords="73,430,261,473" href="#templates-gallery" alt="Готовые решения" title="Готовые решения">
-                <area shape="rect" coords="73,485,261,528" href="#contacts" alt="Контакты" title="Контакты">
-            </map>
-        </div>
-        <img src="Слайд2.JPG" alt="До/После 1">
+        <img src="Слайд2.JPG" alt="До/После 1" usemap="#menu-map">
     </section>
     
-    <!-- СЛАЙД 3 -->
+    <!-- СЛАЙД 3 - с теми же кнопками меню -->
     <section class="slide">
-        <div class="slide-menu">
-            <img src="Слайд1.JPG" alt="Меню" usemap="#main-menu-map" style="width: 470px; height: 100vh; object-fit: cover; opacity: 0;">
-            <map name="main-menu-map">
-                <area shape="rect" coords="73,210,261,253" href="#main-menu" alt="Обо мне" title="Обо мне">
-                <area shape="rect" coords="73,270,261,313" href="#before-after" alt="До/после" title="До/после">
-                <area shape="rect" coords="73,325,261,368" href="#infographics-gallery" alt="Инфографика" title="Инфографика">
-                <area shape="rect" coords="73,379,261,422" href="#lab" alt="Лаборатория" title="Лаборатория">
-                <area shape="rect" coords="73,430,261,473" href="#templates-gallery" alt="Готовые решения" title="Готовые решения">
-                <area shape="rect" coords="73,485,261,528" href="#contacts" alt="Контакты" title="Контакты">
-            </map>
-        </div>
-        <img src="Слайд3.JPG" alt="До/После 2">
+        <img src="Слайд3.JPG" alt="До/После 2" usemap="#menu-map">
     </section>
     
-    <!-- СЛАЙД 4 -->
+    <!-- СЛАЙД 4 - с меню и миниатюрами -->
     <section class="slide" id="infographics-gallery">
-        <div class="slide-menu">
-            <img src="Слайд1.JPG" alt="Меню" usemap="#main-menu-map" style="width: 470px; height: 100vh; object-fit: cover; opacity: 0;">
-            <map name="main-menu-map">
-                <area shape="rect" coords="73,210,261,253" href="#main-menu" alt="Обо мне" title="Обо мне">
-                <area shape="rect" coords="73,270,261,313" href="#before-after" alt="До/после" title="До/после">
-                <area shape="rect" coords="73,325,261,368" href="#infographics-gallery" alt="Инфографика" title="Инфографика">
-                <area shape="rect" coords="73,379,261,422" href="#lab" alt="Лаборатория" title="Лаборатория">
-                <area shape="rect" coords="73,430,261,473" href="#templates-gallery" alt="Готовые решения" title="Готовые решения">
-                <area shape="rect" coords="73,485,261,528" href="#contacts" alt="Контакты" title="Контакты">
-            </map>
-        </div>
         <img src="Слайд4.JPG" alt="Инфографика - Галерея 1" usemap="#infographics-map-1">
         <map name="infographics-map-1">
+            <!-- Кнопки меню -->
+            <area shape="rect" coords="73,210,261,253" href="#main-menu" alt="Обо мне" title="Обо мне">
+            <area shape="rect" coords="73,270,261,313" href="#before-after" alt="До/после" title="До/после">
+            <area shape="rect" coords="73,325,261,368" href="#infographics-gallery" alt="Инфографика" title="Инфографика">
+            <area shape="rect" coords="73,379,261,422" href="#lab" alt="Лаборатория" title="Лаборатория">
+            <area shape="rect" coords="73,430,261,473" href="#templates-gallery" alt="Готовые решения" title="Готовые решения">
+            <area shape="rect" coords="73,485,261,528" href="#contacts" alt="Контакты" title="Контакты">
+            <!-- Миниатюры -->
             <area shape="rect" coords="67,185,387,398" data-large="Слайд12.JPG" class="zoom-image" alt="Инфографика 1" title="Увеличить">
             <area shape="rect" coords="498,185,818,398" data-large="Слайд13.JPG" class="zoom-image" alt="Инфографика 2" title="Увеличить">
             <area shape="rect" coords="67,484,387,697" data-large="Слайд14.JPG" class="zoom-image" alt="Инфографика 3" title="Увеличить">
@@ -156,74 +113,46 @@
         </map>
     </section>
     
-    <!-- СЛАЙД 5 -->
+    <!-- СЛАЙД 5 - с меню и миниатюрами -->
     <section class="slide">
-        <div class="slide-menu">
-            <img src="Слайд1.JPG" alt="Меню" usemap="#main-menu-map" style="width: 470px; height: 100vh; object-fit: cover; opacity: 0;">
-            <map name="main-menu-map">
-                <area shape="rect" coords="73,210,261,253" href="#main-menu" alt="Обо мне" title="Обо мне">
-                <area shape="rect" coords="73,270,261,313" href="#before-after" alt="До/после" title="До/после">
-                <area shape="rect" coords="73,325,261,368" href="#infographics-gallery" alt="Инфографика" title="Инфографика">
-                <area shape="rect" coords="73,379,261,422" href="#lab" alt="Лаборатория" title="Лаборатория">
-                <area shape="rect" coords="73,430,261,473" href="#templates-gallery" alt="Готовые решения" title="Готовые решения">
-                <area shape="rect" coords="73,485,261,528" href="#contacts" alt="Контакты" title="Контакты">
-            </map>
-        </div>
         <img src="Слайд5.JPG" alt="Инфографика - Галерея 2" usemap="#infographics-map-2">
         <map name="infographics-map-2">
+            <!-- Кнопки меню -->
+            <area shape="rect" coords="73,210,261,253" href="#main-menu" alt="Обо мне" title="Обо мне">
+            <area shape="rect" coords="73,270,261,313" href="#before-after" alt="До/после" title="До/после">
+            <area shape="rect" coords="73,325,261,368" href="#infographics-gallery" alt="Инфографика" title="Инфографика">
+            <area shape="rect" coords="73,379,261,422" href="#lab" alt="Лаборатория" title="Лаборатория">
+            <area shape="rect" coords="73,430,261,473" href="#templates-gallery" alt="Готовые решения" title="Готовые решения">
+            <area shape="rect" coords="73,485,261,528" href="#contacts" alt="Контакты" title="Контакты">
+            <!-- Миниатюры -->
             <area shape="rect" coords="67,185,387,398" data-large="Слайд16.JPG" class="zoom-image" alt="Инфографика 5" title="Увеличить">
             <area shape="rect" coords="498,185,818,398" data-large="Слайд17.JPG" class="zoom-image" alt="Инфографика 6" title="Увеличить">
             <area shape="rect" coords="282,484,602,697" data-large="Слайд18.JPG" class="zoom-image" alt="Инфографика 7" title="Увеличить">
         </map>
     </section>
     
-    <!-- СЛАЙД 6 -->
+    <!-- СЛАЙД 6 - с меню -->
     <section class="slide" id="lab">
-        <div class="slide-menu">
-            <img src="Слайд1.JPG" alt="Меню" usemap="#main-menu-map" style="width: 470px; height: 100vh; object-fit: cover; opacity: 0;">
-            <map name="main-menu-map">
-                <area shape="rect" coords="73,210,261,253" href="#main-menu" alt="Обо мне" title="Обо мне">
-                <area shape="rect" coords="73,270,261,313" href="#before-after" alt="До/после" title="До/после">
-                <area shape="rect" coords="73,325,261,368" href="#infographics-gallery" alt="Инфографика" title="Инфографика">
-                <area shape="rect" coords="73,379,261,422" href="#lab" alt="Лаборатория" title="Лаборатория">
-                <area shape="rect" coords="73,430,261,473" href="#templates-gallery" alt="Готовые решения" title="Готовые решения">
-                <area shape="rect" coords="73,485,261,528" href="#contacts" alt="Контакты" title="Контакты">
-            </map>
-        </div>
-        <img src="Слайд6.JPG" alt="Лаборатория 1">
+        <img src="Слайд6.JPG" alt="Лаборатория 1" usemap="#menu-map">
     </section>
     
-    <!-- СЛАЙД 7 -->
+    <!-- СЛАЙД 7 - с меню -->
     <section class="slide">
-        <div class="slide-menu">
-            <img src="Слайд1.JPG" alt="Меню" usemap="#main-menu-map" style="width: 470px; height: 100vh; object-fit: cover; opacity: 0;">
-            <map name="main-menu-map">
-                <area shape="rect" coords="73,210,261,253" href="#main-menu" alt="Обо мне" title="Обо мне">
-                <area shape="rect" coords="73,270,261,313" href="#before-after" alt="До/после" title="До/после">
-                <area shape="rect" coords="73,325,261,368" href="#infographics-gallery" alt="Инфографика" title="Инфографика">
-                <area shape="rect" coords="73,379,261,422" href="#lab" alt="Лаборатория" title="Лаборатория">
-                <area shape="rect" coords="73,430,261,473" href="#templates-gallery" alt="Готовые решения" title="Готовые решения">
-                <area shape="rect" coords="73,485,261,528" href="#contacts" alt="Контакты" title="Контакты">
-            </map>
-        </div>
-        <img src="Слайд7.JPG" alt="Лаборатория 2">
+        <img src="Слайд7.JPG" alt="Лаборатория 2" usemap="#menu-map">
     </section>
     
-    <!-- СЛАЙД 8 -->
+    <!-- СЛАЙД 8 - с меню и миниатюрами шаблонов -->
     <section class="slide" id="templates-gallery">
-        <div class="slide-menu">
-            <img src="Слайд1.JPG" alt="Меню" usemap="#main-menu-map" style="width: 470px; height: 100vh; object-fit: cover; opacity: 0;">
-            <map name="main-menu-map">
-                <area shape="rect" coords="73,210,261,253" href="#main-menu" alt="Обо мне" title="Обо мне">
-                <area shape="rect" coords="73,270,261,313" href="#before-after" alt="До/после" title="До/после">
-                <area shape="rect" coords="73,325,261,368" href="#infographics-gallery" alt="Инфографика" title="Инфографика">
-                <area shape="rect" coords="73,379,261,422" href="#lab" alt="Лаборатория" title="Лаборатория">
-                <area shape="rect" coords="73,430,261,473" href="#templates-gallery" alt="Готовые решения" title="Готовые решения">
-                <area shape="rect" coords="73,485,261,528" href="#contacts" alt="Контакты" title="Контакты">
-            </map>
-        </div>
         <img src="Слайд8.JPG" alt="Шаблоны - Галерея 1" usemap="#templates-map-1">
         <map name="templates-map-1">
+            <!-- Кнопки меню -->
+            <area shape="rect" coords="73,210,261,253" href="#main-menu" alt="Обо мне" title="Обо мне">
+            <area shape="rect" coords="73,270,261,313" href="#before-after" alt="До/после" title="До/после">
+            <area shape="rect" coords="73,325,261,368" href="#infographics-gallery" alt="Инфографика" title="Инфографика">
+            <area shape="rect" coords="73,379,261,422" href="#lab" alt="Лаборатория" title="Лаборатория">
+            <area shape="rect" coords="73,430,261,473" href="#templates-gallery" alt="Готовые решения" title="Готовые решения">
+            <area shape="rect" coords="73,485,261,528" href="#contacts" alt="Контакты" title="Контакты">
+            <!-- Миниатюры шаблонов -->
             <area shape="rect" coords="67,188,320,401" data-large="Слайд19.JPG" class="zoom-image" alt="Шаблон 1" title="Увеличить">
             <area shape="rect" coords="349,188,602,401" data-large="Слайд20.JPG" class="zoom-image" alt="Шаблон 2" title="Увеличить">
             <area shape="rect" coords="631,188,884,401" data-large="Слайд21.JPG" class="zoom-image" alt="Шаблон 3" title="Увеличить">
@@ -233,21 +162,18 @@
         </map>
     </section>
     
-    <!-- СЛАЙД 9 -->
+    <!-- СЛАЙД 9 - с меню и миниатюрами -->
     <section class="slide">
-        <div class="slide-menu">
-            <img src="Слайд1.JPG" alt="Меню" usemap="#main-menu-map" style="width: 470px; height: 100vh; object-fit: cover; opacity: 0;">
-            <map name="main-menu-map">
-                <area shape="rect" coords="73,210,261,253" href="#main-menu" alt="Обо мне" title="Обо мне">
-                <area shape="rect" coords="73,270,261,313" href="#before-after" alt="До/после" title="До/после">
-                <area shape="rect" coords="73,325,261,368" href="#infographics-gallery" alt="Инфографика" title="Инфографика">
-                <area shape="rect" coords="73,379,261,422" href="#lab" alt="Лаборатория" title="Лаборатория">
-                <area shape="rect" coords="73,430,261,473" href="#templates-gallery" alt="Готовые решения" title="Готовые решения">
-                <area shape="rect" coords="73,485,261,528" href="#contacts" alt="Контакты" title="Контакты">
-            </map>
-        </div>
         <img src="Слайд9.JPG" alt="Шаблоны - Галерея 2" usemap="#templates-map-2">
         <map name="templates-map-2">
+            <!-- Кнопки меню -->
+            <area shape="rect" coords="73,210,261,253" href="#main-menu" alt="Обо мне" title="Обо мне">
+            <area shape="rect" coords="73,270,261,313" href="#before-after" alt="До/после" title="До/после">
+            <area shape="rect" coords="73,325,261,368" href="#infographics-gallery" alt="Инфографика" title="Инфографика">
+            <area shape="rect" coords="73,379,261,422" href="#lab" alt="Лаборатория" title="Лаборатория">
+            <area shape="rect" coords="73,430,261,473" href="#templates-gallery" alt="Готовые решения" title="Готовые решения">
+            <area shape="rect" coords="73,485,261,528" href="#contacts" alt="Контакты" title="Контакты">
+            <!-- Миниатюры -->
             <area shape="rect" coords="67,188,320,401" data-large="Слайд25.JPG" class="zoom-image" alt="Шаблон 7" title="Увеличить">
             <area shape="rect" coords="349,188,602,401" data-large="Слайд26.JPG" class="zoom-image" alt="Шаблон 8" title="Увеличить">
             <area shape="rect" coords="631,188,884,401" data-large="Слайд27.JPG" class="zoom-image" alt="Шаблон 9" title="Увеличить">
@@ -257,21 +183,18 @@
         </map>
     </section>
     
-    <!-- СЛАЙД 10 -->
+    <!-- СЛАЙД 10 - с меню и миниатюрами -->
     <section class="slide">
-        <div class="slide-menu">
-            <img src="Слайд1.JPG" alt="Меню" usemap="#main-menu-map" style="width: 470px; height: 100vh; object-fit: cover; opacity: 0;">
-            <map name="main-menu-map">
-                <area shape="rect" coords="73,210,261,253" href="#main-menu" alt="Обо мне" title="Обо мне">
-                <area shape="rect" coords="73,270,261,313" href="#before-after" alt="До/после" title="До/после">
-                <area shape="rect" coords="73,325,261,368" href="#infographics-gallery" alt="Инфографика" title="Инфографика">
-                <area shape="rect" coords="73,379,261,422" href="#lab" alt="Лаборатория" title="Лаборатория">
-                <area shape="rect" coords="73,430,261,473" href="#templates-gallery" alt="Готовые решения" title="Готовые решения">
-                <area shape="rect" coords="73,485,261,528" href="#contacts" alt="Контакты" title="Контакты">
-            </map>
-        </div>
         <img src="Слайд10.JPG" alt="Шаблоны - Галерея 3" usemap="#templates-map-3">
         <map name="templates-map-3">
+            <!-- Кнопки меню -->
+            <area shape="rect" coords="73,210,261,253" href="#main-menu" alt="Обо мне" title="Обо мне">
+            <area shape="rect" coords="73,270,261,313" href="#before-after" alt="До/после" title="До/после">
+            <area shape="rect" coords="73,325,261,368" href="#infographics-gallery" alt="Инфографика" title="Инфографика">
+            <area shape="rect" coords="73,379,261,422" href="#lab" alt="Лаборатория" title="Лаборатория">
+            <area shape="rect" coords="73,430,261,473" href="#templates-gallery" alt="Готовые решения" title="Готовые решения">
+            <area shape="rect" coords="73,485,261,528" href="#contacts" alt="Контакты" title="Контакты">
+            <!-- Миниатюры -->
             <area shape="rect" coords="67,188,320,401" data-large="Слайд31.JPG" class="zoom-image" alt="Шаблон 13" title="Увеличить">
             <area shape="rect" coords="349,188,602,401" data-large="Слайд32.JPG" class="zoom-image" alt="Шаблон 14" title="Увеличить">
             <area shape="rect" coords="631,188,884,401" data-large="Слайд33.JPG" class="zoom-image" alt="Шаблон 15" title="Увеличить">
@@ -281,20 +204,9 @@
         </map>
     </section>
     
-    <!-- СЛАЙД 11 -->
+    <!-- СЛАЙД 11 - с меню -->
     <section class="slide" id="contacts">
-        <div class="slide-menu">
-            <img src="Слайд1.JPG" alt="Меню" usemap="#main-menu-map" style="width: 470px; height: 100vh; object-fit: cover; opacity: 0;">
-            <map name="main-menu-map">
-                <area shape="rect" coords="73,210,261,253" href="#main-menu" alt="Обо мне" title="Обо мне">
-                <area shape="rect" coords="73,270,261,313" href="#before-after" alt="До/после" title="До/после">
-                <area shape="rect" coords="73,325,261,368" href="#infographics-gallery" alt="Инфографика" title="Инфографика">
-                <area shape="rect" coords="73,379,261,422" href="#lab" alt="Лаборатория" title="Лаборатория">
-                <area shape="rect" coords="73,430,261,473" href="#templates-gallery" alt="Готовые решения" title="Готовые решения">
-                <area shape="rect" coords="73,485,261,528" href="#contacts" alt="Контакты" title="Контакты">
-            </map>
-        </div>
-        <img src="Слайд11.JPG" alt="Контакты">
+        <img src="Слайд11.JPG" alt="Контакты" usemap="#menu-map">
     </section>
     
     <!-- МОДАЛЬНОЕ ОКНО -->
