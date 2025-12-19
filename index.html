@@ -82,11 +82,7 @@
         area:hover {
             opacity: 0.85;
         }
-        .nav-btn.active {
-            outline: 2px solid #E29B17;
-            outline-offset: 3px;
-            border-radius: 2px;
-        }
+        /* Убрал .nav-btn.active - image map area не поддерживает такие стили */
         
         /* АНИМИРОВАННЫЙ ЗУМ-ЭФФЕКТ */
         .zoom-overlay {
@@ -364,112 +360,46 @@
     </div>
 
     <div class="slides-container">
-        <!-- СЛАЙДЫ С LAZY LOADING -->
+        <!-- СЛАЙДЫ (возвращаем оригинальный формат) -->
         <section class="slide active" id="main-menu">
-            <img 
-                src="Слайд1.JPG" 
-                data-src="Слайд1.JPG" 
-                alt="Главное меню" 
-                usemap="#slide1-map"
-                loading="lazy"
-            >
+            <img src="Слайд1.JPG" alt="Главное меню" usemap="#slide1-map">
         </section>
         <section class="slide" id="before-after">
-            <img 
-                src="" 
-                data-src="Слайд2.JPG" 
-                alt="До/После 1" 
-                usemap="#menu-map"
-                loading="lazy"
-            >
+            <img src="Слайд2.JPG" alt="До/После 1" usemap="#menu-map">
         </section>
         <section class="slide">
-            <img 
-                src="" 
-                data-src="Слайд3.JPG" 
-                alt="До/После 2" 
-                usemap="#menu-map"
-                loading="lazy"
-            >
+            <img src="Слайд3.JPG" alt="До/После 2" usemap="#menu-map">
         </section>
         <section class="slide" id="infographics-gallery">
-            <img 
-                src="" 
-                data-src="Слайд4.JPG" 
-                alt="Инфографика - Галерея 1" 
-                usemap="#slide4-map"
-                loading="lazy"
-            >
+            <img src="Слайд4.JPG" alt="Инфографика - Галерея 1" usemap="#slide4-map">
         </section>
         <section class="slide" id="infographics-gallery-2">
-            <img 
-                src="" 
-                data-src="Слайд5.JPG" 
-                alt="Инфографика - Галерея 2" 
-                usemap="#slide5-map"
-                loading="lazy"
-            >
+            <img src="Слайд5.JPG" alt="Инфографика - Галерея 2" usemap="#slide5-map">
         </section>
         <section class="slide" id="lab">
-            <img 
-                src="" 
-                data-src="Слайд6.JPG" 
-                alt="Лаборатория 1" 
-                usemap="#slide6-map"
-                loading="lazy"
-            >
+            <img src="Слайд6.JPG" alt="Лаборатория 1" usemap="#slide6-map">
         </section>
         <section class="slide" id="lab-2">
-            <img 
-                src="" 
-                data-src="Слайд7.JPG" 
-                alt="Лаборатория 2" 
-                usemap="#slide7-map"
-                loading="lazy"
-            >
+            <img src="Слайд7.JPG" alt="Лаборатория 2" usemap="#slide7-map">
         </section>
         <section class="slide" id="templates-gallery">
-            <img 
-                src="" 
-                data-src="Слайд8.JPG" 
-                alt="Шаблоны - Галерея 1" 
-                usemap="#slide8-map"
-                loading="lazy"
-            >
+            <img src="Слайд8.JPG" alt="Шаблоны - Галерея 1" usemap="#slide8-map">
         </section>
         <section class="slide" id="templates-gallery-2">
-            <img 
-                src="" 
-                data-src="Слайд9.JPG" 
-                alt="Шаблоны - Галерея 2" 
-                usemap="#slide9-map"
-                loading="lazy"
-            >
+            <img src="Слайд9.JPG" alt="Шаблоны - Галерея 2" usemap="#slide9-map">
         </section>
         <section class="slide" id="templates-gallery-3">
-            <img 
-                src="" 
-                data-src="Слайд10.JPG" 
-                alt="Шаблоны - Галерея 3" 
-                usemap="#slide10-map"
-                loading="lazy"
-            >
+            <img src="Слайд10.JPG" alt="Шаблоны - Галерея 3" usemap="#slide10-map">
         </section>
         <section class="slide" id="contacts">
-            <img 
-                src="" 
-                data-src="Слайд11.JPG" 
-                alt="Контакты" 
-                usemap="#menu-map"
-                loading="lazy"
-            >
+            <img src="Слайд11.JPG" alt="Контакты" usemap="#menu-map">
         </section>
     </div>
 
     <!-- Подсказка для мобильных -->
     <div class="nav-hint">← → на клавиатуре • ESC для выхода</div>
 
-    <!-- Image Maps (остаются БЕЗ ИЗМЕНЕНИЙ) -->
+    <!-- Image Maps (остаются БЕЗ ИЗМЕНЕНИЙ, как в оригинале) -->
     <map name="slide1-map">
         <area shape="rect" coords="73,210,261,253" href="#" data-target="main-menu" class="nav-btn" alt="Обо мне" title="Обо мне">
         <area shape="rect" coords="73,270,261,313" href="#" data-target="before-after" class="nav-btn" alt="До/после" title="До/после">
@@ -607,26 +537,10 @@
                     loader.classList.add('hidden');
                     setTimeout(() => loader.remove(), 1200);
                 }
+                
+                // Запускаем предзагрузку изображений после основной загрузки
+                setTimeout(preloadZoomImages, 500);
             }, 1800); // Увеличенное время загрузки
-        });
-
-        // ==================== LAZY LOADING ДЛЯ ИЗОБРАЖЕНИЙ СЛАЙДОВ ====================
-        const slideObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    const img = entry.target.querySelector('img');
-                    if (img && img.dataset.src) {
-                        img.src = img.dataset.src;
-                        img.removeAttribute('data-src');
-                    }
-                    slideObserver.unobserve(entry.target);
-                }
-            });
-        }, { threshold: 0.1, rootMargin: '50px' });
-
-        // Наблюдаем за всеми слайдами кроме первого (он уже загружен)
-        document.querySelectorAll('.slide:not(.active)').forEach(slide => {
-            slideObserver.observe(slide);
         });
 
         // ==================== ПРЕДЗАГРУЗКА ИЗОБРАЖЕНИЙ ДЛЯ ЗУМА ====================
@@ -647,11 +561,6 @@
                 img.src = url;
             });
         }
-
-        // Вызываем предзагрузку после основной загрузки
-        window.addEventListener('load', function() {
-            setTimeout(preloadZoomImages, 1200);
-        });
 
         // ==================== ЭФФЕКТ ПЛАВНОГО УВЕЛИЧЕНИЯ ====================
         function zoomImageFromThumbnail(areaElement) {
@@ -762,12 +671,52 @@
             }, 500);
         }
 
-        // ==================== ОБРАБОТЧИКИ ДЛЯ МИНИАТЮР ====================
-        document.querySelectorAll('.zoom-image').forEach(area => {
-            area.addEventListener('click', function(e) {
+        // ==================== ВОЛШЕБНАЯ ФУНКЦИЯ ПЕРЕХОДА ====================
+        function switchSlideWithMagic(newSlideId) {
+            const currentSlide = document.querySelector('.slide.active');
+            const newSlide = document.getElementById(newSlideId);
+            
+            if (!currentSlide || !newSlide || currentSlide === newSlide) return;
+            
+            // 1. Помечаем текущий слайд как "уходящий"
+            currentSlide.classList.remove('active');
+            currentSlide.classList.add('leaving');
+            
+            // 2. Через небольшой промежуток начинаем показ нового слайда
+            setTimeout(() => {
+                newSlide.classList.add('active');
+                
+                // Принудительная прокрутка к верху на мобильных
+                if (window.innerWidth <= 768) {
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+            }, 150);
+            
+            // 3. Убираем класс "leaving" после завершения анимации
+            setTimeout(() => {
+                currentSlide.classList.remove('leaving');
+            }, 850);
+        }
+
+        // ==================== ОБРАБОТЧИКИ СОБЫТИЙ ====================
+        
+        // Обработчики для кнопок навигации
+        document.addEventListener('click', function(e) {
+            // Проверяем, кликнули ли мы на area с классом nav-btn
+            const target = e.target;
+            if (target.tagName === 'AREA' && target.classList.contains('nav-btn')) {
                 e.preventDefault();
-                zoomImageFromThumbnail(this);
-            });
+                const targetId = target.getAttribute('data-target');
+                if (targetId) {
+                    switchSlideWithMagic(targetId);
+                }
+            }
+            
+            // Проверяем, кликнули ли мы на area с классом zoom-image
+            if (target.tagName === 'AREA' && target.classList.contains('zoom-image')) {
+                e.preventDefault();
+                zoomImageFromThumbnail(target);
+            }
         });
 
         // Закрытие по кнопке
@@ -785,52 +734,6 @@
             if (e.key === 'Escape') {
                 closeZoom();
             }
-        });
-
-        // ==================== ВОЛШЕБНАЯ ФУНКЦИЯ ПЕРЕХОДА ====================
-        function switchSlideWithMagic(newSlideId) {
-            const currentSlide = document.querySelector('.slide.active');
-            const newSlide = document.getElementById(newSlideId);
-            
-            if (!currentSlide || !newSlide || currentSlide === newSlide) return;
-            
-            // 1. Помечаем текущий слайд как "уходящий"
-            currentSlide.classList.remove('active');
-            currentSlide.classList.add('leaving');
-            
-            // 2. Обновляем активные кнопки меню
-            document.querySelectorAll('.nav-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            
-            // 3. Добавляем активный класс кнопкам нового слайда
-            document.querySelectorAll(`area[data-target="${newSlideId}"]`).forEach(btn => {
-                btn.classList.add('active');
-            });
-            
-            // 4. Через небольшой промежуток начинаем показ нового слайда
-            setTimeout(() => {
-                newSlide.classList.add('active');
-                
-                // Принудительная прокрутка к верху на мобильных
-                if (window.innerWidth <= 768) {
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                }
-            }, 150);
-            
-            // 5. Убираем класс "leaving" после завершения анимации
-            setTimeout(() => {
-                currentSlide.classList.remove('leaving');
-            }, 850);
-        }
-
-        // ==================== НАВИГАЦИЯ ПО СЛАЙДАМ ====================
-        document.querySelectorAll('.nav-btn').forEach(btn => {
-            btn.addEventListener('click', function(e) {
-                e.preventDefault();
-                const targetId = this.getAttribute('data-target');
-                switchSlideWithMagic(targetId);
-            });
         });
 
         // ==================== УПРАВЛЕНИЕ ПРОКРУТКОЙ ====================
@@ -896,11 +799,9 @@
             }
         });
 
-        // Инициализация активной кнопки для первого слайда
+        // Инициализация при загрузке
         document.addEventListener('DOMContentLoaded', function() {
-            document.querySelectorAll('area[data-target="main-menu"]').forEach(btn => {
-                btn.classList.add('active');
-            });
+            console.log('Портфолио загружено. Кнопки меню активны.');
         });
     </script>
 </body>
