@@ -113,7 +113,8 @@
         .zoom-image-animating img {
             width: 100%;
             height: 100%;
-            object-fit: contain;
+            /* ВАЖНО: cover вместо contain для заполнения всего экрана */
+            object-fit: cover; /* ← ИЗМЕНЕНО: заполняет весь контейнер */
             opacity: 0;
             transition: opacity 0.4s ease 0.2s;
         }
@@ -541,22 +542,34 @@
                 
                 // Даем время браузеру обработать DOM
                 setTimeout(() => {
-                    // Рассчитываем конечную позицию и размер
-                    const maxWidth = window.innerWidth * 0.85;
-                    const maxHeight = window.innerHeight * 0.85;
+                    // РАСЧЕТ РАЗМЕРА ДЛЯ 16:9 НА ВЕСЬ ЭКРАН
+                    const screenRatio = window.innerWidth / window.innerHeight;
+                    const imageRatio = this.naturalWidth / this.naturalHeight; // Должно быть ~1.777 (16:9)
                     
-                    // Сохраняем пропорции изображения
-                    const imgRatio = this.naturalWidth / this.naturalHeight;
-                    let targetWidth = maxWidth;
-                    let targetHeight = targetWidth / imgRatio;
+                    let targetWidth, targetHeight, targetLeft, targetTop;
                     
-                    if (targetHeight > maxHeight) {
-                        targetHeight = maxHeight;
-                        targetWidth = targetHeight * imgRatio;
+                    // Для экранов 16:9 (большинство) - растягиваем на весь экран
+                    if (Math.abs(screenRatio - 1.777) < 0.1) { // Если экран ~16:9
+                        targetWidth = window.innerWidth * 0.95;  // 95% ширины экрана
+                        targetHeight = targetWidth / imageRatio; // Сохраняем пропорции
+                        
+                        if (targetHeight > window.innerHeight * 0.95) {
+                            targetHeight = window.innerHeight * 0.95;
+                            targetWidth = targetHeight * imageRatio;
+                        }
+                    } else {
+                        // Для нестандартных экранов - сохраняем пропорции 16:9
+                        targetWidth = Math.min(window.innerWidth * 0.95, this.naturalWidth);
+                        targetHeight = targetWidth / imageRatio;
+                        
+                        if (targetHeight > window.innerHeight * 0.95) {
+                            targetHeight = window.innerHeight * 0.95;
+                            targetWidth = targetHeight * imageRatio;
+                        }
                     }
                     
-                    const targetLeft = (window.innerWidth - targetWidth) / 2;
-                    const targetTop = (window.innerHeight - targetHeight) / 2;
+                    targetLeft = (window.innerWidth - targetWidth) / 2;
+                    targetTop = (window.innerHeight - targetHeight) / 2;
                     
                     // Активируем фон оверлея
                     zoomOverlay.classList.add('active');
