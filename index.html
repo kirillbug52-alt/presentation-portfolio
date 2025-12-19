@@ -6,16 +6,15 @@
     <!-- Подключаем шрифт Raleway -->
     <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
-        /* БАЗОВЫЕ СТИЛИ - ВСЁ НА ВЕСЬ ЭКРАН */
+        /* БАЗОВЫЕ СТИЛИ */
         body, html {
             margin: 0;
             padding: 0;
             overflow: hidden;
             font-family: 'Segoe UI', system-ui, sans-serif;
-            background: #000;
+            background: #0a0a0a;
             height: 100%;
-            width: 100%;
-            perspective: 1200px;
+            perspective: 1200px; /* Для 3D-эффектов */
         }
         .slides-container {
             width: 100vw;
@@ -25,17 +24,18 @@
         }
         .slide {
             position: absolute;
-            width: 100vw; /* 100% ширины экрана */
-            height: 100vh; /* 100% высоты экрана */
+            width: 100%;
+            height: 100%;
             display: flex;
             justify-content: center;
             align-items: center;
             background: #000;
             pointer-events: none;
             opacity: 0;
+            /* Исходное состояние для анимации ВХОДА */
             transform: translateX(80px) scale(0.96) rotateY(-5deg);
             filter: blur(8px);
-            transition: none;
+            transition: none; /* Анимация контролируется JS */
             z-index: 1;
             will-change: transform, opacity, filter;
         }
@@ -50,6 +50,7 @@
                         filter 0.8s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .slide.leaving {
+            /* Анимация для уходящего слайда (ВЫХОД) */
             opacity: 0;
             transform: translateX(-80px) scale(0.96) rotateY(5deg);
             filter: blur(8px);
@@ -58,12 +59,9 @@
                         opacity 0.7s cubic-bezier(0.7, 0, 0.84, 0),
                         filter 0.7s cubic-bezier(0.7, 0, 0.84, 0);
         }
-        /* ИЗОБРАЖЕНИЯ СЛАЙДОВ НА ВЕСЬ ЭКРАН */
         .slide img {
-            width: 100vw;
-            height: 100vh;
-            object-fit: cover; /* Заполняет весь экран */
-            object-position: center;
+            max-width: 100%;
+            max-height: 100vh;
             display: block;
             outline: none;
             border: none;
@@ -96,7 +94,7 @@
             transition: background 0.5s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .zoom-overlay.active {
-            background: rgba(0, 0, 0, 0.96);
+            background: rgba(0, 0, 0, 0.96); /* Более темный фон */
         }
         .zoom-image-animating {
             position: absolute;
@@ -104,20 +102,25 @@
             overflow: hidden;
             transform-origin: center center;
             transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+            /* Убрали border-radius и box-shadow для полного экрана */
+            border-radius: 0 !important;
+            box-shadow: none !important;
         }
         .zoom-image-animating.expanded {
-            width: 100vw !important;
-            height: 100vh !important;
-            left: 0 !important;
-            top: 0 !important;
+            /* Убрали тень для чистого вида */
+            box-shadow: none;
         }
         .zoom-image-animating img {
             width: 100%;
             height: 100%;
+            /* ВАЖНО: cover и 100% размеров */
             object-fit: cover;
             object-position: center;
             opacity: 0;
             transition: opacity 0.4s ease 0.2s;
+            /* Убираем любые ограничения */
+            max-width: none !important;
+            max-height: none !important;
         }
         .zoom-image-animating img.loaded {
             opacity: 1;
@@ -145,7 +148,7 @@
             transition-delay: 0.4s;
         }
         .zoom-close:hover {
-            color: #E29B17;
+            color: #E29B17; /* Золотой при наведении */
             transform: scale(1.1);
         }
         
@@ -169,21 +172,17 @@
             transition-delay: 0.5s;
         }
         
-        /* ПРЕЛОАДЕР С ОБЛОЖКОЙ */
+        /* ПРЕЛОАДЕР С ЗОЛОТЫМИ АКЦЕНТАМИ */
         .site-loader {
             position: fixed;
             top: 0; left: 0;
             width: 100%; height: 100%;
-            background: #000;
-            background-image: url('ОБЛОЖКА.jpg'); /* Ваша обложка */
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
+            background: #0a0a0a;
             display: flex;
             justify-content: center;
             align-items: center;
             z-index: 9999;
-            transition: opacity 1.2s ease, visibility 1.2s ease;
+            transition: opacity 0.9s ease, visibility 0.9s ease;
         }
         .site-loader.hidden {
             opacity: 0;
@@ -192,40 +191,39 @@
         .loader-content {
             text-align: center;
             transform: translateY(-20px);
-            background: rgba(0, 0, 0, 0.6); /* Полупрозрачный фон для читаемости */
-            padding: 40px 60px;
-            border-radius: 10px;
-            backdrop-filter: blur(5px);
         }
         .loader-spinner {
             width: 72px;
             height: 72px;
             margin: 0 auto 30px;
-            border: 3px solid rgba(226, 155, 23, 0.15);
-            border-top-color: #E29B17;
-            border-right-color: #F8C462;
+            border: 3px solid rgba(226, 155, 23, 0.15); /* Золотой с прозрачностью */
+            border-top-color: #E29B17; /* Основной золотой */
+            border-right-color: #F8C462; /* Светлый золотой */
             border-radius: 50%;
             animation: spin 1.4s cubic-bezier(0.68, -0.55, 0.27, 1.55) infinite;
-            box-shadow: 0 0 20px rgba(226, 155, 23, 0.3);
+            box-shadow: 0 0 20px rgba(226, 155, 23, 0.3); /* Свечение */
         }
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
         .loader-text {
-            color: #FFFFFF; /* Белый текст */
-            font-family: 'Raleway', 'Segoe UI', sans-serif;
+            color: #E29B17; /* Золотой цвет */
+            font-family: 'Raleway', 'Segoe UI', sans-serif; /* Шрифт Raleway */
             letter-spacing: 4px;
             font-size: 18px;
             font-weight: 500;
             opacity: 0.9;
             animation: pulse 2s ease-in-out infinite;
+            text-shadow: 0 0 10px rgba(226, 155, 23, 0.4);
         }
         @keyframes pulse {
             0%, 100% { 
-                opacity: 0.8;
+                opacity: 0.7;
+                text-shadow: 0 0 5px rgba(226, 155, 23, 0.3);
             }
             50% { 
                 opacity: 1;
+                text-shadow: 0 0 15px rgba(226, 155, 23, 0.6);
             }
         }
 
@@ -233,7 +231,7 @@
         @media (max-width: 768px) {
             body, html {
                 overflow-y: auto;
-                perspective: none;
+                perspective: none; /* Отключаем 3D на мобильных */
             }
             .slides-container {
                 overflow-y: auto;
@@ -243,8 +241,7 @@
             .slide {
                 position: relative;
                 min-height: 100vh;
-                width: 100vw;
-                padding: 0;
+                padding: 10px 0;
                 transform: translateY(25px) scale(0.98) !important;
                 filter: blur(4px) !important;
             }
@@ -257,9 +254,9 @@
                 filter: blur(4px) !important;
             }
             .slide img {
-                width: 100vw;
+                max-width: 96vw;
+                max-height: none;
                 height: auto;
-                min-height: 100vh;
             }
             .zoom-close {
                 top: 15px;
@@ -279,9 +276,6 @@
             .loader-text {
                 font-size: 16px;
                 letter-spacing: 3px;
-            }
-            .loader-content {
-                padding: 30px 40px;
             }
             .nav-hint {
                 font-size: 12px;
@@ -318,7 +312,7 @@
     <div id="site-loader" class="site-loader">
         <div class="loader-content">
             <div class="loader-spinner"></div>
-            <p class="loader-text">ЗАГРУЗКА ПОРТФОЛИО</p>
+            <p class="loader-text">ПОРТФОЛИО ПРЕЗЕНТАЦИЙ</p>
         </div>
     </div>
 
@@ -332,7 +326,7 @@
     </div>
 
     <div class="slides-container">
-        <!-- СЛАЙДЫ -->
+        <!-- СЛАЙДЫ (остаются в том же порядке) -->
         <section class="slide active" id="main-menu">
             <img src="Слайд1.JPG" alt="Главное меню" usemap="#slide1-map">
         </section>
@@ -371,7 +365,7 @@
     <!-- Подсказка для мобильных -->
     <div class="nav-hint">← → на клавиатуре • ESC для выхода</div>
 
-    <!-- Image Maps (остаются БЕЗ ИЗМЕНЕНИЙ) -->
+    <!-- Image Maps (остаются БЕЗ ИЗМЕНЕНИЙ, как в предыдущем коде) -->
     <map name="slide1-map">
         <area shape="rect" coords="73,210,261,253" href="#" data-target="main-menu" class="nav-btn" alt="Обо мне" title="Обо мне">
         <area shape="rect" coords="73,270,261,313" href="#" data-target="before-after" class="nav-btn" alt="До/после" title="До/после">
@@ -501,15 +495,15 @@
                 };
         }());
 
-        // ==================== ПРЕЛОАДЕР (ДЛИННЕЕ) ====================
+        // ==================== ПРЕЛОАДЕР ====================
         window.addEventListener('load', function() {
             setTimeout(function() {
                 const loader = document.getElementById('site-loader');
                 if (loader) {
                     loader.classList.add('hidden');
-                    setTimeout(() => loader.remove(), 1200); // Дольше скрывается
+                    setTimeout(() => loader.remove(), 900);
                 }
-            }, 1800); // Дольше показывается (было 800)
+            }, 800);
         });
 
         // ==================== ЭФФЕКТ ПЛАВНОГО УВЕЛИЧЕНИЯ ====================
@@ -539,6 +533,10 @@
             zoomCaption.classList.remove('visible');
             zoomClose.classList.remove('visible');
             
+            // Убираем border-radius и другие ограничения
+            zoomContainer.style.borderRadius = '0';
+            zoomContainer.style.boxShadow = 'none';
+            
             // Устанавливаем начальную позицию (точно на месте миниатюры)
             zoomContainer.style.width = rect.width + 'px';
             zoomContainer.style.height = rect.height + 'px';
@@ -560,16 +558,23 @@
                 
                 // Даем время браузеру обработать DOM
                 setTimeout(() => {
+                    // РАСЧЕТ НА ВЕСЬ ЭКРАН БЕЗ ОГРАНИЧЕНИЙ
+                    const targetWidth = window.innerWidth; // 100% ширины экрана
+                    const targetHeight = window.innerHeight; // 100% высоты экрана
+                    
+                    const targetLeft = 0; // С самого левого края
+                    const targetTop = 0; // С самого верха
+                    
                     // Активируем фон оверлея
                     zoomOverlay.classList.add('active');
                     
-                    // Анимация увеличения до полного экрана
+                    // Анимация увеличения и перемещения
                     requestAnimationFrame(() => {
                         // Плавное перемещение и масштабирование НА ВЕСЬ ЭКРАН
-                        zoomContainer.style.left = '0px';
-                        zoomContainer.style.top = '0px';
-                        zoomContainer.style.width = '100vw';
-                        zoomContainer.style.height = '100vh';
+                        zoomContainer.style.left = targetLeft + 'px';
+                        zoomContainer.style.top = targetTop + 'px';
+                        zoomContainer.style.width = targetWidth + 'px';
+                        zoomContainer.style.height = targetHeight + 'px';
                         
                         // Добавляем класс для дополнительных стилей
                         setTimeout(() => {
@@ -649,7 +654,7 @@
             // 2. Через небольшой промежуток начинаем показ нового слайда
             setTimeout(() => {
                 newSlide.classList.add('active');
-            }, 150);
+            }, 150); // Задержка для наложения анимаций
             
             // 3. Убираем класс "leaving" после завершения анимации
             setTimeout(() => {
@@ -672,14 +677,18 @@
             const currentIndex = slides.findIndex(slide => slide.classList.contains('active'));
             
             if (event.key === 'ArrowRight' || event.key === 'PageDown' || event.key === ' ') {
+                // Следующий слайд
                 const nextIndex = (currentIndex + 1) % slides.length;
                 switchSlideWithMagic(slides[nextIndex].id);
             } else if (event.key === 'ArrowLeft' || event.key === 'PageUp') {
+                // Предыдущий слайд
                 const prevIndex = (currentIndex - 1 + slides.length) % slides.length;
                 switchSlideWithMagic(slides[prevIndex].id);
             } else if (event.key === 'Home') {
+                // На первый слайд
                 switchSlideWithMagic(slides[0].id);
             } else if (event.key === 'End') {
+                // На последний слайд
                 switchSlideWithMagic(slides[slides.length - 1].id);
             }
         });
