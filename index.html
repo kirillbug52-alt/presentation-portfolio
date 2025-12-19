@@ -9,7 +9,8 @@
             padding: 0;
             overflow: hidden;
             font-family: sans-serif;
-            background: #000;
+            background: #000; /* Чёрный фон для полноэкранного режима */
+            height: 100%;
         }
         .slides-container {
             width: 100vw;
@@ -25,6 +26,7 @@
             align-items: center;
             opacity: 0;
             transition: opacity 0.5s ease;
+            background: #000; /* Чёрный фон под изображениями */
         }
         .slide.active {
             opacity: 1;
@@ -34,6 +36,9 @@
             max-width: 100%;
             max-height: 100vh;
             display: block;
+            /* Убираем любые границы у изображения */
+            outline: none;
+            border: none;
         }
         area {
             cursor: pointer;
@@ -99,37 +104,37 @@
             <img src="Слайд3.JPG" alt="До/После 2" usemap="#menu-map">
         </section>
         
-        <!-- СЛАЙД 4 -->
+        <!-- СЛАЙД 4 - Инфографика 1 -->
         <section class="slide" id="infographics-gallery">
             <img src="Слайд4.JPG" alt="Инфографика - Галерея 1" usemap="#slide4-map">
         </section>
         
-        <!-- СЛАЙД 5 -->
-        <section class="slide">
+        <!-- СЛАЙД 5 - Инфографика 2 -->
+        <section class="slide" id="infographics-gallery-2">
             <img src="Слайд5.JPG" alt="Инфографика - Галерея 2" usemap="#slide5-map">
         </section>
         
-        <!-- СЛАЙД 6 -->
+        <!-- СЛАЙД 6 - Лаборатория 1 -->
         <section class="slide" id="lab">
-            <img src="Слайд6.JPG" alt="Лаборатория 1" usemap="#menu-map">
+            <img src="Слайд6.JPG" alt="Лаборатория 1" usemap="#slide6-map">
         </section>
         
-        <!-- СЛАЙД 7 -->
+        <!-- СЛАЙД 7 - Лаборатория 2 -->
         <section class="slide">
-            <img src="Слайд7.JPG" alt="Лаборатория 2" usemap="#menu-map">
+            <img src="Слайд7.JPG" alt="Лаборатория 2" usemap="#slide7-map">
         </section>
         
-        <!-- СЛАЙД 8 -->
+        <!-- СЛАЙД 8 - Шаблоны 1 -->
         <section class="slide" id="templates-gallery">
             <img src="Слайд8.JPG" alt="Шаблоны - Галерея 1" usemap="#slide8-map">
         </section>
         
-        <!-- СЛАЙД 9 -->
-        <section class="slide">
+        <!-- СЛАЙД 9 - Шаблоны 2 -->
+        <section class="slide" id="templates-gallery-2">
             <img src="Слайд9.JPG" alt="Шаблоны - Галерея 2" usemap="#slide9-map">
         </section>
         
-        <!-- СЛАЙД 10 -->
+        <!-- СЛАЙД 10 - Шаблоны 3 -->
         <section class="slide">
             <img src="Слайд10.JPG" alt="Шаблоны - Галерея 3" usemap="#slide10-map">
         </section>
@@ -167,11 +172,11 @@
         <area shape="rect" coords="73,379,261,422" href="#" data-target="lab" class="nav-btn" alt="Лаборатория" title="Лаборатория">
         <area shape="rect" coords="73,430,261,473" href="#" data-target="templates-gallery" class="nav-btn" alt="Готовые решения" title="Готовые решения">
         <area shape="rect" coords="73,485,261,528" href="#" data-target="contacts" class="nav-btn" alt="Контакты" title="Контакты">
-        <!-- Миниатюры инфографики -->
+        <!-- Миниатюры инфографики (только 2 рабочие - укажите какие) -->
         <area shape="rect" coords="67,185,387,398" data-large="Слайд12.JPG" class="zoom-image" alt="Инфографика 1" title="Увеличить">
         <area shape="rect" coords="498,185,818,398" data-large="Слайд13.JPG" class="zoom-image" alt="Инфографика 2" title="Увеличить">
-        <area shape="rect" coords="67,484,387,697" data-large="Слайд14.JPG" class="zoom-image" alt="Инфографика 3" title="Увеличить">
-        <area shape="rect" coords="498,484,818,697" data-large="Слайд15.JPG" class="zoom-image" alt="Инфографика 4" title="Увеличить">
+        <!-- Кнопка "ДАЛЕЕ" -->
+        <area shape="rect" coords="1104,648,1203,673" href="#" data-target="infographics-gallery-2" class="nav-btn" alt="Далее" title="Далее">
     </map>
     
     <map name="slide5-map">
@@ -186,6 +191,32 @@
         <area shape="rect" coords="67,185,387,398" data-large="Слайд16.JPG" class="zoom-image" alt="Инфографика 5" title="Увеличить">
         <area shape="rect" coords="498,185,818,398" data-large="Слайд17.JPG" class="zoom-image" alt="Инфографика 6" title="Увеличить">
         <area shape="rect" coords="282,484,602,697" data-large="Слайд18.JPG" class="zoom-image" alt="Инфографика 7" title="Увеличить">
+        <!-- Кнопка "НАЗАД" -->
+        <area shape="rect" coords="1104,648,1203,673" href="#" data-target="infographics-gallery" class="nav-btn" alt="Назад" title="Назад">
+    </map>
+    
+    <map name="slide6-map">
+        <!-- Кнопки меню -->
+        <area shape="rect" coords="73,210,261,253" href="#" data-target="main-menu" class="nav-btn" alt="Обо мне" title="Обо мне">
+        <area shape="rect" coords="73,270,261,313" href="#" data-target="before-after" class="nav-btn" alt="До/после" title="До/после">
+        <area shape="rect" coords="73,325,261,368" href="#" data-target="infographics-gallery" class="nav-btn" alt="Инфографика" title="Инфографика">
+        <area shape="rect" coords="73,379,261,422" href="#" data-target="lab" class="nav-btn" alt="Лаборатория" title="Лаборатория">
+        <area shape="rect" coords="73,430,261,473" href="#" data-target="templates-gallery" class="nav-btn" alt="Готовые решения" title="Готовые решения">
+        <area shape="rect" coords="73,485,261,528" href="#" data-target="contacts" class="nav-btn" alt="Контакты" title="Контакты">
+        <!-- Кнопка "ДАЛЕЕ" -->
+        <area shape="rect" coords="1104,648,1203,673" href="#" data-target="lab-2" class="nav-btn" alt="Далее" title="Далее">
+    </map>
+    
+    <map name="slide7-map">
+        <!-- Кнопки меню -->
+        <area shape="rect" coords="73,210,261,253" href="#" data-target="main-menu" class="nav-btn" alt="Обо мне" title="Обо мне">
+        <area shape="rect" coords="73,270,261,313" href="#" data-target="before-after" class="nav-btn" alt="До/после" title="До/после">
+        <area shape="rect" coords="73,325,261,368" href="#" data-target="infographics-gallery" class="nav-btn" alt="Инфографика" title="Инфографика">
+        <area shape="rect" coords="73,379,261,422" href="#" data-target="lab" class="nav-btn" alt="Лаборатория" title="Лаборатория">
+        <area shape="rect" coords="73,430,261,473" href="#" data-target="templates-gallery" class="nav-btn" alt="Готовые решения" title="Готовые решения">
+        <area shape="rect" coords="73,485,261,528" href="#" data-target="contacts" class="nav-btn" alt="Контакты" title="Контакты">
+        <!-- Кнопка "НАЗАД" -->
+        <area shape="rect" coords="1104,648,1203,673" href="#" data-target="lab" class="nav-btn" alt="Назад" title="Назад">
     </map>
     
     <map name="slide8-map">
@@ -203,6 +234,8 @@
         <area shape="rect" coords="67,484,320,697" data-large="Слайд22.JPG" class="zoom-image" alt="Шаблон 4" title="Увеличить">
         <area shape="rect" coords="349,484,602,697" data-large="Слайд23.JPG" class="zoom-image" alt="Шаблон 5" title="Увеличить">
         <area shape="rect" coords="631,484,884,697" data-large="Слайд24.JPG" class="zoom-image" alt="Шаблон 6" title="Увеличить">
+        <!-- Кнопка "ДАЛЕЕ" -->
+        <area shape="rect" coords="1104,648,1203,673" href="#" data-target="templates-gallery-2" class="nav-btn" alt="Далее" title="Далее">
     </map>
     
     <map name="slide9-map">
@@ -220,6 +253,10 @@
         <area shape="rect" coords="67,484,320,697" data-large="Слайд28.JPG" class="zoom-image" alt="Шаблон 10" title="Увеличить">
         <area shape="rect" coords="349,484,602,697" data-large="Слайд29.JPG" class="zoom-image" alt="Шаблон 11" title="Увеличить">
         <area shape="rect" coords="631,484,884,697" data-large="Слайд30.JPG" class="zoom-image" alt="Шаблон 12" title="Увеличить">
+        <!-- Кнопка "НАЗАД" на слайд 8 -->
+        <area shape="rect" coords="289,650,390,672" href="#" data-target="templates-gallery" class="nav-btn" alt="Назад" title="Назад">
+        <!-- Кнопка "ДАЛЕЕ" на слайд 10 -->
+        <area shape="rect" coords="1104,648,1203,673" href="#" data-target="templates-gallery-3" class="nav-btn" alt="Далее" title="Далее">
     </map>
     
     <map name="slide10-map">
@@ -237,6 +274,8 @@
         <area shape="rect" coords="67,484,320,697" data-large="Слайд34.JPG" class="zoom-image" alt="Шаблон 16" title="Увеличить">
         <area shape="rect" coords="349,484,602,697" data-large="Слайд35.JPG" class="zoom-image" alt="Шаблон 17" title="Увеличить">
         <area shape="rect" coords="631,484,884,697" data-large="Слайд36.JPG" class="zoom-image" alt="Шаблон 18" title="Увеличить">
+        <!-- Кнопка "НАЗАД" на слайд 9 -->
+        <area shape="rect" coords="1104,648,1203,673" href="#" data-target="templates-gallery-2" class="nav-btn" alt="Назад" title="Назад">
     </map>
     
     <!-- МОДАЛЬНОЕ ОКНО -->
@@ -293,6 +332,13 @@
         document.addEventListener('wheel', function(e) {
             e.preventDefault();
         }, { passive: false });
+        
+        // Полноэкранный режим изображений (убираем выделение)
+        document.querySelectorAll('.slide img').forEach(img => {
+            img.style.userSelect = 'none';
+            img.style.webkitUserSelect = 'none';
+            img.style.msUserSelect = 'none';
+        });
     </script>
 </body>
 </html>
