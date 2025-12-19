@@ -9,7 +9,7 @@
             padding: 0;
             overflow: hidden;
             font-family: sans-serif;
-            background: #000; /* Чёрный фон для полноэкранного режима */
+            background: #000;
             height: 100%;
         }
         .slides-container {
@@ -26,7 +26,7 @@
             align-items: center;
             opacity: 0;
             transition: opacity 0.5s ease;
-            background: #000; /* Чёрный фон под изображениями */
+            background: #000;
         }
         .slide.active {
             opacity: 1;
@@ -36,7 +36,6 @@
             max-width: 100%;
             max-height: 100vh;
             display: block;
-            /* Убираем любые границы у изображения */
             outline: none;
             border: none;
         }
@@ -120,7 +119,7 @@
         </section>
         
         <!-- СЛАЙД 7 - Лаборатория 2 -->
-        <section class="slide">
+        <section class="slide" id="lab-2">
             <img src="Слайд7.JPG" alt="Лаборатория 2" usemap="#slide7-map">
         </section>
         
@@ -135,7 +134,7 @@
         </section>
         
         <!-- СЛАЙД 10 - Шаблоны 3 -->
-        <section class="slide">
+        <section class="slide" id="templates-gallery-3">
             <img src="Слайд10.JPG" alt="Шаблоны - Галерея 3" usemap="#slide10-map">
         </section>
         
@@ -172,9 +171,8 @@
         <area shape="rect" coords="73,379,261,422" href="#" data-target="lab" class="nav-btn" alt="Лаборатория" title="Лаборатория">
         <area shape="rect" coords="73,430,261,473" href="#" data-target="templates-gallery" class="nav-btn" alt="Готовые решения" title="Готовые решения">
         <area shape="rect" coords="73,485,261,528" href="#" data-target="contacts" class="nav-btn" alt="Контакты" title="Контакты">
-        <!-- Миниатюры инфографики (только 2 рабочие - укажите какие) -->
+        <!-- ТОЛЬКО ЛЕВАЯ ВЕРХНЯЯ МИНИАТЮРА -->
         <area shape="rect" coords="67,185,387,398" data-large="Слайд12.JPG" class="zoom-image" alt="Инфографика 1" title="Увеличить">
-        <area shape="rect" coords="498,185,818,398" data-large="Слайд13.JPG" class="zoom-image" alt="Инфографика 2" title="Увеличить">
         <!-- Кнопка "ДАЛЕЕ" -->
         <area shape="rect" coords="1104,648,1203,673" href="#" data-target="infographics-gallery-2" class="nav-btn" alt="Далее" title="Далее">
     </map>
@@ -333,7 +331,7 @@
             e.preventDefault();
         }, { passive: false });
         
-        // Полноэкранный режим изображений (убираем выделение)
+        // Полноэкранный режим изображений
         document.querySelectorAll('.slide img').forEach(img => {
             img.style.userSelect = 'none';
             img.style.webkitUserSelect = 'none';
