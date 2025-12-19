@@ -182,7 +182,18 @@
             justify-content: center;
             align-items: center;
             z-index: 9999;
-            transition: opacity 0.9s ease, visibility 0.9s ease;
+            transition: opacity 1.2s ease, visibility 1.2s ease;
+        }
+        .site-loader::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-image: url('ОБЛОЖКА.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            filter: brightness(0.85); /* Слегка затемняем */
         }
         .site-loader.hidden {
             opacity: 0;
@@ -191,6 +202,8 @@
         .loader-content {
             text-align: center;
             transform: translateY(-20px);
+            position: relative;
+            z-index: 1;
         }
         .loader-spinner {
             width: 72px;
@@ -201,29 +214,30 @@
             border-right-color: #F8C462; /* Светлый золотой */
             border-radius: 50%;
             animation: spin 1.4s cubic-bezier(0.68, -0.55, 0.27, 1.55) infinite;
-            box-shadow: 0 0 20px rgba(226, 155, 23, 0.3); /* Свечение */
+            /* Убран темный прямоугольник вокруг */
+            background: transparent;
         }
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
         .loader-text {
-            color: #E29B17; /* Золотой цвет */
+            color: #FFFFFF; /* БЕЛЫЙ цвет */
             font-family: 'Raleway', 'Segoe UI', sans-serif; /* Шрифт Raleway */
             letter-spacing: 4px;
             font-size: 18px;
             font-weight: 500;
             opacity: 0.9;
             animation: pulse 2s ease-in-out infinite;
-            text-shadow: 0 0 10px rgba(226, 155, 23, 0.4);
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
         }
         @keyframes pulse {
             0%, 100% { 
                 opacity: 0.7;
-                text-shadow: 0 0 5px rgba(226, 155, 23, 0.3);
+                text-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
             }
             50% { 
                 opacity: 1;
-                text-shadow: 0 0 15px rgba(226, 155, 23, 0.6);
+                text-shadow: 0 0 15px rgba(255, 255, 255, 0.6);
             }
         }
 
@@ -312,7 +326,7 @@
     <div id="site-loader" class="site-loader">
         <div class="loader-content">
             <div class="loader-spinner"></div>
-            <p class="loader-text">ПОРТФОЛИО ПРЕЗЕНТАЦИЙ</p>
+            <p class="loader-text">ЗАГРУЗКА ПОРТФОЛИО</p>
         </div>
     </div>
 
@@ -454,7 +468,7 @@
         <area shape="rect" coords="614,424,933,603" data-large="Слайд29.JPG" class="zoom-image" alt="Шаблон 11" title="Увеличить">
         <area shape="rect" coords="933,424,1252,603" data-large="Слайд30.JPG" class="zoom-image" alt="Шаблон 12" title="Увеличить">
         <area shape="rect" coords="289,650,390,672" href="#" data-target="templates-gallery" class="nav-btn" alt="Назад" title="Назад">
-        <area shape="rect" coords="1104,648,1203,673" href="#" data-target="templates-gallery-3" class="nav-btn" alt="Далее" title="Далее">
+        <area shape="rect" coords="1104,648,1203,673" href="#" data-target="templates-gallery-2" class="nav-btn" alt="Далее" title="Далее">
     </map>
     <map name="slide10-map">
         <area shape="rect" coords="73,210,261,253" href="#" data-target="main-menu" class="nav-btn" alt="Обо мне" title="Обо мне">
@@ -501,9 +515,9 @@
                 const loader = document.getElementById('site-loader');
                 if (loader) {
                     loader.classList.add('hidden');
-                    setTimeout(() => loader.remove(), 900);
+                    setTimeout(() => loader.remove(), 1200);
                 }
-            }, 800);
+            }, 1800); // Увеличенное время загрузки
         });
 
         // ==================== ЭФФЕКТ ПЛАВНОГО УВЕЛИЧЕНИЯ ====================
