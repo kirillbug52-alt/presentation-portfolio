@@ -4,18 +4,21 @@
     <title>Портфолио дизайнера презентаций</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
+        /* БАЗОВЫЕ СТИЛИ */
         body, html {
             margin: 0;
             padding: 0;
             overflow: hidden;
-            font-family: sans-serif;
-            background: #000;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: #0a0a0a;
             height: 100%;
+            perspective: 1200px; /* Для 3D-эффектов */
         }
         .slides-container {
             width: 100vw;
             height: 100vh;
             position: relative;
+            overflow: hidden;
         }
         .slide {
             position: absolute;
@@ -24,13 +27,35 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            opacity: 0;
-            transition: opacity 0.5s ease;
             background: #000;
+            pointer-events: none;
+            opacity: 0;
+            /* Исходное состояние для анимации ВХОДА */
+            transform: translateX(80px) scale(0.96) rotateY(-5deg);
+            filter: blur(8px);
+            transition: none; /* Анимация контролируется JS */
+            z-index: 1;
+            will-change: transform, opacity, filter;
         }
         .slide.active {
             opacity: 1;
-            z-index: 1;
+            transform: translateX(0) scale(1) rotateY(0deg);
+            filter: blur(0);
+            pointer-events: all;
+            z-index: 3;
+            transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+                        opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+                        filter 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .slide.leaving {
+            /* Анимация для уходящего слайда (ВЫХОД) */
+            opacity: 0;
+            transform: translateX(-80px) scale(0.96) rotateY(5deg);
+            filter: blur(8px);
+            z-index: 2;
+            transition: transform 0.8s cubic-bezier(0.7, 0, 0.84, 0),
+                        opacity 0.7s cubic-bezier(0.7, 0, 0.84, 0),
+                        filter 0.7s cubic-bezier(0.7, 0, 0.84, 0);
         }
         .slide img {
             max-width: 100%;
@@ -38,186 +63,258 @@
             display: block;
             outline: none;
             border: none;
-            position: relative;
+            user-select: none;
+            -webkit-user-select: none;
+            -ms-user-select: none;
+            /* Лёгкая тень для отделения от фона */
+            filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.3));
         }
-        
-        /* ПРЯМОУГОЛЬНИК-ПОДСВЕТКА ВНУТРИ ИЗОБРАЖЕНИЯ */
-        .menu-highlighter {
-            position: absolute;
-            background-color: rgba(255, 255, 255, 0.15);
-            border: 2px solid rgba(255, 255, 255, 0.6);
-            border-radius: 4px;
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
-            z-index: 2;
-            pointer-events: none;
-            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-            opacity: 0;
-        }
-        .menu-highlighter.active {
-            opacity: 1;
-        }
-        
+        /* СТИЛИ ДЛЯ ИНТЕРАКТИВНЫХ ОБЛАСТЕЙ */
         area {
             cursor: pointer;
             outline: none;
         }
         area:hover {
-            opacity: 0.8;
+            opacity: 0.85;
         }
-        
+        /* МОДАЛЬНОЕ ОКНО (УЛУЧШЕННОЕ) */
         .modal {
             display: none;
             position: fixed;
             z-index: 1000;
             left: 0; top: 0;
             width: 100%; height: 100%;
-            background: rgba(0,0,0,0.95);
+            background: rgba(5, 5, 5, 0.97);
             justify-content: center;
             align-items: center;
-            animation: fadeIn 0.3s;
+            animation: modalFadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            backdrop-filter: blur(12px) saturate(1.3);
         }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes modalFadeIn {
+            from { opacity: 0; backdrop-filter: blur(0px); }
+            to { opacity: 1; backdrop-filter: blur(12px) saturate(1.3); }
+        }
         .modal-content {
-            max-width: 90%;
-            max-height: 90vh;
-            border-radius: 8px;
-            box-shadow: 0 0 40px rgba(255,255,255,0.1);
+            max-width: 92%;
+            max-height: 92vh;
+            border-radius: 6px;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.7),
+                        inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+            transform: scale(0.94) translateY(10px);
+            animation: modalZoomIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0;
+            animation-delay: 0.1s;
+        }
+        @keyframes modalZoomIn {
+            to { transform: scale(1) translateY(0); opacity: 1; }
         }
         .close {
             position: absolute;
-            top: 25px;
-            right: 35px;
-            color: white;
-            font-size: 45px;
-            font-weight: bold;
+            top: 28px;
+            right: 38px;
+            color: rgba(255, 255, 255, 0.85);
+            font-size: 48px;
+            font-weight: 300;
             cursor: pointer;
-            transition: 0.3s;
+            transition: all 0.3s ease;
+            padding: 12px;
+            z-index: 1001;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
         }
-        .close:hover { color: #ccc; }
+        .close:hover {
+            color: #fff;
+            transform: scale(1.15) rotate(90deg);
+        }
         .modal-caption {
             position: absolute;
-            bottom: 30px;
-            color: white;
+            bottom: 45px;
+            color: rgba(255, 255, 255, 0.9);
             text-align: center;
             width: 100%;
-            font-size: 16px;
-            padding: 0 20px;
+            font-size: 19px;
+            font-weight: 400;
+            padding: 0 25px;
+            text-shadow: 0 2px 15px rgba(0,0,0,0.5);
+            letter-spacing: 0.3px;
         }
-        
-        /* ПРЕЛОАДЕР */
+
+        /* ПРЕЛОАДЕР (СОХРАНИЛИ, НО УЛУЧШИЛИ) */
         .site-loader {
             position: fixed;
             top: 0; left: 0;
             width: 100%; height: 100%;
-            background: #000;
+            background: #0a0a0a;
             display: flex;
             justify-content: center;
             align-items: center;
             z-index: 9999;
-            transition: opacity 0.8s ease, visibility 0.8s ease;
+            transition: opacity 0.9s ease, visibility 0.9s ease;
         }
         .site-loader.hidden {
             opacity: 0;
             visibility: hidden;
         }
+        .loader-content {
+            text-align: center;
+            transform: translateY(-20px);
+        }
         .loader-spinner {
-            width: 60px;
-            height: 60px;
-            border: 3px solid rgba(255,255,255,0.3);
-            border-top-color: white;
+            width: 68px;
+            height: 68px;
+            margin: 0 auto 28px;
+            border: 2.5px solid transparent;
+            border-top-color: rgba(255, 255, 255, 0.95);
+            border-right-color: rgba(255, 255, 255, 0.3);
             border-radius: 50%;
-            animation: spin 1s linear infinite;
+            animation: spin 1.4s cubic-bezier(0.68, -0.55, 0.27, 1.55) infinite;
         }
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
         .loader-text {
-            color: white;
-            font-family: sans-serif;
-            letter-spacing: 2px;
-            font-size: 16px;
-            margin-top: 20px;
+            color: rgba(255, 255, 255, 0.8);
+            font-family: 'Segoe UI', sans-serif;
+            letter-spacing: 3px;
+            font-size: 17px;
+            font-weight: 300;
+            opacity: 0.9;
+            animation: pulse 2s ease-in-out infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 1; }
+        }
+
+        /* АДАПТИВНОСТЬ ДЛЯ МОБИЛЬНЫХ */
+        @media (max-width: 768px) {
+            body, html {
+                overflow-y: auto;
+                perspective: none; /* Отключаем 3D на мобильных */
+            }
+            .slides-container {
+                overflow-y: auto;
+                height: auto;
+                min-height: 100vh;
+            }
+            .slide {
+                position: relative;
+                min-height: 100vh;
+                padding: 10px 0;
+                transform: translateY(25px) scale(0.98) !important;
+                filter: blur(4px) !important;
+            }
+            .slide.active {
+                transform: translateY(0) scale(1) !important;
+                filter: blur(0) !important;
+            }
+            .slide.leaving {
+                transform: translateY(-25px) scale(0.98) !important;
+                filter: blur(4px) !important;
+            }
+            .slide img {
+                max-width: 96vw;
+                max-height: none;
+                height: auto;
+            }
+            .close {
+                top: 18px;
+                right: 22px;
+                font-size: 42px;
+                padding: 8px;
+            }
+            .modal-caption {
+                bottom: 30px;
+                font-size: 16px;
+                padding: 0 15px;
+            }
+            .loader-spinner {
+                width: 54px;
+                height: 54px;
+            }
+            .loader-text {
+                font-size: 14px;
+                letter-spacing: 2px;
+            }
+            .nav-hint {
+                font-size: 12px;
+                padding: 8px;
+                bottom: 15px;
+            }
+        }
+
+        /* ПОДСКАЗКА ДЛЯ МОБИЛЬНЫХ */
+        .nav-hint {
+            position: fixed;
+            bottom: 25px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.35);
+            font-size: 13px;
+            font-weight: 300;
+            padding: 12px;
+            z-index: 99;
+            font-family: 'Segoe UI', sans-serif;
+            letter-spacing: 1px;
+            pointer-events: none;
+        }
+        @media (min-width: 769px) {
+            .nav-hint {
+                display: none;
+            }
         }
     </style>
 </head>
 <body>
     <!-- ПРЕЛОАДЕР -->
     <div id="site-loader" class="site-loader">
-        <div class="loader-content" style="text-align: center;">
+        <div class="loader-content">
             <div class="loader-spinner"></div>
-            <p class="loader-text">ЗАГРУЗКА ПОРТФОЛИО</p>
+            <p class="loader-text">ПОРТФОЛИО ПРЕЗЕНТАЦИЙ</p>
         </div>
     </div>
 
     <div class="slides-container">
-        <!-- СЛАЙД 1 -->
+        <!-- СЛАЙДЫ (остаются в том же порядке) -->
         <section class="slide active" id="main-menu">
             <img src="Слайд1.JPG" alt="Главное меню" usemap="#slide1-map">
-            <div class="menu-highlighter active" id="highlighter-1" style="width: 188px; height: 43px; left: 73px; top: 210px;"></div>
         </section>
-        
-        <!-- СЛАЙД 2 -->
         <section class="slide" id="before-after">
             <img src="Слайд2.JPG" alt="До/После 1" usemap="#menu-map">
-            <div class="menu-highlighter" id="highlighter-2"></div>
         </section>
-        
-        <!-- СЛАЙД 3 -->
         <section class="slide">
             <img src="Слайд3.JPG" alt="До/После 2" usemap="#menu-map">
-            <div class="menu-highlighter" id="highlighter-3"></div>
         </section>
-        
-        <!-- СЛАЙД 4 - Инфографика 1 -->
         <section class="slide" id="infographics-gallery">
             <img src="Слайд4.JPG" alt="Инфографика - Галерея 1" usemap="#slide4-map">
-            <div class="menu-highlighter" id="highlighter-4"></div>
         </section>
-        
-        <!-- СЛАЙД 5 - Инфографика 2 -->
         <section class="slide" id="infographics-gallery-2">
             <img src="Слайд5.JPG" alt="Инфографика - Галерея 2" usemap="#slide5-map">
-            <div class="menu-highlighter" id="highlighter-5"></div>
         </section>
-        
-        <!-- СЛАЙД 6 - Лаборатория 1 -->
         <section class="slide" id="lab">
             <img src="Слайд6.JPG" alt="Лаборатория 1" usemap="#slide6-map">
-            <div class="menu-highlighter" id="highlighter-6"></div>
         </section>
-        
-        <!-- СЛАЙД 7 - Лаборатория 2 -->
         <section class="slide" id="lab-2">
             <img src="Слайд7.JPG" alt="Лаборатория 2" usemap="#slide7-map">
-            <div class="menu-highlighter" id="highlighter-7"></div>
         </section>
-        
-        <!-- СЛАЙД 8 - Шаблоны 1 -->
         <section class="slide" id="templates-gallery">
             <img src="Слайд8.JPG" alt="Шаблоны - Галерея 1" usemap="#slide8-map">
-            <div class="menu-highlighter" id="highlighter-8"></div>
         </section>
-        
-        <!-- СЛАЙД 9 - Шаблоны 2 -->
         <section class="slide" id="templates-gallery-2">
             <img src="Слайд9.JPG" alt="Шаблоны - Галерея 2" usemap="#slide9-map">
-            <div class="menu-highlighter" id="highlighter-9"></div>
         </section>
-        
-        <!-- СЛАЙД 10 - Шаблоны 3 -->
         <section class="slide" id="templates-gallery-3">
             <img src="Слайд10.JPG" alt="Шаблоны - Галерея 3" usemap="#slide10-map">
-            <div class="menu-highlighter" id="highlighter-10"></div>
         </section>
-        
-        <!-- СЛАЙД 11 -->
         <section class="slide" id="contacts">
             <img src="Слайд11.JPG" alt="Контакты" usemap="#menu-map">
-            <div class="menu-highlighter" id="highlighter-11"></div>
         </section>
     </div>
-    
-    <!-- Image Maps -->
+
+    <!-- Подсказка для мобильных -->
+    <div class="nav-hint">← → на клавиатуре • ESC для выхода</div>
+
+    <!-- Image Maps (остаются БЕЗ ИЗМЕНЕНИЙ, как в предыдущем коде) -->
     <map name="slide1-map">
         <area shape="rect" coords="73,210,261,253" href="#" data-target="main-menu" class="nav-btn" alt="Обо мне" title="Обо мне">
         <area shape="rect" coords="73,270,261,313" href="#" data-target="before-after" class="nav-btn" alt="До/после" title="До/после">
@@ -226,7 +323,6 @@
         <area shape="rect" coords="73,430,261,473" href="#" data-target="templates-gallery" class="nav-btn" alt="Готовые решения" title="Готовые решения">
         <area shape="rect" coords="73,485,261,528" href="#" data-target="contacts" class="nav-btn" alt="Контакты" title="Контакты">
     </map>
-    
     <map name="menu-map">
         <area shape="rect" coords="73,210,261,253" href="#" data-target="main-menu" class="nav-btn" alt="Обо мне" title="Обо мне">
         <area shape="rect" coords="73,270,261,313" href="#" data-target="before-after" class="nav-btn" alt="До/после" title="До/после">
@@ -235,123 +331,96 @@
         <area shape="rect" coords="73,430,261,473" href="#" data-target="templates-gallery" class="nav-btn" alt="Готовые решения" title="Готовые решения">
         <area shape="rect" coords="73,485,261,528" href="#" data-target="contacts" class="nav-btn" alt="Контакты" title="Контакты">
     </map>
-    
     <map name="slide4-map">
-        <!-- Кнопки меню -->
         <area shape="rect" coords="73,210,261,253" href="#" data-target="main-menu" class="nav-btn" alt="Обо мне" title="Обо мне">
         <area shape="rect" coords="73,270,261,313" href="#" data-target="before-after" class="nav-btn" alt="До/после" title="До/после">
         <area shape="rect" coords="73,325,261,368" href="#" data-target="infographics-gallery" class="nav-btn" alt="Инфографика" title="Инфографика">
         <area shape="rect" coords="73,379,261,422" href="#" data-target="lab" class="nav-btn" alt="Лаборатория" title="Лаборатория">
         <area shape="rect" coords="73,430,261,473" href="#" data-target="templates-gallery" class="nav-btn" alt="Готовые решения" title="Готовые решения">
         <area shape="rect" coords="73,485,261,528" href="#" data-target="contacts" class="nav-btn" alt="Контакты" title="Контакты">
-        <!-- МИНИАТЮРЫ С КОРРЕКТНЫМИ КООРДИНАТАМИ -->
         <area shape="rect" coords="522,236,842,417" data-large="Слайд13.JPG" class="zoom-image" alt="Инфографика 1" title="Увеличить">
         <area shape="rect" coords="522,468,842,649" data-large="Слайд14.JPG" class="zoom-image" alt="Инфографика 2" title="Увеличить">
         <area shape="rect" coords="886,46,1206,227" data-large="Слайд12.JPG" class="zoom-image" alt="Инфографика 3" title="Увеличить">
         <area shape="rect" coords="886,236,1206,417" data-large="Слайд15.JPG" class="zoom-image" alt="Инфографика 4" title="Увеличить">
-        <!-- Кнопка "ДАЛЕЕ" -->
         <area shape="rect" coords="1104,648,1203,673" href="#" data-target="infographics-gallery-2" class="nav-btn" alt="Далее" title="Далее">
     </map>
-    
     <map name="slide5-map">
-        <!-- Кнопки меню -->
         <area shape="rect" coords="73,210,261,253" href="#" data-target="main-menu" class="nav-btn" alt="Обо мне" title="Обо мне">
         <area shape="rect" coords="73,270,261,313" href="#" data-target="before-after" class="nav-btn" alt="До/после" title="До/после">
         <area shape="rect" coords="73,325,261,368" href="#" data-target="infographics-gallery" class="nav-btn" alt="Инфографика" title="Инфографика">
         <area shape="rect" coords="73,379,261,422" href="#" data-target="lab" class="nav-btn" alt="Лаборатория" title="Лаборатория">
         <area shape="rect" coords="73,430,261,473" href="#" data-target="templates-gallery" class="nav-btn" alt="Готовые решения" title="Готовые решения">
         <area shape="rect" coords="73,485,261,528" href="#" data-target="contacts" class="nav-btn" alt="Контакты" title="Контакты">
-        <!-- Миниатюры инфографики -->
         <area shape="rect" coords="522,228,844,408" data-large="Слайд17.JPG" class="zoom-image" alt="Инфографика 5" title="Увеличить">
         <area shape="rect" coords="520,468,842,648" data-large="Слайд18.JPG" class="zoom-image" alt="Инфографика 6" title="Увеличить">
         <area shape="rect" coords="885,47,1207,227" data-large="Слайд16.JPG" class="zoom-image" alt="Инфографика 7" title="Увеличить">
-        <!-- Кнопка "НАЗАД" -->
         <area shape="rect" coords="1104,648,1203,673" href="#" data-target="infographics-gallery" class="nav-btn" alt="Назад" title="Назад">
     </map>
-    
     <map name="slide6-map">
-        <!-- Кнопки меню -->
         <area shape="rect" coords="73,210,261,253" href="#" data-target="main-menu" class="nav-btn" alt="Обо мне" title="Обо мне">
         <area shape="rect" coords="73,270,261,313" href="#" data-target="before-after" class="nav-btn" alt="До/после" title="До/после">
         <area shape="rect" coords="73,325,261,368" href="#" data-target="infographics-gallery" class="nav-btn" alt="Инфографика" title="Инфографика">
         <area shape="rect" coords="73,379,261,422" href="#" data-target="lab" class="nav-btn" alt="Лаборатория" title="Лаборатория">
         <area shape="rect" coords="73,430,261,473" href="#" data-target="templates-gallery" class="nav-btn" alt="Готовые решения" title="Готовые решения">
         <area shape="rect" coords="73,485,261,528" href="#" data-target="contacts" class="nav-btn" alt="Контакты" title="Контакты">
-        <!-- Кнопка "ДАЛЕЕ" -->
         <area shape="rect" coords="1104,648,1203,673" href="#" data-target="lab-2" class="nav-btn" alt="Далее" title="Далее">
     </map>
-    
     <map name="slide7-map">
-        <!-- Кнопки меню -->
         <area shape="rect" coords="73,210,261,253" href="#" data-target="main-menu" class="nav-btn" alt="Обо мне" title="Обо мне">
         <area shape="rect" coords="73,270,261,313" href="#" data-target="before-after" class="nav-btn" alt="До/после" title="До/после">
         <area shape="rect" coords="73,325,261,368" href="#" data-target="infographics-gallery" class="nav-btn" alt="Инфографика" title="Инфографика">
         <area shape="rect" coords="73,379,261,422" href="#" data-target="lab" class="nav-btn" alt="Лаборатория" title="Лаборатория">
         <area shape="rect" coords="73,430,261,473" href="#" data-target="templates-gallery" class="nav-btn" alt="Готовые решения" title="Готовые решения">
         <area shape="rect" coords="73,485,261,528" href="#" data-target="contacts" class="nav-btn" alt="Контакты" title="Контакты">
-        <!-- Кнопка "НАЗАД" -->
         <area shape="rect" coords="1104,648,1203,673" href="#" data-target="lab" class="nav-btn" alt="Назад" title="Назад">
     </map>
-    
     <map name="slide8-map">
-        <!-- Кнопки меню -->
         <area shape="rect" coords="73,210,261,253" href="#" data-target="main-menu" class="nav-btn" alt="Обо мне" title="Обо мне">
         <area shape="rect" coords="73,270,261,313" href="#" data-target="before-after" class="nav-btn" alt="До/после" title="До/после">
         <area shape="rect" coords="73,325,261,368" href="#" data-target="infographics-gallery" class="nav-btn" alt="Инфографика" title="Инфографика">
         <area shape="rect" coords="73,379,261,422" href="#" data-target="lab" class="nav-btn" alt="Лаборатория" title="Лаборатория">
         <area shape="rect" coords="73,430,261,473" href="#" data-target="templates-gallery" class="nav-btn" alt="Готовые решения" title="Готовые решения">
         <area shape="rect" coords="73,485,261,528" href="#" data-target="contacts" class="nav-btn" alt="Контакты" title="Контакты">
-        <!-- Миниатюры шаблонов -->
-        <area shape="rect" coords="67,188,320,401" data-large="Слайд19.JPG" class="zoom-image" alt="Шаблон 1" title="Увеличить">
-        <area shape="rect" coords="349,188,602,401" data-large="Слайд20.JPG" class="zoom-image" alt="Шаблон 2" title="Увеличить">
-        <area shape="rect" coords="631,188,884,401" data-large="Слайд21.JPG" class="zoom-image" alt="Шаблон 3" title="Увеличить">
-        <area shape="rect" coords="67,484,320,697" data-large="Слайд22.JPG" class="zoom-image" alt="Шаблон 4" title="Увеличить">
-        <area shape="rect" coords="349,484,602,697" data-large="Слайд23.JPG" class="zoom-image" alt="Шаблон 5" title="Увеличить">
-        <area shape="rect" coords="631,484,884,697" data-large="Слайд24.JPG" class="zoom-image" alt="Шаблон 6" title="Увеличить">
-        <!-- Кнопка "ДАЛЕЕ" -->
+        <area shape="rect" coords="294,158,613,337" data-large="Слайд19.JPG" class="zoom-image" alt="Шаблон 1" title="Увеличить">
+        <area shape="rect" coords="614,158,933,337" data-large="Слайд20.JPG" class="zoom-image" alt="Шаблон 2" title="Увеличить">
+        <area shape="rect" coords="933,158,1252,337" data-large="Слайд21.JPG" class="zoom-image" alt="Шаблон 3" title="Увеличить">
+        <area shape="rect" coords="294,424,613,603" data-large="Слайд22.JPG" class="zoom-image" alt="Шаблон 4" title="Увеличить">
+        <area shape="rect" coords="614,424,933,603" data-large="Слайд23.JPG" class="zoom-image" alt="Шаблон 5" title="Увеличить">
+        <area shape="rect" coords="933,424,1252,603" data-large="Слайд24.JPG" class="zoom-image" alt="Шаблон 6" title="Увеличить">
         <area shape="rect" coords="1104,648,1203,673" href="#" data-target="templates-gallery-2" class="nav-btn" alt="Далее" title="Далее">
     </map>
-    
     <map name="slide9-map">
-        <!-- Кнопки меню -->
         <area shape="rect" coords="73,210,261,253" href="#" data-target="main-menu" class="nav-btn" alt="Обо мне" title="Обо мне">
         <area shape="rect" coords="73,270,261,313" href="#" data-target="before-after" class="nav-btn" alt="До/после" title="До/после">
         <area shape="rect" coords="73,325,261,368" href="#" data-target="infographics-gallery" class="nav-btn" alt="Инфографика" title="Инфографика">
         <area shape="rect" coords="73,379,261,422" href="#" data-target="lab" class="nav-btn" alt="Лаборатория" title="Лаборатория">
         <area shape="rect" coords="73,430,261,473" href="#" data-target="templates-gallery" class="nav-btn" alt="Готовые решения" title="Готовые решения">
         <area shape="rect" coords="73,485,261,528" href="#" data-target="contacts" class="nav-btn" alt="Контакты" title="Контакты">
-        <!-- Миниатюры шаблонов -->
-        <area shape="rect" coords="67,188,320,401" data-large="Слайд25.JPG" class="zoom-image" alt="Шаблон 7" title="Увеличить">
-        <area shape="rect" coords="349,188,602,401" data-large="Слайд26.JPG" class="zoom-image" alt="Шаблон 8" title="Увеличить">
-        <area shape="rect" coords="631,188,884,401" data-large="Слайд27.JPG" class="zoom-image" alt="Шаблон 9" title="Увеличить">
-        <area shape="rect" coords="67,484,320,697" data-large="Слайд28.JPG" class="zoom-image" alt="Шаблон 10" title="Увеличить">
-        <area shape="rect" coords="349,484,602,697" data-large="Слайд29.JPG" class="zoom-image" alt="Шаблон 11" title="Увеличить">
-        <area shape="rect" coords="631,484,884,697" data-large="Слайд30.JPG" class="zoom-image" alt="Шаблон 12" title="Увеличить">
-        <!-- Кнопка "НАЗАД" на слайд 8 -->
+        <area shape="rect" coords="294,158,613,337" data-large="Слайд25.JPG" class="zoom-image" alt="Шаблон 7" title="Увеличить">
+        <area shape="rect" coords="614,158,933,337" data-large="Слайд26.JPG" class="zoom-image" alt="Шаблон 8" title="Увеличить">
+        <area shape="rect" coords="933,158,1252,337" data-large="Слайд27.JPG" class="zoom-image" alt="Шаблон 9" title="Увеличить">
+        <area shape="rect" coords="294,424,613,603" data-large="Слайд28.JPG" class="zoom-image" alt="Шаблон 10" title="Увеличить">
+        <area shape="rect" coords="614,424,933,603" data-large="Слайд29.JPG" class="zoom-image" alt="Шаблон 11" title="Увеличить">
+        <area shape="rect" coords="933,424,1252,603" data-large="Слайд30.JPG" class="zoom-image" alt="Шаблон 12" title="Увеличить">
         <area shape="rect" coords="289,650,390,672" href="#" data-target="templates-gallery" class="nav-btn" alt="Назад" title="Назад">
-        <!-- Кнопка "ДАЛЕЕ" на слайд 10 -->
         <area shape="rect" coords="1104,648,1203,673" href="#" data-target="templates-gallery-3" class="nav-btn" alt="Далее" title="Далее">
     </map>
-    
     <map name="slide10-map">
-        <!-- Кнопки меню -->
         <area shape="rect" coords="73,210,261,253" href="#" data-target="main-menu" class="nav-btn" alt="Обо мне" title="Обо мне">
         <area shape="rect" coords="73,270,261,313" href="#" data-target="before-after" class="nav-btn" alt="До/после" title="До/после">
         <area shape="rect" coords="73,325,261,368" href="#" data-target="infographics-gallery" class="nav-btn" alt="Инфографика" title="Инфографика">
         <area shape="rect" coords="73,379,261,422" href="#" data-target="lab" class="nav-btn" alt="Лаборатория" title="Лаборатория">
         <area shape="rect" coords="73,430,261,473" href="#" data-target="templates-gallery" class="nav-btn" alt="Готовые решения" title="Готовые решения">
         <area shape="rect" coords="73,485,261,528" href="#" data-target="contacts" class="nav-btn" alt="Контакты" title="Контакты">
-        <!-- Миниатюры шаблонов -->
-        <area shape="rect" coords="67,188,320,401" data-large="Слайд31.JPG" class="zoom-image" alt="Шаблон 13" title="Увеличить">
-        <area shape="rect" coords="349,188,602,401" data-large="Слайд32.JPG" class="zoom-image" alt="Шаблон 14" title="Увеличить">
-        <area shape="rect" coords="631,188,884,401" data-large="Слайд33.JPG" class="zoom-image" alt="Шаблон 15" title="Увеличить">
-        <area shape="rect" coords="67,484,320,697" data-large="Слайд34.JPG" class="zoom-image" alt="Шаблон 16" title="Увеличить">
-        <area shape="rect" coords="349,484,602,697" data-large="Слайд35.JPG" class="zoom-image" alt="Шаблон 17" title="Увеличить">
-        <area shape="rect" coords="631,484,884,697" data-large="Слайд36.JPG" class="zoom-image" alt="Шаблон 18" title="Увеличить">
-        <!-- Кнопка "НАЗАД" на слайд 9 -->
+        <area shape="rect" coords="294,158,613,337" data-large="Слайд31.JPG" class="zoom-image" alt="Шаблон 13" title="Увеличить">
+        <area shape="rect" coords="614,158,933,337" data-large="Слайд32.JPG" class="zoom-image" alt="Шаблон 14" title="Увеличить">
+        <area shape="rect" coords="933,158,1252,337" data-large="Слайд33.JPG" class="zoom-image" alt="Шаблон 15" title="Увеличить">
+        <area shape="rect" coords="294,424,613,603" data-large="Слайд34.JPG" class="zoom-image" alt="Шаблон 16" title="Увеличить">
+        <area shape="rect" coords="614,424,933,603" data-large="Слайд35.JPG" class="zoom-image" alt="Шаблон 17" title="Увеличить">
+        <area shape="rect" coords="933,424,1252,603" data-large="Слайд36.JPG" class="zoom-image" alt="Шаблон 18" title="Увеличить">
         <area shape="rect" coords="1104,648,1203,673" href="#" data-target="templates-gallery-2" class="nav-btn" alt="Назад" title="Назад">
     </map>
-    
+
     <!-- МОДАЛЬНОЕ ОКНО -->
     <div id="imageModal" class="modal">
         <span class="close">&times;</span>
@@ -360,59 +429,59 @@
     </div>
 
     <script>
+        // ==================== ПОЛИФИЛ ДЛА ПЛАВНОСТИ ====================
+        (function() {
+            var lastTime = 0;
+            var vendors = ['ms', 'moz', 'webkit', 'o'];
+            for(var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
+                window.requestAnimationFrame = window[vendors[x]+'RequestAnimationFrame'];
+                window.cancelAnimationFrame = window[vendors[x]+'CancelAnimationFrame'] || window[vendors[x]+'CancelRequestAnimationFrame'];
+            }
+            if (!window.requestAnimationFrame)
+                window.requestAnimationFrame = function(callback, element) {
+                    var currTime = new Date().getTime();
+                    var timeToCall = Math.max(0, 16 - (currTime - lastTime));
+                    var id = window.setTimeout(function() { callback(currTime + timeToCall); }, timeToCall);
+                    lastTime = currTime + timeToCall;
+                    return id;
+                };
+            if (!window.cancelAnimationFrame)
+                window.cancelAnimationFrame = function(id) {
+                    clearTimeout(id);
+                };
+        }());
+
         // ==================== ПРЕЛОАДЕР ====================
         window.addEventListener('load', function() {
             setTimeout(function() {
                 const loader = document.getElementById('site-loader');
                 if (loader) {
                     loader.classList.add('hidden');
-                    setTimeout(function() {
-                        loader.remove();
-                    }, 800);
+                    setTimeout(() => loader.remove(), 900);
                 }
-            }, 500);
+            }, 800);
         });
 
-        // ==================== ФУНКЦИИ ДЛЯ ЭФФЕКТА ЛИФТА ====================
-        function moveHighlighterTo(targetId) {
-            // Получаем координаты целевой кнопки
-            let targetCoords = null;
-            
-            // Ищем area с нужным data-target
-            document.querySelectorAll('area[data-target]').forEach(area => {
-                if (area.getAttribute('data-target') === targetId) {
-                    const coords = area.getAttribute('coords').split(',').map(Number);
-                    targetCoords = {
-                        x1: coords[0],
-                        y1: coords[1],
-                        x2: coords[2],
-                        y2: coords[3]
-                    };
-                }
-            });
-            
-            if (!targetCoords) return;
-            
-            const width = targetCoords.x2 - targetCoords.x1;
-            const height = targetCoords.y2 - targetCoords.y1;
-            
-            // Скрываем все хайлайтеры
-            document.querySelectorAll('.menu-highlighter').forEach(hl => {
-                hl.classList.remove('active');
-            });
-            
-            // Показываем и перемещаем хайлайтер на текущем слайде
+        // ==================== ВОЛШЕБНАЯ ФУНКЦИЯ ПЕРЕХОДА ====================
+        function switchSlideWithMagic(newSlideId) {
             const currentSlide = document.querySelector('.slide.active');
-            if (currentSlide) {
-                const highlighter = currentSlide.querySelector('.menu-highlighter');
-                if (highlighter) {
-                    highlighter.style.width = width + 'px';
-                    highlighter.style.height = height + 'px';
-                    highlighter.style.left = targetCoords.x1 + 'px';
-                    highlighter.style.top = targetCoords.y1 + 'px';
-                    highlighter.classList.add('active');
-                }
-            }
+            const newSlide = document.getElementById(newSlideId);
+            
+            if (!currentSlide || !newSlide || currentSlide === newSlide) return;
+            
+            // 1. Помечаем текущий слайд как "уходящий"
+            currentSlide.classList.remove('active');
+            currentSlide.classList.add('leaving');
+            
+            // 2. Через небольшой промежуток начинаем показ нового слайда
+            setTimeout(() => {
+                newSlide.classList.add('active');
+            }, 150); // Задержка для наложения анимаций
+            
+            // 3. Убираем класс "leaving" после завершения анимации
+            setTimeout(() => {
+                currentSlide.classList.remove('leaving');
+            }, 850);
         }
 
         // ==================== НАВИГАЦИЯ ПО СЛАЙДАМ ====================
@@ -420,52 +489,86 @@
             btn.addEventListener('click', function(e) {
                 e.preventDefault();
                 const targetId = this.getAttribute('data-target');
-                
-                // Скрыть все слайды
-                document.querySelectorAll('.slide').forEach(slide => {
-                    slide.classList.remove('active');
-                });
-                
-                // Показать целевой слайд
-                const targetSlide = document.getElementById(targetId);
-                if(targetSlide) {
-                    targetSlide.classList.add('active');
-                    
-                    // Обновляем подсветку на новом слайде
-                    setTimeout(() => {
-                        moveHighlighterTo(targetId);
-                    }, 10);
-                }
+                switchSlideWithMagic(targetId);
             });
         });
-        
+
+        // ==================== КЛАВИАТУРНАЯ НАВИГАЦИЯ ====================
+        document.addEventListener('keydown', function(event) {
+            const slides = Array.from(document.querySelectorAll('.slide'));
+            const currentIndex = slides.findIndex(slide => slide.classList.contains('active'));
+            
+            if (event.key === 'ArrowRight' || event.key === 'PageDown' || event.key === ' ') {
+                // Следующий слайд
+                const nextIndex = (currentIndex + 1) % slides.length;
+                switchSlideWithMagic(slides[nextIndex].id);
+            } else if (event.key === 'ArrowLeft' || event.key === 'PageUp') {
+                // Предыдущий слайд
+                const prevIndex = (currentIndex - 1 + slides.length) % slides.length;
+                switchSlideWithMagic(slides[prevIndex].id);
+            } else if (event.key === 'Home') {
+                // На первый слайд
+                switchSlideWithMagic(slides[0].id);
+            } else if (event.key === 'End') {
+                // На последний слайд
+                switchSlideWithMagic(slides[slides.length - 1].id);
+            }
+        });
+
         // ==================== ЗУМ ДЛЯ МИНИАТЮР ====================
         document.querySelectorAll('.zoom-image').forEach(area => {
             area.addEventListener('click', function(e) {
                 e.preventDefault();
-                document.getElementById('imageModal').style.display = 'flex';
-                document.getElementById('imageCaption').textContent = this.getAttribute('alt');
-                document.getElementById('zoomedImage').src = this.getAttribute('data-large');
+                const modal = document.getElementById('imageModal');
+                const caption = document.getElementById('imageCaption');
+                const zoomedImg = document.getElementById('zoomedImage');
+                
+                modal.style.display = 'flex';
+                caption.textContent = this.getAttribute('alt');
+                
+                // Плавная загрузка изображения
+                zoomedImg.style.opacity = '0';
+                const img = new Image();
+                img.onload = function() {
+                    zoomedImg.src = this.src;
+                    setTimeout(() => {
+                        zoomedImg.style.opacity = '1';
+                        zoomedImg.style.transition = 'opacity 0.4s ease';
+                    }, 10);
+                };
+                img.src = this.getAttribute('data-large');
             });
         });
-        
+
         // ==================== ЗАКРЫТИЕ МОДАЛЬНОГО ОКНА ====================
-        document.querySelector('.close').addEventListener('click', function() {
-            document.getElementById('imageModal').style.display = 'none';
-        });
-        
+        document.querySelector('.close').addEventListener('click', closeModal);
         document.getElementById('imageModal').addEventListener('click', function(e) {
-            if(e.target === this) this.style.display = 'none';
+            if (e.target === this) closeModal();
         });
-        
         document.addEventListener('keydown', function(e) {
-            if(e.key === 'Escape') document.getElementById('imageModal').style.display = 'none';
+            if (e.key === 'Escape') closeModal();
         });
-        
-        // ==================== БЛОКИРОВКА ПРОКРУТКИ ====================
-        document.addEventListener('wheel', function(e) {
-            e.preventDefault();
-        }, { passive: false });
+        function closeModal() {
+            document.getElementById('imageModal').style.display = 'none';
+        }
+
+        // ==================== ПЛАВНЫЙ СКРОЛЛ ДЛЯ МОБИЛЬНЫХ ====================
+        if (window.innerWidth <= 768) {
+            document.querySelectorAll('area').forEach(area => {
+                area.addEventListener('click', function() {
+                    setTimeout(() => {
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }, 300);
+                });
+            });
+        }
+
+        // ==================== ОТКЛЮЧЕНИЕ ПРОКРУТКИ НА ДЕСКТОПЕ ====================
+        if (window.innerWidth > 768) {
+            document.addEventListener('wheel', function(e) {
+                e.preventDefault();
+            }, { passive: false });
+        }
     </script>
 </body>
 </html>
