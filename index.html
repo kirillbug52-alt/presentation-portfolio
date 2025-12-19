@@ -3,6 +3,8 @@
 <head>
     <title>Портфолио дизайнера презентаций</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Подключаем шрифт Raleway -->
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
         /* БАЗОВЫЕ СТИЛИ */
         body, html {
@@ -66,8 +68,6 @@
             user-select: none;
             -webkit-user-select: none;
             -ms-user-select: none;
-            /* Лёгкая тень для отделения от фона */
-            filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.3));
         }
         /* СТИЛИ ДЛЯ ИНТЕРАКТИВНЫХ ОБЛАСТЕЙ */
         area {
@@ -94,29 +94,33 @@
             transition: background 0.5s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .zoom-overlay.active {
-            background: rgba(0, 0, 0, 0.92);
+            background: rgba(0, 0, 0, 0.96); /* Более темный фон */
         }
         .zoom-image-animating {
             position: absolute;
             z-index: 1001;
-            border-radius: 4px;
             overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0);
             transform-origin: center center;
-            transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1),
-                        border-radius 0.5s ease 0.2s;
+            transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+            /* Убрали border-radius и box-shadow для полного экрана */
+            border-radius: 0 !important;
+            box-shadow: none !important;
         }
         .zoom-image-animating.expanded {
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-            border-radius: 8px;
+            /* Убрали тень для чистого вида */
+            box-shadow: none;
         }
         .zoom-image-animating img {
             width: 100%;
             height: 100%;
-            /* ВАЖНО: cover вместо contain для заполнения всего экрана */
-            object-fit: cover; /* ← ИЗМЕНЕНО: заполняет весь контейнер */
+            /* ВАЖНО: cover и 100% размеров */
+            object-fit: cover;
+            object-position: center;
             opacity: 0;
             transition: opacity 0.4s ease 0.2s;
+            /* Убираем любые ограничения */
+            max-width: none !important;
+            max-height: none !important;
         }
         .zoom-image-animating img.loaded {
             opacity: 1;
@@ -144,7 +148,7 @@
             transition-delay: 0.4s;
         }
         .zoom-close:hover {
-            color: white;
+            color: #E29B17; /* Золотой при наведении */
             transform: scale(1.1);
         }
         
@@ -168,7 +172,7 @@
             transition-delay: 0.5s;
         }
         
-        /* ПРЕЛОАДЕР (СОХРАНИЛИ, НО УЛУЧШИЛИ) */
+        /* ПРЕЛОАДЕР С ЗОЛОТЫМИ АКЦЕНТАМИ */
         .site-loader {
             position: fixed;
             top: 0; left: 0;
@@ -189,30 +193,38 @@
             transform: translateY(-20px);
         }
         .loader-spinner {
-            width: 68px;
-            height: 68px;
-            margin: 0 auto 28px;
-            border: 2.5px solid transparent;
-            border-top-color: rgba(255, 255, 255, 0.95);
-            border-right-color: rgba(255, 255, 255, 0.3);
+            width: 72px;
+            height: 72px;
+            margin: 0 auto 30px;
+            border: 3px solid rgba(226, 155, 23, 0.15); /* Золотой с прозрачностью */
+            border-top-color: #E29B17; /* Основной золотой */
+            border-right-color: #F8C462; /* Светлый золотой */
             border-radius: 50%;
             animation: spin 1.4s cubic-bezier(0.68, -0.55, 0.27, 1.55) infinite;
+            box-shadow: 0 0 20px rgba(226, 155, 23, 0.3); /* Свечение */
         }
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
         .loader-text {
-            color: rgba(255, 255, 255, 0.8);
-            font-family: 'Segoe UI', sans-serif;
-            letter-spacing: 3px;
-            font-size: 17px;
-            font-weight: 300;
+            color: #E29B17; /* Золотой цвет */
+            font-family: 'Raleway', 'Segoe UI', sans-serif; /* Шрифт Raleway */
+            letter-spacing: 4px;
+            font-size: 18px;
+            font-weight: 500;
             opacity: 0.9;
             animation: pulse 2s ease-in-out infinite;
+            text-shadow: 0 0 10px rgba(226, 155, 23, 0.4);
         }
         @keyframes pulse {
-            0%, 100% { opacity: 0.7; }
-            50% { opacity: 1; }
+            0%, 100% { 
+                opacity: 0.7;
+                text-shadow: 0 0 5px rgba(226, 155, 23, 0.3);
+            }
+            50% { 
+                opacity: 1;
+                text-shadow: 0 0 15px rgba(226, 155, 23, 0.6);
+            }
         }
 
         /* АДАПТИВНОСТЬ ДЛЯ МОБИЛЬНЫХ */
@@ -258,12 +270,12 @@
                 padding: 0 15px;
             }
             .loader-spinner {
-                width: 54px;
-                height: 54px;
+                width: 60px;
+                height: 60px;
             }
             .loader-text {
-                font-size: 14px;
-                letter-spacing: 2px;
+                font-size: 16px;
+                letter-spacing: 3px;
             }
             .nav-hint {
                 font-size: 12px;
@@ -521,6 +533,10 @@
             zoomCaption.classList.remove('visible');
             zoomClose.classList.remove('visible');
             
+            // Убираем border-radius и другие ограничения
+            zoomContainer.style.borderRadius = '0';
+            zoomContainer.style.boxShadow = 'none';
+            
             // Устанавливаем начальную позицию (точно на месте миниатюры)
             zoomContainer.style.width = rect.width + 'px';
             zoomContainer.style.height = rect.height + 'px';
@@ -542,41 +558,19 @@
                 
                 // Даем время браузеру обработать DOM
                 setTimeout(() => {
-                    // РАСЧЕТ РАЗМЕРА ДЛЯ 16:9 НА ВЕСЬ ЭКРАН
-                    const screenRatio = window.innerWidth / window.innerHeight;
-                    const imageRatio = this.naturalWidth / this.naturalHeight; // Должно быть ~1.777 (16:9)
+                    // РАСЧЕТ НА ВЕСЬ ЭКРАН БЕЗ ОГРАНИЧЕНИЙ
+                    const targetWidth = window.innerWidth; // 100% ширины экрана
+                    const targetHeight = window.innerHeight; // 100% высоты экрана
                     
-                    let targetWidth, targetHeight, targetLeft, targetTop;
-                    
-                    // Для экранов 16:9 (большинство) - растягиваем на весь экран
-                    if (Math.abs(screenRatio - 1.777) < 0.1) { // Если экран ~16:9
-                        targetWidth = window.innerWidth * 0.95;  // 95% ширины экрана
-                        targetHeight = targetWidth / imageRatio; // Сохраняем пропорции
-                        
-                        if (targetHeight > window.innerHeight * 0.95) {
-                            targetHeight = window.innerHeight * 0.95;
-                            targetWidth = targetHeight * imageRatio;
-                        }
-                    } else {
-                        // Для нестандартных экранов - сохраняем пропорции 16:9
-                        targetWidth = Math.min(window.innerWidth * 0.95, this.naturalWidth);
-                        targetHeight = targetWidth / imageRatio;
-                        
-                        if (targetHeight > window.innerHeight * 0.95) {
-                            targetHeight = window.innerHeight * 0.95;
-                            targetWidth = targetHeight * imageRatio;
-                        }
-                    }
-                    
-                    targetLeft = (window.innerWidth - targetWidth) / 2;
-                    targetTop = (window.innerHeight - targetHeight) / 2;
+                    const targetLeft = 0; // С самого левого края
+                    const targetTop = 0; // С самого верха
                     
                     // Активируем фон оверлея
                     zoomOverlay.classList.add('active');
                     
                     // Анимация увеличения и перемещения
                     requestAnimationFrame(() => {
-                        // Плавное перемещение и масштабирование
+                        // Плавное перемещение и масштабирование НА ВЕСЬ ЭКРАН
                         zoomContainer.style.left = targetLeft + 'px';
                         zoomContainer.style.top = targetTop + 'px';
                         zoomContainer.style.width = targetWidth + 'px';
