@@ -223,6 +223,20 @@
             }
         }
 
+        /* ДОБАВЛЕНО: Золотой ободок вокруг активной области при наведении */
+        .area-highlight {
+            position: absolute;
+            border: 2px solid rgba(226, 155, 23, 0);
+            border-radius: 3px;
+            pointer-events: none;
+            z-index: 10;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        .area-highlight.visible {
+            border-color: rgba(226, 155, 23, 0.8);
+            box-shadow: 0 0 15px rgba(226, 155, 23, 0.4);
+        }
+
         @media (max-width: 768px) {
             body, html {
                 overflow-y: auto;
@@ -276,6 +290,9 @@
                 font-size: 12px;
                 padding: 8px;
                 bottom: 15px;
+            }
+            .area-highlight {
+                display: none; /* Скрываем на мобильных */
             }
         }
 
@@ -485,6 +502,38 @@
                 };
         }());
 
+        // ДОБАВЛЕНО: Визуальное выделение активных областей
+        function createAreaHighlights() {
+            if (window.innerWidth <= 768) return; // Не показываем на мобильных
+            
+            const areas = document.querySelectorAll('area');
+            areas.forEach(area => {
+                const highlight = document.createElement('div');
+                highlight.className = 'area-highlight';
+                
+                const updatePosition = () => {
+                    const coords = area.getAttribute('coords').split(',').map(Number);
+                    if (coords.length === 4) {
+                        highlight.style.left = coords[0] + 'px';
+                        highlight.style.top = coords[1] + 'px';
+                        highlight.style.width = (coords[2] - coords[0]) + 'px';
+                        highlight.style.height = (coords[3] - coords[1]) + 'px';
+                    }
+                };
+                
+                area.addEventListener('mouseenter', () => {
+                    updatePosition();
+                    highlight.classList.add('visible');
+                });
+                
+                area.addEventListener('mouseleave', () => {
+                    highlight.classList.remove('visible');
+                });
+                
+                document.body.appendChild(highlight);
+            });
+        }
+
         // АВТОМАТИЧЕСКИЙ ПЕРЕСЧЁТ КООРДИНАТ ПОД ТЕКУЩИЙ РАЗМЕР ОКНА
         function recalculateMapCoordinates() {
             const scaleX = window.innerWidth / 1920;
@@ -512,6 +561,8 @@
                 }
                 // Пересчитываем координаты после загрузки
                 recalculateMapCoordinates();
+                // Создаем визуальные подсказки
+                createAreaHighlights();
             }, 800);
         });
 
