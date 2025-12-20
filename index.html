@@ -14,7 +14,7 @@
             font-family: 'Segoe UI', system-ui, sans-serif;
             background: #0a0a0a;
             height: 100%;
-            perspective: 1200px; /* Для 3D-эффектов */
+            perspective: 1200px;
         }
         .slides-container {
             width: 100vw;
@@ -32,10 +32,9 @@
             background: #000;
             pointer-events: none;
             opacity: 0;
-            /* Исходное состояние для анимации ВХОДА */
             transform: translateX(80px) scale(0.96) rotateY(-5deg);
             filter: blur(8px);
-            transition: none; /* Анимация контролируется JS */
+            transition: none;
             z-index: 1;
             will-change: transform, opacity, filter;
         }
@@ -50,7 +49,6 @@
                         filter 0.8s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .slide.leaving {
-            /* Анимация для уходящего слайда (ВЫХОД) */
             opacity: 0;
             transform: translateX(-80px) scale(0.96) rotateY(5deg);
             filter: blur(8px);
@@ -59,18 +57,26 @@
                         opacity 0.7s cubic-bezier(0.7, 0, 0.84, 0),
                         filter 0.7s cubic-bezier(0.7, 0, 0.84, 0);
         }
-        .slide img {
+        
+        /* КОНТЕЙНЕР ДЛЯ ИЗОБРАЖЕНИЯ И КНОПОК */
+        .slide-content {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .slide-content img {
             max-width: 100%;
             max-height: 100vh;
             display: block;
-            outline: none;
-            border: none;
             user-select: none;
             -webkit-user-select: none;
-            -ms-user-select: none;
         }
         
-        /* СТИЛИ ДЛЯ НАВИГАЦИОННЫХ ОВЕРЛЕЕВ */
+        /* СТИЛИ ДЛЯ НАВИГАЦИОННЫХ ОВЕРЛЕЕВ ПОВЕРХ ИЗОБРАЖЕНИЯ */
         .nav-overlay {
             position: absolute;
             background: transparent;
@@ -83,15 +89,10 @@
             background: rgba(226, 155, 23, 0.15);
             box-shadow: 0 0 0 2px rgba(226, 155, 23, 0.3);
         }
-        .nav-overlay.nav-btn:hover {
-            background: rgba(226, 155, 23, 0.1);
-        }
+        
         .zoom-overlay {
-            position: absolute;
             background: transparent;
             cursor: zoom-in;
-            z-index: 10;
-            transition: all 0.2s ease;
         }
         .zoom-overlay:hover {
             background: rgba(255, 255, 255, 0.05);
@@ -112,7 +113,7 @@
             transition: background 0.5s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .zoom-overlay-full.active {
-            background: rgba(0, 0, 0, 0.96); /* Более темный фон */
+            background: rgba(0, 0, 0, 0.96);
         }
         .zoom-image-animating {
             position: absolute;
@@ -162,7 +163,7 @@
             transition-delay: 0.4s;
         }
         .zoom-close:hover {
-            color: #E29B17; /* Золотой при наведении */
+            color: #E29B17;
             transform: scale(1.1);
         }
         
@@ -186,7 +187,7 @@
             transition-delay: 0.5s;
         }
         
-        /* ПРЕЛОАДЕР С ЗОЛОТЫМИ АКЦЕНТАМИ */
+        /* ПРЕЛОАДЕР */
         .site-loader {
             position: fixed;
             top: 0; left: 0;
@@ -207,7 +208,7 @@
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
-            filter: brightness(0.85); /* Слегка затемняем */
+            filter: brightness(0.85);
         }
         .site-loader.hidden {
             opacity: 0;
@@ -223,20 +224,19 @@
             width: 72px;
             height: 72px;
             margin: 0 auto 30px;
-            border: 3px solid rgba(226, 155, 23, 0.15); /* Золотой с прозрачностью */
-            border-top-color: #E29B17; /* Основной золотой */
-            border-right-color: #F8C462; /* Светлый золотой */
+            border: 3px solid rgba(226, 155, 23, 0.15);
+            border-top-color: #E29B17;
+            border-right-color: #F8C462;
             border-radius: 50%;
             animation: spin 1.4s cubic-bezier(0.68, -0.55, 0.27, 1.55) infinite;
-            /* Убран темный прямоугольник вокруг */
             background: transparent;
         }
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
         .loader-text {
-            color: #FFFFFF; /* БЕЛЫЙ цвет */
-            font-family: 'Raleway', 'Segoe UI', sans-serif; /* Шрифт Raleway */
+            color: #FFFFFF;
+            font-family: 'Raleway', 'Segoe UI', sans-serif;
             letter-spacing: 4px;
             font-size: 18px;
             font-weight: 500;
@@ -245,71 +245,24 @@
             text-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
         }
         @keyframes pulse {
-            0%, 100% { 
-                opacity: 0.7;
-                text-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
-            }
-            50% { 
-                opacity: 1;
-                text-shadow: 0 0 15px rgba(255, 255, 255, 0.6);
-            }
+            0%, 100% { opacity: 0.7; text-shadow: 0 0 5px rgba(255, 255, 255, 0.3); }
+            50% { opacity: 1; text-shadow: 0 0 15px rgba(255, 255, 255, 0.6); }
         }
 
-        /* АДАПТИВНОСТЬ ДЛЯ МОБИЛЬНЫХ */
+        /* АДАПТИВНОСТЬ */
         @media (max-width: 768px) {
-            body, html {
-                overflow-y: auto;
-                perspective: none; /* Отключаем 3D на мобильных */
-            }
-            .slides-container {
-                overflow-y: auto;
-                height: auto;
-                min-height: 100vh;
-            }
-            .slide {
-                position: relative;
-                min-height: 100vh;
-                padding: 10px 0;
-                transform: translateY(25px) scale(0.98) !important;
-                filter: blur(4px) !important;
-            }
-            .slide.active {
-                transform: translateY(0) scale(1) !important;
-                filter: blur(0) !important;
-            }
-            .slide.leaving {
-                transform: translateY(-25px) scale(0.98) !important;
-                filter: blur(4px) !important;
-            }
-            .slide img {
-                max-width: 96vw;
-                max-height: none;
-                height: auto;
-            }
-            .zoom-close {
-                top: 15px;
-                right: 20px;
-                font-size: 40px;
-                padding: 8px;
-            }
-            .zoom-caption {
-                bottom: 25px;
-                font-size: 16px;
-                padding: 0 15px;
-            }
-            .loader-spinner {
-                width: 60px;
-                height: 60px;
-            }
-            .loader-text {
-                font-size: 16px;
-                letter-spacing: 3px;
-            }
-            .nav-hint {
-                font-size: 12px;
-                padding: 8px;
-                bottom: 15px;
-            }
+            body, html { overflow-y: auto; perspective: none; }
+            .slides-container { overflow-y: auto; height: auto; min-height: 100vh; }
+            .slide { position: relative; min-height: 100vh; padding: 10px 0;
+                    transform: translateY(25px) scale(0.98) !important; filter: blur(4px) !important; }
+            .slide.active { transform: translateY(0) scale(1) !important; filter: blur(0) !important; }
+            .slide.leaving { transform: translateY(-25px) scale(0.98) !important; filter: blur(4px) !important; }
+            .slide-content img { max-width: 96vw; max-height: none; height: auto; }
+            .zoom-close { top: 15px; right: 20px; font-size: 40px; padding: 8px; }
+            .zoom-caption { bottom: 25px; font-size: 16px; padding: 0 15px; }
+            .loader-spinner { width: 60px; height: 60px; }
+            .loader-text { font-size: 16px; letter-spacing: 3px; }
+            .nav-hint { font-size: 12px; padding: 8px; bottom: 15px; }
         }
 
         /* ПОДСКАЗКА ДЛЯ МОБИЛЬНЫХ */
@@ -329,9 +282,7 @@
             pointer-events: none;
         }
         @media (min-width: 769px) {
-            .nav-hint {
-                display: none;
-            }
+            .nav-hint { display: none; }
         }
     </style>
 </head>
@@ -344,7 +295,7 @@
         </div>
     </div>
 
-    <!-- ОВЕРЛЕЙ ДЛЯ АНИМАЦИИ ЗУМА -->
+    <!-- ОВЕРЛЕЙ ДЛЯ ЗУМА -->
     <div id="zoomOverlay" class="zoom-overlay-full">
         <div id="zoomContainer" class="zoom-image-animating">
             <img id="zoomImage" src="" alt="">
@@ -356,180 +307,180 @@
     <div class="slides-container">
         <!-- СЛАЙД 1: Главное меню -->
         <section class="slide active" id="main-menu">
-            <img src="Слайд1.JPG" alt="Главное меню">
-            <!-- Навигационные кнопки меню -->
-            <div class="nav-overlay nav-btn" data-target="main-menu" style="left: 5.7%; top: 29.2%; width: 14.7%; height: 6%;" title="Обо мне"></div>
-            <div class="nav-overlay nav-btn" data-target="before-after" style="left: 5.7%; top: 37.5%; width: 14.7%; height: 6%;" title="До/после"></div>
-            <div class="nav-overlay nav-btn" data-target="infographics-gallery" style="left: 5.7%; top: 45.1%; width: 14.7%; height: 6%;" title="Инфографика"></div>
-            <div class="nav-overlay nav-btn" data-target="lab" style="left: 5.7%; top: 52.6%; width: 14.7%; height: 6%;" title="Лаборатория"></div>
-            <div class="nav-overlay nav-btn" data-target="templates-gallery" style="left: 5.7%; top: 59.7%; width: 14.7%; height: 6%;" title="Готовые решения"></div>
-            <div class="nav-overlay nav-btn" data-target="contacts" style="left: 5.7%; top: 67.4%; width: 14.7%; height: 6%;" title="Контакты"></div>
+            <div class="slide-content">
+                <img src="Слайд1.JPG" alt="Главное меню">
+                <!-- Кнопки меню ПОВЕРХ изображения -->
+                <div class="nav-overlay" data-target="main-menu" style="left: 5.7%; top: 29.2%; width: 14.7%; height: 6%;"></div>
+                <div class="nav-overlay" data-target="before-after" style="left: 5.7%; top: 37.5%; width: 14.7%; height: 6%;"></div>
+                <div class="nav-overlay" data-target="infographics-gallery" style="left: 5.7%; top: 45.1%; width: 14.7%; height: 6%;"></div>
+                <div class="nav-overlay" data-target="lab" style="left: 5.7%; top: 52.6%; width: 14.7%; height: 6%;"></div>
+                <div class="nav-overlay" data-target="templates-gallery" style="left: 5.7%; top: 59.7%; width: 14.7%; height: 6%;"></div>
+                <div class="nav-overlay" data-target="contacts" style="left: 5.7%; top: 67.4%; width: 14.7%; height: 6%;"></div>
+            </div>
         </section>
 
         <!-- СЛАЙД 2: До/После 1 -->
         <section class="slide" id="before-after">
-            <img src="Слайд2.JPG" alt="До/После 1">
-            <!-- Навигационные кнопки меню -->
-            <div class="nav-overlay nav-btn" data-target="main-menu" style="left: 5.7%; top: 29.2%; width: 14.7%; height: 6%;" title="Обо мне"></div>
-            <div class="nav-overlay nav-btn" data-target="before-after" style="left: 5.7%; top: 37.5%; width: 14.7%; height: 6%;" title="До/после"></div>
-            <div class="nav-overlay nav-btn" data-target="infographics-gallery" style="left: 5.7%; top: 45.1%; width: 14.7%; height: 6%;" title="Инфографика"></div>
-            <div class="nav-overlay nav-btn" data-target="lab" style="left: 5.7%; top: 52.6%; width: 14.7%; height: 6%;" title="Лаборатория"></div>
-            <div class="nav-overlay nav-btn" data-target="templates-gallery" style="left: 5.7%; top: 59.7%; width: 14.7%; height: 6%;" title="Готовые решения"></div>
-            <div class="nav-overlay nav-btn" data-target="contacts" style="left: 5.7%; top: 67.4%; width: 14.7%; height: 6%;" title="Контакты"></div>
+            <div class="slide-content">
+                <img src="Слайд2.JPG" alt="До/После 1">
+                <div class="nav-overlay" data-target="main-menu" style="left: 5.7%; top: 29.2%; width: 14.7%; height: 6%;"></div>
+                <div class="nav-overlay" data-target="before-after" style="left: 5.7%; top: 37.5%; width: 14.7%; height: 6%;"></div>
+                <div class="nav-overlay" data-target="infographics-gallery" style="left: 5.7%; top: 45.1%; width: 14.7%; height: 6%;"></div>
+                <div class="nav-overlay" data-target="lab" style="left: 5.7%; top: 52.6%; width: 14.7%; height: 6%;"></div>
+                <div class="nav-overlay" data-target="templates-gallery" style="left: 5.7%; top: 59.7%; width: 14.7%; height: 6%;"></div>
+                <div class="nav-overlay" data-target="contacts" style="left: 5.7%; top: 67.4%; width: 14.7%; height: 6%;"></div>
+            </div>
         </section>
 
         <!-- СЛАЙД 3: До/После 2 -->
         <section class="slide">
-            <img src="Слайд3.JPG" alt="До/После 2">
-            <!-- Навигационные кнопки меню -->
-            <div class="nav-overlay nav-btn" data-target="main-menu" style="left: 5.7%; top: 29.2%; width: 14.7%; height: 6%;" title="Обо мне"></div>
-            <div class="nav-overlay nav-btn" data-target="before-after" style="left: 5.7%; top: 37.5%; width: 14.7%; height: 6%;" title="До/после"></div>
-            <div class="nav-overlay nav-btn" data-target="infographics-gallery" style="left: 5.7%; top: 45.1%; width: 14.7%; height: 6%;" title="Инфографика"></div>
-            <div class="nav-overlay nav-btn" data-target="lab" style="left: 5.7%; top: 52.6%; width: 14.7%; height: 6%;" title="Лаборатория"></div>
-            <div class="nav-overlay nav-btn" data-target="templates-gallery" style="left: 5.7%; top: 59.7%; width: 14.7%; height: 6%;" title="Готовые решения"></div>
-            <div class="nav-overlay nav-btn" data-target="contacts" style="left: 5.7%; top: 67.4%; width: 14.7%; height: 6%;" title="Контакты"></div>
+            <div class="slide-content">
+                <img src="Слайд3.JPG" alt="До/После 2">
+                <div class="nav-overlay" data-target="main-menu" style="left: 5.7%; top: 29.2%; width: 14.7%; height: 6%;"></div>
+                <div class="nav-overlay" data-target="before-after" style="left: 5.7%; top: 37.5%; width: 14.7%; height: 6%;"></div>
+                <div class="nav-overlay" data-target="infographics-gallery" style="left: 5.7%; top: 45.1%; width: 14.7%; height: 6%;"></div>
+                <div class="nav-overlay" data-target="lab" style="left: 5.7%; top: 52.6%; width: 14.7%; height: 6%;"></div>
+                <div class="nav-overlay" data-target="templates-gallery" style="left: 5.7%; top: 59.7%; width: 14.7%; height: 6%;"></div>
+                <div class="nav-overlay" data-target="contacts" style="left: 5.7%; top: 67.4%; width: 14.7%; height: 6%;"></div>
+            </div>
         </section>
 
         <!-- СЛАЙД 4: Инфографика - Галерея 1 -->
         <section class="slide" id="infographics-gallery">
-            <img src="Слайд4.JPG" alt="Инфографика - Галерея 1">
-            <!-- Навигационные кнопки меню -->
-            <div class="nav-overlay nav-btn" data-target="main-menu" style="left: 5.7%; top: 29.2%; width: 14.7%; height: 6%;" title="Обо мне"></div>
-            <div class="nav-overlay nav-btn" data-target="before-after" style="left: 5.7%; top: 37.5%; width: 14.7%; height: 6%;" title="До/после"></div>
-            <div class="nav-overlay nav-btn" data-target="infographics-gallery" style="left: 5.7%; top: 45.1%; width: 14.7%; height: 6%;" title="Инфографика"></div>
-            <div class="nav-overlay nav-btn" data-target="lab" style="left: 5.7%; top: 52.6%; width: 14.7%; height: 6%;" title="Лаборатория"></div>
-            <div class="nav-overlay nav-btn" data-target="templates-gallery" style="left: 5.7%; top: 59.7%; width: 14.7%; height: 6%;" title="Готовые решения"></div>
-            <div class="nav-overlay nav-btn" data-target="contacts" style="left: 5.7%; top: 67.4%; width: 14.7%; height: 6%;" title="Контакты"></div>
-            <!-- Кнопки зума для инфографики -->
-            <div class="nav-overlay zoom-overlay" data-large="Слайд13.JPG" data-alt="Инфографика 1" style="left: 40.8%; top: 32.8%; width: 25%; height: 25.1%;" title="Увеличить"></div>
-            <div class="nav-overlay zoom-overlay" data-large="Слайд14.JPG" data-alt="Инфографика 2" style="left: 40.8%; top: 65%; width: 25%; height: 25.1%;" title="Увеличить"></div>
-            <div class="nav-overlay zoom-overlay" data-large="Слайд12.JPG" data-alt="Инфографика 3" style="left: 69.2%; top: 6.4%; width: 25%; height: 25.1%;" title="Увеличить"></div>
-            <div class="nav-overlay zoom-overlay" data-large="Слайд15.JPG" data-alt="Инфографика 4" style="left: 69.2%; top: 32.8%; width: 25%; height: 25.1%;" title="Увеличить"></div>
-            <!-- Кнопка "Далее" -->
-            <div class="nav-overlay nav-btn" data-target="infographics-gallery-2" style="left: 86.3%; top: 90%; width: 7.7%; height: 3.5%;" title="Далее"></div>
+            <div class="slide-content">
+                <img src="Слайд4.JPG" alt="Инфографика - Галерея 1">
+                <div class="nav-overlay" data-target="main-menu" style="left: 5.7%; top: 29.2%; width: 14.7%; height: 6%;"></div>
+                <div class="nav-overlay" data-target="before-after" style="left: 5.7%; top: 37.5%; width: 14.7%; height: 6%;"></div>
+                <div class="nav-overlay" data-target="infographics-gallery" style="left: 5.7%; top: 45.1%; width: 14.7%; height: 6%;"></div>
+                <div class="nav-overlay" data-target="lab" style="left: 5.7%; top: 52.6%; width: 14.7%; height: 6%;"></div>
+                <div class="nav-overlay" data-target="templates-gallery" style="left: 5.7%; top: 59.7%; width: 14.7%; height: 6%;"></div>
+                <div class="nav-overlay" data-target="contacts" style="left: 5.7%; top: 67.4%; width: 14.7%; height: 6%;"></div>
+                <!-- Зум-кнопки -->
+                <div class="nav-overlay zoom-overlay" data-large="Слайд13.JPG" data-alt="Инфографика 1" style="left: 40.8%; top: 32.8%; width: 25%; height: 25.1%;"></div>
+                <div class="nav-overlay zoom-overlay" data-large="Слайд14.JPG" data-alt="Инфографика 2" style="left: 40.8%; top: 65%; width: 25%; height: 25.1%;"></div>
+                <div class="nav-overlay zoom-overlay" data-large="Слайд12.JPG" data-alt="Инфографика 3" style="left: 69.2%; top: 6.4%; width: 25%; height: 25.1%;"></div>
+                <div class="nav-overlay zoom-overlay" data-large="Слайд15.JPG" data-alt="Инфографика 4" style="left: 69.2%; top: 32.8%; width: 25%; height: 25.1%;"></div>
+                <div class="nav-overlay" data-target="infographics-gallery-2" style="left: 86.3%; top: 90%; width: 7.7%; height: 3.5%;"></div>
+            </div>
         </section>
 
         <!-- СЛАЙД 5: Инфографика - Галерея 2 -->
         <section class="slide" id="infographics-gallery-2">
-            <img src="Слайд5.JPG" alt="Инфографика - Галерея 2">
-            <!-- Навигационные кнопки меню -->
-            <div class="nav-overlay nav-btn" data-target="main-menu" style="left: 5.7%; top: 29.2%; width: 14.7%; height: 6%;" title="Обо мне"></div>
-            <div class="nav-overlay nav-btn" data-target="before-after" style="left: 5.7%; top: 37.5%; width: 14.7%; height: 6%;" title="До/после"></div>
-            <div class="nav-overlay nav-btn" data-target="infographics-gallery" style="left: 5.7%; top: 45.1%; width: 14.7%; height: 6%;" title="Инфографика"></div>
-            <div class="nav-overlay nav-btn" data-target="lab" style="left: 5.7%; top: 52.6%; width: 14.7%; height: 6%;" title="Лаборатория"></div>
-            <div class="nav-overlay nav-btn" data-target="templates-gallery" style="left: 5.7%; top: 59.7%; width: 14.7%; height: 6%;" title="Готовые решения"></div>
-            <div class="nav-overlay nav-btn" data-target="contacts" style="left: 5.7%; top: 67.4%; width: 14.7%; height: 6%;" title="Контакты"></div>
-            <!-- Кнопки зума для инфографики -->
-            <div class="nav-overlay zoom-overlay" data-large="Слайд17.JPG" data-alt="Инфографика 5" style="left: 40.8%; top: 31.7%; width: 25.2%; height: 25%;" title="Увеличить"></div>
-            <div class="nav-overlay zoom-overlay" data-large="Слайд18.JPG" data-alt="Инфографика 6" style="left: 40.6%; top: 65%; width: 25.2%; height: 25%;" title="Увеличить"></div>
-            <div class="nav-overlay zoom-overlay" data-large="Слайд16.JPG" data-alt="Инфографика 7" style="left: 69.1%; top: 6.5%; width: 25.2%; height: 25%;" title="Увеличить"></div>
-            <!-- Кнопка "Назад" -->
-            <div class="nav-overlay nav-btn" data-target="infographics-gallery" style="left: 86.3%; top: 90%; width: 7.7%; height: 3.5%;" title="Назад"></div>
+            <div class="slide-content">
+                <img src="Слайд5.JPG" alt="Инфографика - Галерея 2">
+                <div class="nav-overlay" data-target="main-menu" style="left: 5.7%; top: 29.2%; width: 14.7%; height: 6%;"></div>
+                <div class="nav-overlay" data-target="before-after" style="left: 5.7%; top: 37.5%; width: 14.7%; height: 6%;"></div>
+                <div class="nav-overlay" data-target="infographics-gallery" style="left: 5.7%; top: 45.1%; width: 14.7%; height: 6%;"></div>
+                <div class="nav-overlay" data-target="lab" style="left: 5.7%; top: 52.6%; width: 14.7%; height: 6%;"></div>
+                <div class="nav-overlay" data-target="templates-gallery" style="left: 5.7%; top: 59.7%; width: 14.7%; height: 6%;"></div>
+                <div class="nav-overlay" data-target="contacts" style="left: 5.7%; top: 67.4%; width: 14.7%; height: 6%;"></div>
+                <div class="nav-overlay zoom-overlay" data-large="Слайд17.JPG" data-alt="Инфографика 5" style="left: 40.8%; top: 31.7%; width: 25.2%; height: 25%;"></div>
+                <div class="nav-overlay zoom-overlay" data-large="Слайд18.JPG" data-alt="Инфографика 6" style="left: 40.6%; top: 65%; width: 25.2%; height: 25%;"></div>
+                <div class="nav-overlay zoom-overlay" data-large="Слайд16.JPG" data-alt="Инфографика 7" style="left: 69.1%; top: 6.5%; width: 25.2%; height: 25%;"></div>
+                <div class="nav-overlay" data-target="infographics-gallery" style="left: 86.3%; top: 90%; width: 7.7%; height: 3.5%;"></div>
+            </div>
         </section>
 
         <!-- СЛАЙД 6: Лаборатория 1 -->
         <section class="slide" id="lab">
-            <img src="Слайд6.JPG" alt="Лаборатория 1">
-            <!-- Навигационные кнопки меню -->
-            <div class="nav-overlay nav-btn" data-target="main-menu" style="left: 5.7%; top: 29.2%; width: 14.7%; height: 6%;" title="Обо мне"></div>
-            <div class="nav-overlay nav-btn" data-target="before-after" style="left: 5.7%; top: 37.5%; width: 14.7%; height: 6%;" title="До/после"></div>
-            <div class="nav-overlay nav-btn" data-target="infographics-gallery" style="left: 5.7%; top: 45.1%; width: 14.7%; height: 6%;" title="Инфографика"></div>
-            <div class="nav-overlay nav-btn" data-target="lab" style="left: 5.7%; top: 52.6%; width: 14.7%; height: 6%;" title="Лаборатория"></div>
-            <div class="nav-overlay nav-btn" data-target="templates-gallery" style="left: 5.7%; top: 59.7%; width: 14.7%; height: 6%;" title="Готовые решения"></div>
-            <div class="nav-overlay nav-btn" data-target="contacts" style="left: 5.7%; top: 67.4%; width: 14.7%; height: 6%;" title="Контакты"></div>
-            <!-- Кнопка "Далее" -->
-            <div class="nav-overlay nav-btn" data-target="lab-2" style="left: 86.3%; top: 90%; width: 7.7%; height: 3.5%;" title="Далее"></div>
+            <div class="slide-content">
+                <img src="Слайд6.JPG" alt="Лаборатория 1">
+                <div class="nav-overlay" data-target="main-menu" style="left: 5.7%; top: 29.2%; width: 14.7%; height: 6%;"></div>
+                <div class="nav-overlay" data-target="before-after" style="left: 5.7%; top: 37.5%; width: 14.7%; height: 6%;"></div>
+                <div class="nav-overlay" data-target="infographics-gallery" style="left: 5.7%; top: 45.1%; width: 14.7%; height: 6%;"></div>
+                <div class="nav-overlay" data-target="lab" style="left: 5.7%; top: 52.6%; width: 14.7%; height: 6%;"></div>
+                <div class="nav-overlay" data-target="templates-gallery" style="left: 5.7%; top: 59.7%; width: 14.7%; height: 6%;"></div>
+                <div class="nav-overlay" data-target="contacts" style="left: 5.7%; top: 67.4%; width: 14.7%; height: 6%;"></div>
+                <div class="nav-overlay" data-target="lab-2" style="left: 86.3%; top: 90%; width: 7.7%; height: 3.5%;"></div>
+            </div>
         </section>
 
         <!-- СЛАЙД 7: Лаборатория 2 -->
         <section class="slide" id="lab-2">
-            <img src="Слайд7.JPG" alt="Лаборатория 2">
-            <!-- Навигационные кнопки меню -->
-            <div class="nav-overlay nav-btn" data-target="main-menu" style="left: 5.7%; top: 29.2%; width: 14.7%; height: 6%;" title="Обо мне"></div>
-            <div class="nav-overlay nav-btn" data-target="before-after" style="left: 5.7%; top: 37.5%; width: 14.7%; height: 6%;" title="До/после"></div>
-            <div class="nav-overlay nav-btn" data-target="infographics-gallery" style="left: 5.7%; top: 45.1%; width: 14.7%; height: 6%;" title="Инфографика"></div>
-            <div class="nav-overlay nav-btn" data-target="lab" style="left: 5.7%; top: 52.6%; width: 14.7%; height: 6%;" title="Лаборатория"></div>
-            <div class="nav-overlay nav-btn" data-target="templates-gallery" style="left: 5.7%; top: 59.7%; width: 14.7%; height: 6%;" title="Готовые решения"></div>
-            <div class="nav-overlay nav-btn" data-target="contacts" style="left: 5.7%; top: 67.4%; width: 14.7%; height: 6%;" title="Контакты"></div>
-            <!-- Кнопка "Назад" -->
-            <div class="nav-overlay nav-btn" data-target="lab" style="left: 86.3%; top: 90%; width: 7.7%; height: 3.5%;" title="Назад"></div>
+            <div class="slide-content">
+                <img src="Слайд7.JPG" alt="Лаборатория 2">
+                <div class="nav-overlay" data-target="main-menu" style="left: 5.7%; top: 29.2%; width: 14.7%; height: 6%;"></div>
+                <div class="nav-overlay" data-target="before-after" style="left: 5.7%; top: 37.5%; width: 14.7%; height: 6%;"></div>
+                <div class="nav-overlay" data-target="infographics-gallery" style="left: 5.7%; top: 45.1%; width: 14.7%; height: 6%;"></div>
+                <div class="nav-overlay" data-target="lab" style="left: 5.7%; top: 52.6%; width: 14.7%; height: 6%;"></div>
+                <div class="nav-overlay" data-target="templates-gallery" style="left: 5.7%; top: 59.7%; width: 14.7%; height: 6%;"></div>
+                <div class="nav-overlay" data-target="contacts" style="left: 5.7%; top: 67.4%; width: 14.7%; height: 6%;"></div>
+                <div class="nav-overlay" data-target="lab" style="left: 86.3%; top: 90%; width: 7.7%; height: 3.5%;"></div>
+            </div>
         </section>
 
         <!-- СЛАЙД 8: Шаблоны - Галерея 1 -->
         <section class="slide" id="templates-gallery">
-            <img src="Слайд8.JPG" alt="Шаблоны - Галерея 1">
-            <!-- Навигационные кнопки меню -->
-            <div class="nav-overlay nav-btn" data-target="main-menu" style="left: 5.7%; top: 29.2%; width: 14.7%; height: 6%;" title="Обо мне"></div>
-            <div class="nav-overlay nav-btn" data-target="before-after" style="left: 5.7%; top: 37.5%; width: 14.7%; height: 6%;" title="До/после"></div>
-            <div class="nav-overlay nav-btn" data-target="infographics-gallery" style="left: 5.7%; top: 45.1%; width: 14.7%; height: 6%;" title="Инфографика"></div>
-            <div class="nav-overlay nav-btn" data-target="lab" style="left: 5.7%; top: 52.6%; width: 14.7%; height: 6%;" title="Лаборатория"></div>
-            <div class="nav-overlay nav-btn" data-target="templates-gallery" style="left: 5.7%; top: 59.7%; width: 14.7%; height: 6%;" title="Готовые решения"></div>
-            <div class="nav-overlay nav-btn" data-target="contacts" style="left: 5.7%; top: 67.4%; width: 14.7%; height: 6%;" title="Контакты"></div>
-            <!-- Кнопки зума для шаблонов -->
-            <div class="nav-overlay zoom-overlay" data-large="Слайд19.JPG" data-alt="Шаблон 1" style="left: 23%; top: 21.9%; width: 25%; height: 24.9%;" title="Увеличить"></div>
-            <div class="nav-overlay zoom-overlay" data-large="Слайд20.JPG" data-alt="Шаблон 2" style="left: 48%; top: 21.9%; width: 25%; height: 24.9%;" title="Увеличить"></div>
-            <div class="nav-overlay zoom-overlay" data-large="Слайд21.JPG" data-alt="Шаблон 3" style="left: 72.9%; top: 21.9%; width: 25%; height: 24.9%;" title="Увеличить"></div>
-            <div class="nav-overlay zoom-overlay" data-large="Слайд22.JPG" data-alt="Шаблон 4" style="left: 23%; top: 58.9%; width: 25%; height: 24.9%;" title="Увеличить"></div>
-            <div class="nav-overlay zoom-overlay" data-large="Слайд23.JPG" data-alt="Шаблон 5" style="left: 48%; top: 58.9%; width: 25%; height: 24.9%;" title="Увеличить"></div>
-            <div class="nav-overlay zoom-overlay" data-large="Слайд24.JPG" data-alt="Шаблон 6" style="left: 72.9%; top: 58.9%; width: 25%; height: 24.9%;" title="Увеличить"></div>
-            <!-- Кнопка "Далее" -->
-            <div class="nav-overlay nav-btn" data-target="templates-gallery-2" style="left: 86.3%; top: 90%; width: 7.7%; height: 3.5%;" title="Далее"></div>
+            <div class="slide-content">
+                <img src="Слайд8.JPG" alt="Шаблоны - Галерея 1">
+                <div class="nav-overlay" data-target="main-menu" style="left: 5.7%; top: 29.2%; width: 14.7%; height: 6%;"></div>
+                <div class="nav-overlay" data-target="before-after" style="left: 5.7%; top: 37.5%; width: 14.7%; height: 6%;"></div>
+                <div class="nav-overlay" data-target="infographics-gallery" style="left: 5.7%; top: 45.1%; width: 14.7%; height: 6%;"></div>
+                <div class="nav-overlay" data-target="lab" style="left: 5.7%; top: 52.6%; width: 14.7%; height: 6%;"></div>
+                <div class="nav-overlay" data-target="templates-gallery" style="left: 5.7%; top: 59.7%; width: 14.7%; height: 6%;"></div>
+                <div class="nav-overlay" data-target="contacts" style="left: 5.7%; top: 67.4%; width: 14.7%; height: 6%;"></div>
+                <div class="nav-overlay zoom-overlay" data-large="Слайд19.JPG" data-alt="Шаблон 1" style="left: 23%; top: 21.9%; width: 25%; height: 24.9%;"></div>
+                <div class="nav-overlay zoom-overlay" data-large="Слайд20.JPG" data-alt="Шаблон 2" style="left: 48%; top: 21.9%; width: 25%; height: 24.9%;"></div>
+                <div class="nav-overlay zoom-overlay" data-large="Слайд21.JPG" data-alt="Шаблон 3" style="left: 72.9%; top: 21.9%; width: 25%; height: 24.9%;"></div>
+                <div class="nav-overlay zoom-overlay" data-large="Слайд22.JPG" data-alt="Шаблон 4" style="left: 23%; top: 58.9%; width: 25%; height: 24.9%;"></div>
+                <div class="nav-overlay zoom-overlay" data-large="Слайд23.JPG" data-alt="Шаблон 5" style="left: 48%; top: 58.9%; width: 25%; height: 24.9%;"></div>
+                <div class="nav-overlay zoom-overlay" data-large="Слайд24.JPG" data-alt="Шаблон 6" style="left: 72.9%; top: 58.9%; width: 25%; height: 24.9%;"></div>
+                <div class="nav-overlay" data-target="templates-gallery-2" style="left: 86.3%; top: 90%; width: 7.7%; height: 3.5%;"></div>
+            </div>
         </section>
 
         <!-- СЛАЙД 9: Шаблоны - Галерея 2 -->
         <section class="slide" id="templates-gallery-2">
-            <img src="Слайд9.JPG" alt="Шаблоны - Галерея 2">
-            <!-- Навигационные кнопки меню -->
-            <div class="nav-overlay nav-btn" data-target="main-menu" style="left: 5.7%; top: 29.2%; width: 14.7%; height: 6%;" title="Обо мне"></div>
-            <div class="nav-overlay nav-btn" data-target="before-after" style="left: 5.7%; top: 37.5%; width: 14.7%; height: 6%;" title="До/после"></div>
-            <div class="nav-overlay nav-btn" data-target="infographics-gallery" style="left: 5.7%; top: 45.1%; width: 14.7%; height: 6%;" title="Инфографика"></div>
-            <div class="nav-overlay nav-btn" data-target="lab" style="left: 5.7%; top: 52.6%; width: 14.7%; height: 6%;" title="Лаборатория"></div>
-            <div class="nav-overlay nav-btn" data-target="templates-gallery" style="left: 5.7%; top: 59.7%; width: 14.7%; height: 6%;" title="Готовые решения"></div>
-            <div class="nav-overlay nav-btn" data-target="contacts" style="left: 5.7%; top: 67.4%; width: 14.7%; height: 6%;" title="Контакты"></div>
-            <!-- Кнопки зума для шаблонов -->
-            <div class="nav-overlay zoom-overlay" data-large="Слайд25.JPG" data-alt="Шаблон 7" style="left: 23%; top: 21.9%; width: 25%; height: 24.9%;" title="Увеличить"></div>
-            <div class="nav-overlay zoom-overlay" data-large="Слайд26.JPG" data-alt="Шаблон 8" style="left: 48%; top: 21.9%; width: 25%; height: 24.9%;" title="Увеличить"></div>
-            <div class="nav-overlay zoom-overlay" data-large="Слайд27.JPG" data-alt="Шаблон 9" style="left: 72.9%; top: 21.9%; width: 25%; height: 24.9%;" title="Увеличить"></div>
-            <div class="nav-overlay zoom-overlay" data-large="Слайд28.JPG" data-alt="Шаблон 10" style="left: 23%; top: 58.9%; width: 25%; height: 24.9%;" title="Увеличить"></div>
-            <div class="nav-overlay zoom-overlay" data-large="Слайд29.JPG" data-alt="Шаблон 11" style="left: 48%; top: 58.9%; width: 25%; height: 24.9%;" title="Увеличить"></div>
-            <div class="nav-overlay zoom-overlay" data-large="Слайд30.JPG" data-alt="Шаблон 12" style="left: 72.9%; top: 58.9%; width: 25%; height: 24.9%;" title="Увеличить"></div>
-            <!-- Кнопка "Назад" -->
-            <div class="nav-overlay nav-btn" data-target="templates-gallery" style="left: 22.6%; top: 90.3%; width: 7.9%; height: 3.1%;" title="Назад"></div>
-            <!-- Кнопка "Далее" -->
-            <div class="nav-overlay nav-btn" data-target="templates-gallery-3" style="left: 86.3%; top: 90%; width: 7.7%; height: 3.5%;" title="Далее"></div>
+            <div class="slide-content">
+                <img src="Слайд9.JPG" alt="Шаблоны - Галерея 2">
+                <div class="nav-overlay" data-target="main-menu" style="left: 5.7%; top: 29.2%; width: 14.7%; height: 6%;"></div>
+                <div class="nav-overlay" data-target="before-after" style="left: 5.7%; top: 37.5%; width: 14.7%; height: 6%;"></div>
+                <div class="nav-overlay" data-target="infographics-gallery" style="left: 5.7%; top: 45.1%; width: 14.7%; height: 6%;"></div>
+                <div class="nav-overlay" data-target="lab" style="left: 5.7%; top: 52.6%; width: 14.7%; height: 6%;"></div>
+                <div class="nav-overlay" data-target="templates-gallery" style="left: 5.7%; top: 59.7%; width: 14.7%; height: 6%;"></div>
+                <div class="nav-overlay" data-target="contacts" style="left: 5.7%; top: 67.4%; width: 14.7%; height: 6%;"></div>
+                <div class="nav-overlay zoom-overlay" data-large="Слайд25.JPG" data-alt="Шаблон 7" style="left: 23%; top: 21.9%; width: 25%; height: 24.9%;"></div>
+                <div class="nav-overlay zoom-overlay" data-large="Слайд26.JPG" data-alt="Шаблон 8" style="left: 48%; top: 21.9%; width: 25%; height: 24.9%;"></div>
+                <div class="nav-overlay zoom-overlay" data-large="Слайд27.JPG" data-alt="Шаблон 9" style="left: 72.9%; top: 21.9%; width: 25%; height: 24.9%;"></div>
+                <div class="nav-overlay zoom-overlay" data-large="Слайд28.JPG" data-alt="Шаблон 10" style="left: 23%; top: 58.9%; width: 25%; height: 24.9%;"></div>
+                <div class="nav-overlay zoom-overlay" data-large="Слайд29.JPG" data-alt="Шаблон 11" style="left: 48%; top: 58.9%; width: 25%; height: 24.9%;"></div>
+                <div class="nav-overlay zoom-overlay" data-large="Слайд30.JPG" data-alt="Шаблон 12" style="left: 72.9%; top: 58.9%; width: 25%; height: 24.9%;"></div>
+                <div class="nav-overlay" data-target="templates-gallery" style="left: 22.6%; top: 90.3%; width: 7.9%; height: 3.1%;"></div>
+                <div class="nav-overlay" data-target="templates-gallery-3" style="left: 86.3%; top: 90%; width: 7.7%; height: 3.5%;"></div>
+            </div>
         </section>
 
         <!-- СЛАЙД 10: Шаблоны - Галерея 3 -->
         <section class="slide" id="templates-gallery-3">
-            <img src="Слайд10.JPG" alt="Шаблоны - Галерея 3">
-            <!-- Навигационные кнопки меню -->
-            <div class="nav-overlay nav-btn" data-target="main-menu" style="left: 5.7%; top: 29.2%; width: 14.7%; height: 6%;" title="Обо мне"></div>
-            <div class="nav-overlay nav-btn" data-target="before-after" style="left: 5.7%; top: 37.5%; width: 14.7%; height: 6%;" title="До/после"></div>
-            <div class="nav-overlay nav-btn" data-target="infographics-gallery" style="left: 5.7%; top: 45.1%; width: 14.7%; height: 6%;" title="Инфографика"></div>
-            <div class="nav-overlay nav-btn" data-target="lab" style="left: 5.7%; top: 52.6%; width: 14.7%; height: 6%;" title="Лаборатория"></div>
-            <div class="nav-overlay nav-btn" data-target="templates-gallery" style="left: 5.7%; top: 59.7%; width: 14.7%; height: 6%;" title="Готовые решения"></div>
-            <div class="nav-overlay nav-btn" data-target="contacts" style="left: 5.7%; top: 67.4%; width: 14.7%; height: 6%;" title="Контакты"></div>
-            <!-- Кнопки зума для шаблонов -->
-            <div class="nav-overlay zoom-overlay" data-large="Слайд31.JPG" data-alt="Шаблон 13" style="left: 23%; top: 21.9%; width: 25%; height: 24.9%;" title="Увеличить"></div>
-            <div class="nav-overlay zoom-overlay" data-large="Слайд32.JPG" data-alt="Шаблон 14" style="left: 48%; top: 21.9%; width: 25%; height: 24.9%;" title="Увеличить"></div>
-            <div class="nav-overlay zoom-overlay" data-large="Слайд33.JPG" data-alt="Шаблон 15" style="left: 72.9%; top: 21.9%; width: 25%; height: 24.9%;" title="Увеличить"></div>
-            <div class="nav-overlay zoom-overlay" data-large="Слайд34.JPG" data-alt="Шаблон 16" style="left: 23%; top: 58.9%; width: 25%; height: 24.9%;" title="Увеличить"></div>
-            <div class="nav-overlay zoom-overlay" data-large="Слайд35.JPG" data-alt="Шаблон 17" style="left: 48%; top: 58.9%; width: 25%; height: 24.9%;" title="Увеличить"></div>
-            <div class="nav-overlay zoom-overlay" data-large="Слайд36.JPG" data-alt="Шаблон 18" style="left: 72.9%; top: 58.9%; width: 25%; height: 24.9%;" title="Увеличить"></div>
-            <!-- Кнопка "Назад" -->
-            <div class="nav-overlay nav-btn" data-target="templates-gallery-2" style="left: 86.3%; top: 90%; width: 7.7%; height: 3.5%;" title="Назад"></div>
+            <div class="slide-content">
+                <img src="Слайд10.JPG" alt="Шаблоны - Галерея 3">
+                <div class="nav-overlay" data-target="main-menu" style="left: 5.7%; top: 29.2%; width: 14.7%; height: 6%;"></div>
+                <div class="nav-overlay" data-target="before-after" style="left: 5.7%; top: 37.5%; width: 14.7%; height: 6%;"></div>
+                <div class="nav-overlay" data-target="infographics-gallery" style="left: 5.7%; top: 45.1%; width: 14.7%; height: 6%;"></div>
+                <div class="nav-overlay" data-target="lab" style="left: 5.7%; top: 52.6%; width: 14.7%; height: 6%;"></div>
+                <div class="nav-overlay" data-target="templates-gallery" style="left: 5.7%; top: 59.7%; width: 14.7%; height: 6%;"></div>
+                <div class="nav-overlay" data-target="contacts" style="left: 5.7%; top: 67.4%; width: 14.7%; height: 6%;"></div>
+                <div class="nav-overlay zoom-overlay" data-large="Слайд31.JPG" data-alt="Шаблон 13" style="left: 23%; top: 21.9%; width: 25%; height: 24.9%;"></div>
+                <div class="nav-overlay zoom-overlay" data-large="Слайд32.JPG" data-alt="Шаблон 14" style="left: 48%; top: 21.9%; width: 25%; height: 24.9%;"></div>
+                <div class="nav-overlay zoom-overlay" data-large="Слайд33.JPG" data-alt="Шаблон 15" style="left: 72.9%; top: 21.9%; width: 25%; height: 24.9%;"></div>
+                <div class="nav-overlay zoom-overlay" data-large="Слайд34.JPG" data-alt="Шаблон 16" style="left: 23%; top: 58.9%; width: 25%; height: 24.9%;"></div>
+                <div class="nav-overlay zoom-overlay" data-large="Слайд35.JPG" data-alt="Шаблон 17" style="left: 48%; top: 58.9%; width: 25%; height: 24.9%;"></div>
+                <div class="nav-overlay zoom-overlay" data-large="Слайд36.JPG" data-alt="Шаблон 18" style="left: 72.9%; top: 58.9%; width: 25%; height: 24.9%;"></div>
+                <div class="nav-overlay" data-target="templates-gallery-2" style="left: 86.3%; top: 90%; width: 7.7%; height: 3.5%;"></div>
+            </div>
         </section>
 
         <!-- СЛАЙД 11: Контакты -->
         <section class="slide" id="contacts">
-            <img src="Слайд11.JPG" alt="Контакты">
-            <!-- Навигационные кнопки меню -->
-            <div class="nav-overlay nav-btn" data-target="main-menu" style="left: 5.7%; top: 29.2%; width: 14.7%; height: 6%;" title="Обо мне"></div>
-            <div class="nav-overlay nav-btn" data-target="before-after" style="left: 5.7%; top: 37.5%; width: 14.7%; height: 6%;" title="До/после"></div>
-            <div class="nav-overlay nav-btn" data-target="infographics-gallery" style="left: 5.7%; top: 45.1%; width: 14.7%; height: 6%;" title="Инфографика"></div>
-            <div class="nav-overlay nav-btn" data-target="lab" style="left: 5.7%; top: 52.6%; width: 14.7%; height: 6%;" title="Лаборатория"></div>
-            <div class="nav-overlay nav-btn" data-target="templates-gallery" style="left: 5.7%; top: 59.7%; width: 14.7%; height: 6%;" title="Готовые решения"></div>
-            <div class="nav-overlay nav-btn" data-target="contacts" style="left: 5.7%; top: 67.4%; width: 14.7%; height: 6%;" title="Контакты"></div>
+            <div class="slide-content">
+                <img src="Слайд11.JPG" alt="Контакты">
+                <div class="nav-overlay" data-target="main-menu" style="left: 5.7%; top: 29.2%; width: 14.7%; height: 6%;"></div>
+                <div class="nav-overlay" data-target="before-after" style="left: 5.7%; top: 37.5%; width: 14.7%; height: 6%;"></div>
+                <div class="nav-overlay" data-target="infographics-gallery" style="left: 5.7%; top: 45.1%; width: 14.7%; height: 6%;"></div>
+                <div class="nav-overlay" data-target="lab" style="left: 5.7%; top: 52.6%; width: 14.7%; height: 6%;"></div>
+                <div class="nav-overlay" data-target="templates-gallery" style="left: 5.7%; top: 59.7%; width: 14.7%; height: 6%;"></div>
+                <div class="nav-overlay" data-target="contacts" style="left: 5.7%; top: 67.4%; width: 14.7%; height: 6%;"></div>
+            </div>
         </section>
     </div>
 
@@ -537,7 +488,7 @@
     <div class="nav-hint">← → на клавиатуре • ESC для выхода</div>
 
     <script>
-        // ==================== ПОЛИФИЛ ДЛА ПЛАВНОСТИ ====================
+        // ==================== ПОЛИФИЛ ====================
         (function() {
             var lastTime = 0;
             var vendors = ['ms', 'moz', 'webkit', 'o'];
@@ -567,77 +518,55 @@
                     loader.classList.add('hidden');
                     setTimeout(() => loader.remove(), 1200);
                 }
-            }, 1800); // Увеличенное время загрузки
+            }, 1800);
         });
 
         // ==================== ЭФФЕКТ ПЛАВНОГО УВЕЛИЧЕНИЯ ====================
         function zoomImageFromThumbnail(element) {
             const rect = element.getBoundingClientRect();
             const imageUrl = element.getAttribute('data-large');
-            const altText = element.getAttribute('data-alt') || element.getAttribute('title');
+            const altText = element.getAttribute('data-alt') || 'Изображение';
             
-            // Получаем элементы
             const zoomContainer = document.getElementById('zoomContainer');
             const zoomImage = document.getElementById('zoomImage');
             const zoomCaption = document.getElementById('zoomCaption');
             const zoomClose = document.getElementById('zoomClose');
             const zoomOverlay = document.getElementById('zoomOverlay');
             
-            // Сбрасываем стили
             zoomContainer.classList.remove('expanded');
             zoomImage.classList.remove('loaded');
             zoomCaption.classList.remove('visible');
             zoomClose.classList.remove('visible');
             
-            // Убираем border-radius и другие ограничения
             zoomContainer.style.borderRadius = '0';
             zoomContainer.style.boxShadow = 'none';
             
-            // Устанавливаем начальную позицию (точно на месте миниатюры)
             zoomContainer.style.width = rect.width + 'px';
             zoomContainer.style.height = rect.height + 'px';
             zoomContainer.style.left = rect.left + 'px';
             zoomContainer.style.top = rect.top + 'px';
             zoomContainer.style.transform = 'scale(1)';
             
-            // Устанавливаем подпись
             zoomCaption.textContent = altText;
-            
-            // Показываем оверлей (прозрачный)
             zoomOverlay.style.display = 'flex';
             
-            // Загружаем изображение
             const img = new Image();
             img.onload = function() {
-                // Устанавливаем загруженное изображение
                 zoomImage.src = imageUrl;
-                
-                // Даем время браузеру обработать DOM
                 setTimeout(() => {
-                    // РАСЧЕТ НА ВЕСЬ ЭКРАН БЕЗ ОГРАНИЧЕНИЙ
-                    const targetWidth = window.innerWidth; // 100% ширины экрана
-                    const targetHeight = window.innerHeight; // 100% высоты экрана
+                    const targetWidth = window.innerWidth;
+                    const targetHeight = window.innerHeight;
                     
-                    const targetLeft = 0; // С самого левого края
-                    const targetTop = 0; // С самого верха
-                    
-                    // Активируем фон оверлея
                     zoomOverlay.classList.add('active');
-                    
-                    // Анимация увеличения и перемещения
                     requestAnimationFrame(() => {
-                        // Плавное перемещение и масштабирование НА ВЕСЬ ЭКРАН
-                        zoomContainer.style.left = targetLeft + 'px';
-                        zoomContainer.style.top = targetTop + 'px';
+                        zoomContainer.style.left = '0px';
+                        zoomContainer.style.top = '0px';
                         zoomContainer.style.width = targetWidth + 'px';
                         zoomContainer.style.height = targetHeight + 'px';
                         
-                        // Добавляем класс для дополнительных стилей
                         setTimeout(() => {
                             zoomContainer.classList.add('expanded');
                             zoomImage.classList.add('loaded');
-                            
-                            // Показываем кнопку закрытия и подпись
                             setTimeout(() => {
                                 zoomClose.classList.add('visible');
                                 zoomCaption.classList.add('visible');
@@ -649,63 +578,48 @@
             img.src = imageUrl;
         }
 
-        // ==================== ЗАКРЫТИЕ ЭФФЕКТА УВЕЛИЧЕНИЯ ====================
+        // ==================== ЗАКРЫТИЕ ЗУМА ====================
         function closeZoom() {
             const zoomOverlay = document.getElementById('zoomOverlay');
             const zoomContainer = document.getElementById('zoomContainer');
             const zoomCaption = document.getElementById('zoomCaption');
             const zoomClose = document.getElementById('zoomClose');
             
-            // Скрываем элементы
             zoomCaption.classList.remove('visible');
             zoomClose.classList.remove('visible');
             zoomContainer.classList.remove('expanded');
-            
-            // Убираем фон оверлея
             zoomOverlay.classList.remove('active');
             
-            // Скрываем оверлей после анимации
             setTimeout(() => {
                 zoomOverlay.style.display = 'none';
-                zoomImage.src = ''; // Очищаем изображение
+                document.getElementById('zoomImage').src = '';
             }, 500);
         }
 
-        // ==================== ОБРАБОТЧИКИ ДЛЯ DIV-ОВЕРЛЕЕВ ====================
+        // ==================== ОБРАБОТЧИКИ ====================
         document.addEventListener('click', function(e) {
             const target = e.target;
             
-            // Обработка навигационных кнопок
-            if (target.classList.contains('nav-btn')) {
+            if (target.classList.contains('nav-overlay')) {
                 e.preventDefault();
-                const targetId = target.getAttribute('data-target');
-                if (targetId) {
-                    switchSlideWithMagic(targetId);
+                
+                if (target.classList.contains('zoom-overlay')) {
+                    zoomImageFromThumbnail(target);
+                } else {
+                    const targetId = target.getAttribute('data-target');
+                    if (targetId) {
+                        switchSlideWithMagic(targetId);
+                    }
                 }
             }
-            
-            // Обработка кнопок зума
-            if (target.classList.contains('zoom-overlay')) {
-                e.preventDefault();
-                zoomImageFromThumbnail(target);
-            }
         });
 
-        // Закрытие по кнопке
         document.getElementById('zoomClose').addEventListener('click', closeZoom);
-
-        // Закрытие по клику на оверлей
         document.getElementById('zoomOverlay').addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeZoom();
-            }
+            if (e.target === this) closeZoom();
         });
-
-        // Закрытие по ESC
         document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                closeZoom();
-            }
+            if (e.key === 'Escape') closeZoom();
         });
 
         // ==================== ВОЛШЕБНАЯ ФУНКЦИЯ ПЕРЕХОДА ====================
@@ -715,16 +629,13 @@
             
             if (!currentSlide || !newSlide || currentSlide === newSlide) return;
             
-            // 1. Помечаем текущий слайд как "уходящий"
             currentSlide.classList.remove('active');
             currentSlide.classList.add('leaving');
             
-            // 2. Через небольшой промежуток начинаем показ нового слайда
             setTimeout(() => {
                 newSlide.classList.add('active');
-            }, 150); // Задержка для наложения анимаций
+            }, 150);
             
-            // 3. Убираем класс "leaving" после завершения анимации
             setTimeout(() => {
                 currentSlide.classList.remove('leaving');
             }, 850);
@@ -736,18 +647,14 @@
             const currentIndex = slides.findIndex(slide => slide.classList.contains('active'));
             
             if (event.key === 'ArrowRight' || event.key === 'PageDown' || event.key === ' ') {
-                // Следующий слайд
                 const nextIndex = (currentIndex + 1) % slides.length;
                 switchSlideWithMagic(slides[nextIndex].id);
             } else if (event.key === 'ArrowLeft' || event.key === 'PageUp') {
-                // Предыдущий слайд
                 const prevIndex = (currentIndex - 1 + slides.length) % slides.length;
                 switchSlideWithMagic(slides[prevIndex].id);
             } else if (event.key === 'Home') {
-                // На первый слайд
                 switchSlideWithMagic(slides[0].id);
             } else if (event.key === 'End') {
-                // На последний слайд
                 switchSlideWithMagic(slides[slides.length - 1].id);
             }
         });
