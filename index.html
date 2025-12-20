@@ -1,492 +1,715 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html>
 <head>
-    <meta charset="UTF-8">
+    <title>Портфолио дизайнера презентаций</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Презентации для бизнеса</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Подключаем шрифт Raleway -->
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
-        * {
+        /* БАЗОВЫЕ СТИЛИ */
+        body, html {
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        body {
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            color: #333;
-            line-height: 1.6;
-            min-height: 100vh;
-            padding: 20px;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
             overflow: hidden;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: #0a0a0a;
+            height: 100%;
+            perspective: 1200px; /* Для 3D-эффектов */
         }
-
-        /* Header */
-        .header {
-            background: linear-gradient(90deg, #1a237e 0%, #283593 100%);
-            color: white;
-            padding: 40px;
+        .slides-container {
+            width: 100vw;
+            height: 100vh;
             position: relative;
             overflow: hidden;
-            text-align: center;
         }
-
-        .gold-circle {
+        .slide {
             position: absolute;
-            width: 350px;
-            height: 350px;
-            background: radial-gradient(circle, #FFD700 0%, #FFA500 70%, transparent 100%);
-            border-radius: 50%;
-            top: -100px;
-            right: -100px;
-            opacity: 0.4;
-            filter: blur(15px);
-            animation: pulse 8s infinite alternate;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); opacity: 0.3; }
-            100% { transform: scale(1.1); opacity: 0.5; }
-        }
-
-        .logo {
-            font-size: 2.8rem;
-            font-weight: 800;
-            margin-bottom: 15px;
-            letter-spacing: 1px;
-            position: relative;
-            display: inline-block;
-        }
-
-        .logo span {
-            color: #FFD700;
-        }
-
-        .tagline {
-            font-size: 1.2rem;
-            opacity: 0.9;
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        /* Navigation */
-        .nav {
-            background: #f8f9fa;
-            border-bottom: 1px solid #eaeaea;
-            padding: 0 40px;
-        }
-
-        .nav-list {
+            width: 100%;
+            height: 100%;
             display: flex;
-            list-style: none;
             justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .nav-item {
-            padding: 20px 25px;
-            position: relative;
-            cursor: pointer;
-            font-weight: 600;
-            color: #555;
-            transition: all 0.3s;
-        }
-
-        .nav-item:hover {
-            color: #1a237e;
-            background: #edf2ff;
-        }
-
-        .nav-item.active {
-            color: #1a237e;
-            border-bottom: 3px solid #FFD700;
-        }
-
-        /* Main Content */
-        .main-content {
-            display: flex;
-            min-height: 600px;
-        }
-
-        /* Slides Panel */
-        .slides-panel {
-            width: 280px;
-            background: #f8f9fa;
-            border-right: 1px solid #eaeaea;
-            padding: 25px 0;
-            overflow-y: auto;
-        }
-
-        .slides-panel h3 {
-            padding: 0 25px 15px;
-            color: #1a237e;
-            font-size: 1.3rem;
-            border-bottom: 1px solid #ddd;
-            margin-bottom: 15px;
-        }
-
-        .slide-item {
-            padding: 15px 25px;
-            border-left: 4px solid transparent;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
             align-items: center;
-            color: #555;
+            background: #000;
+            pointer-events: none;
+            opacity: 0;
+            /* Исходное состояние для анимации ВХОДА */
+            transform: translateX(80px) scale(0.96) rotateY(-5deg);
+            filter: blur(8px);
+            transition: none; /* Анимация контролируется JS */
+            z-index: 1;
+            will-change: transform, opacity, filter;
         }
-
-        .slide-item:hover {
-            background: #edf2ff;
-            border-left-color: #1a237e;
+        .slide.active {
+            opacity: 1;
+            transform: translateX(0) scale(1) rotateY(0deg);
+            filter: blur(0);
+            pointer-events: all;
+            z-index: 3;
+            transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+                        opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+                        filter 0.8s cubic-bezier(0.16, 1, 0.3, 1);
         }
-
-        .slide-item.active {
-            background: #e3f2fd;
-            border-left-color: #FFD700;
-            color: #1a237e;
-            font-weight: 600;
+        .slide.leaving {
+            /* Анимация для уходящего слайда (ВЫХОД) */
+            opacity: 0;
+            transform: translateX(-80px) scale(0.96) rotateY(5deg);
+            filter: blur(8px);
+            z-index: 2;
+            transition: transform 0.8s cubic-bezier(0.7, 0, 0.84, 0),
+                        opacity 0.7s cubic-bezier(0.7, 0, 0.84, 0),
+                        filter 0.7s cubic-bezier(0.7, 0, 0.84, 0);
         }
-
-        .slide-icon {
-            margin-right: 12px;
-            color: #666;
-        }
-
-        .slide-item.active .slide-icon {
-            color: #1a237e;
-        }
-
-        /* Content Area */
-        .content-area {
-            flex: 1;
-            padding: 40px;
-        }
-
-        .slide-title {
-            font-size: 2.2rem;
-            color: #1a237e;
-            margin-bottom: 10px;
-        }
-
-        .slide-subtitle {
-            font-size: 1.1rem;
-            color: #666;
-            margin-bottom: 30px;
-            font-weight: 400;
-        }
-
-        .slide-image-container {
-            text-align: center;
-            margin: 30px 0;
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
-            background: #fafafa;
-            padding: 20px;
-        }
-
-        .slide-image {
+        .slide img {
             max-width: 100%;
-            height: auto;
-            border-radius: 10px;
+            max-height: 100vh;
             display: block;
-            margin: 0 auto;
+            outline: none;
+            border: none;
+            user-select: none;
+            -webkit-user-select: none;
+            -ms-user-select: none;
         }
-
-        .features {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 25px;
-            margin-top: 40px;
+        /* СТИЛИ ДЛЯ ИНТЕРАКТИВНЫХ ОБЛАСТЕЙ */
+        area {
+            cursor: pointer;
+            outline: none;
+            transition: opacity 0.2s ease;
         }
-
-        .feature {
-            background: #f8f9fa;
-            padding: 25px;
-            border-radius: 12px;
-            border-left: 5px solid #FFD700;
-            transition: transform 0.3s, box-shadow 0.3s;
+        area:hover {
+            opacity: 0.85;
         }
-
-        .feature:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        
+        /* АНИМИРОВАННЫЙ ЗУМ-ЭФФЕКТ */
+        .zoom-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0);
+            z-index: 1000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            transition: background 0.5s cubic-bezier(0.16, 1, 0.3, 1);
         }
-
-        .feature h4 {
-            color: #1a237e;
-            margin-bottom: 10px;
-            font-size: 1.4rem;
+        .zoom-overlay.active {
+            background: rgba(0, 0, 0, 0.96); /* Более темный фон */
         }
-
-        /* Footer */
-        .footer {
-            background: #1a237e;
-            color: white;
-            padding: 30px 40px;
+        .zoom-image-animating {
+            position: absolute;
+            z-index: 1001;
+            overflow: hidden;
+            transform-origin: center center;
+            transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+            /* Убрали border-radius и box-shadow для полного экрана */
+            border-radius: 0 !important;
+            box-shadow: none !important;
+        }
+        .zoom-image-animating.expanded {
+            /* Убрали тень для чистого вида */
+            box-shadow: none;
+        }
+        .zoom-image-animating img {
+            width: 100%;
+            height: 100%;
+            /* ВАЖНО: cover и 100% размеров */
+            object-fit: cover;
+            object-position: center;
+            opacity: 0;
+            transition: opacity 0.4s ease 0.2s;
+            /* Убираем любые ограничения */
+            max-width: none !important;
+            max-height: none !important;
+        }
+        .zoom-image-animating img.loaded {
+            opacity: 1;
+        }
+        
+        /* КНОПКА ЗАКРЫТИЯ */
+        .zoom-close {
+            position: absolute;
+            top: 25px;
+            right: 35px;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 45px;
+            font-weight: 300;
+            cursor: pointer;
+            z-index: 1002;
+            opacity: 0;
+            transition: all 0.3s ease;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            padding: 10px;
+            transform: translateY(-10px);
+        }
+        .zoom-close.visible {
+            opacity: 1;
+            transform: translateY(0);
+            transition-delay: 0.4s;
+        }
+        .zoom-close:hover {
+            color: #E29B17; /* Золотой при наведении */
+            transform: scale(1.1);
+        }
+        
+        .zoom-caption {
+            position: absolute;
+            bottom: 40px;
+            color: rgba(255, 255, 255, 0.85);
             text-align: center;
-            margin-top: 40px;
+            width: 100%;
+            font-size: 18px;
+            font-weight: 400;
+            padding: 0 20px;
+            text-shadow: 0 2px 15px rgba(0,0,0,0.5);
+            letter-spacing: 0.3px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 1002;
         }
-
-        .footer-content {
-            max-width: 800px;
-            margin: 0 auto;
+        .zoom-caption.visible {
+            opacity: 1;
+            transition-delay: 0.5s;
         }
-
-        .footer h3 {
-            font-size: 1.8rem;
-            margin-bottom: 15px;
+        
+        /* ПРЕЛОАДЕР С ЗОЛОТЫМИ АКЦЕНТАМИ */
+        .site-loader {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: #0a0a0a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.9s ease, visibility 0.9s ease;
         }
-
-        .contact-btn {
-            display: inline-block;
-            background: #FFD700;
-            color: #1a237e;
-            padding: 15px 35px;
-            border-radius: 50px;
-            font-weight: 700;
-            text-decoration: none;
-            margin-top: 20px;
-            transition: all 0.3s;
-            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3);
+        .site-loader.hidden {
+            opacity: 0;
+            visibility: hidden;
         }
-
-        .contact-btn:hover {
-            background: #ffed4e;
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(255, 215, 0, 0.4);
+        .loader-content {
+            text-align: center;
+            transform: translateY(-20px);
         }
-
-        /* Responsive */
-        @media (max-width: 992px) {
-            .main-content {
-                flex-direction: column;
+        .loader-spinner {
+            width: 72px;
+            height: 72px;
+            margin: 0 auto 30px;
+            border: 3px solid rgba(226, 155, 23, 0.15); /* Золотой с прозрачностью */
+            border-top-color: #E29B17; /* Основной золотой */
+            border-right-color: #F8C462; /* Светлый золотой */
+            border-radius: 50%;
+            animation: spin 1.4s cubic-bezier(0.68, -0.55, 0.27, 1.55) infinite;
+            box-shadow: 0 0 20px rgba(226, 155, 23, 0.3); /* Свечение */
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        .loader-text {
+            color: #E29B17; /* Золотой цвет */
+            font-family: 'Raleway', 'Segoe UI', sans-serif; /* Шрифт Raleway */
+            letter-spacing: 4px;
+            font-size: 18px;
+            font-weight: 500;
+            opacity: 0.9;
+            animation: pulse 2s ease-in-out infinite;
+            text-shadow: 0 0 10px rgba(226, 155, 23, 0.4);
+        }
+        @keyframes pulse {
+            0%, 100% { 
+                opacity: 0.7;
+                text-shadow: 0 0 5px rgba(226, 155, 23, 0.3);
             }
-            .slides-panel {
-                width: 100%;
-                border-right: none;
-                border-bottom: 1px solid #eaeaea;
-                max-height: 250px;
-            }
-            .nav-list {
-                justify-content: flex-start;
-                overflow-x: auto;
+            50% { 
+                opacity: 1;
+                text-shadow: 0 0 15px rgba(226, 155, 23, 0.6);
             }
         }
 
+        /* АДАПТИВНОСТЬ ДЛЯ МОБИЛЬНЫХ */
         @media (max-width: 768px) {
-            .header {
-                padding: 30px 20px;
+            body, html {
+                overflow-y: auto;
+                perspective: none; /* Отключаем 3D на мобильных */
             }
-            .gold-circle {
-                width: 250px;
-                height: 250px;
-                top: -70px;
-                right: -70px;
+            .slides-container {
+                overflow-y: auto;
+                height: auto;
+                min-height: 100vh;
             }
-            .content-area {
-                padding: 30px 20px;
+            .slide {
+                position: relative;
+                min-height: 100vh;
+                padding: 10px 0;
+                transform: translateY(25px) scale(0.98) !important;
+                filter: blur(4px) !important;
             }
-            .features {
-                grid-template-columns: 1fr;
+            .slide.active {
+                transform: translateY(0) scale(1) !important;
+                filter: blur(0) !important;
+            }
+            .slide.leaving {
+                transform: translateY(-25px) scale(0.98) !important;
+                filter: blur(4px) !important;
+            }
+            .slide img {
+                max-width: 96vw;
+                max-height: none;
+                height: auto;
+            }
+            .zoom-close {
+                top: 15px;
+                right: 20px;
+                font-size: 40px;
+                padding: 8px;
+            }
+            .zoom-caption {
+                bottom: 25px;
+                font-size: 16px;
+                padding: 0 15px;
+            }
+            .loader-spinner {
+                width: 60px;
+                height: 60px;
+            }
+            .loader-text {
+                font-size: 16px;
+                letter-spacing: 3px;
+            }
+            .nav-hint {
+                font-size: 12px;
+                padding: 8px;
+                bottom: 15px;
+            }
+        }
+
+        /* ПОДСКАЗКА ДЛЯ МОБИЛЬНЫХ */
+        .nav-hint {
+            position: fixed;
+            bottom: 25px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.35);
+            font-size: 13px;
+            font-weight: 300;
+            padding: 12px;
+            z-index: 99;
+            font-family: 'Segoe UI', sans-serif;
+            letter-spacing: 1px;
+            pointer-events: none;
+        }
+        @media (min-width: 769px) {
+            .nav-hint {
+                display: none;
             }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <!-- Header -->
-        <header class="header">
-            <div class="gold-circle"></div>
-            <h1 class="logo">Презентации<span>PRO</span></h1>
-            <p class="tagline">Оформляю презентации, которые помогут заработать и эффективно выступить на любых мероприятиях.</p>
-        </header>
-
-        <!-- Navigation -->
-        <nav class="nav">
-            <ul class="nav-list">
-                <li class="nav-item active" data-target="design">Дизайн</li>
-                <li class="nav-item" data-target="typography">Типографика</li>
-                <li class="nav-item" data-target="infographics">Инфографика</li>
-                <li class="nav-item" data-target="icons">Иконки</li>
-                <li class="nav-item" data-target="animation">Анимация</li>
-                <li class="nav-item" data-target="presentation">Презентация</li>
-            </ul>
-        </nav>
-
-        <!-- Main Content -->
-        <main class="main-content">
-            <!-- Slides Panel -->
-            <div class="slides-panel">
-                <h3>Слайды презентации</h3>
-                <div class="slide-item active" data-slide="slide1">
-                    <i class="slide-icon fas fa-image"></i>Слайд 1: Обложка
-                </div>
-                <div class="slide-item" data-slide="slide2">
-                    <i class="slide-icon fas fa-chart-bar"></i>Слайд 2: Инфографика
-                </div>
-                <div class="slide-item" data-slide="slide3">
-                    <i class="slide-icon fas fa-list-check"></i>Слайд 3: Структура
-                </div>
-                <div class="slide-item" data-slide="slide4">
-                    <i class="slide-icon fas fa-lightbulb"></i>Слайд 4: Идеи
-                </div>
-                <div class="slide-item" data-slide="slide5">
-                    <i class="slide-icon fas fa-rocket"></i>Слайд 5: Результаты
-                </div>
-                <div class="slide-item" data-slide="slide6">
-                    <i class="slide-icon fas fa-handshake"></i>Слайд 6: Контакты
-                </div>
-            </div>
-
-            <!-- Content Area -->
-            <div class="content-area">
-                <h2 class="slide-title" id="current-title">Дизайн презентаций</h2>
-                <p class="slide-subtitle" id="current-subtitle">Создаю визуально привлекательные и функциональные слайды</p>
-                
-                <div class="slide-image-container">
-                    <!-- WebP изображение -->
-                    <img src="Слайд1.webp" alt="Слайд презентации" class="slide-image" id="current-slide">
-                    <p style="margin-top: 10px; color: #666; font-size: 0.9rem;">Формат: WebP | Оптимизированный размер</p>
-                </div>
-
-                <div class="features">
-                    <div class="feature">
-                        <h4><i class="fas fa-gem" style="color:#FFD700; margin-right:10px;"></i>Уникальный дизайн</h4>
-                        <p>Каждая презентация создаётся с нуля под ваши задачи и корпоративный стиль. Никаких шаблонов.</p>
-                    </div>
-                    <div class="feature">
-                        <h4><i class="fas fa-bolt" style="color:#FFD700; margin-right:10px;"></i>Быстрая реализация</h4>
-                        <p>Соблюдаю сроки, оперативно вношу правки. От концепции до готовой презентации за 3-5 дней.</p>
-                    </div>
-                    <div class="feature">
-                        <h4><i class="fas fa-chart-line" style="color:#FFD700; margin-right:10px;"></i>Эффект на результат</h4>
-                        <p>Слайды, которые убеждают инвесторов, мотивируют команду и закрывают сделки.</p>
-                    </div>
-                </div>
-            </div>
-        </main>
-
-        <!-- Footer -->
-        <footer class="footer">
-            <div class="footer-content">
-                <h3>Готовы работать с профессиональными презентациями?</h3>
-                <p>Выступление с моими слайдами запоминается надолго. Превращаю сложные данные в ясные и убедительные решения.</p>
-                <a href="#contact" class="contact-btn">Обсудить проект</a>
-            </div>
-        </footer>
+    <!-- ПРЕЛОАДЕР -->
+    <div id="site-loader" class="site-loader">
+        <div class="loader-content">
+            <div class="loader-spinner"></div>
+            <p class="loader-text">ПОРТФОЛИО ПРЕЗЕНТАЦИЙ</p>
+        </div>
     </div>
 
+    <!-- ОВЕРЛЕЙ ДЛЯ АНИМАЦИИ ЗУМА -->
+    <div id="zoomOverlay" class="zoom-overlay">
+        <div id="zoomContainer" class="zoom-image-animating">
+            <img id="zoomImage" src="" alt="">
+        </div>
+        <div id="zoomClose" class="zoom-close">&times;</div>
+        <div id="zoomCaption" class="zoom-caption"></div>
+    </div>
+
+    <div class="slides-container">
+        <!-- СЛАЙДЫ -->
+        <section class="slide active" id="main-menu">
+            <img src="Слайд1.webp" alt="Главное меню" usemap="#slide1-map">
+        </section>
+        <section class="slide" id="before-after">
+            <img src="Слайд2.webp" alt="До/После 1" usemap="#menu-map">
+        </section>
+        <section class="slide">
+            <img src="Слайд3.webp" alt="До/После 2" usemap="#menu-map">
+        </section>
+        <section class="slide" id="infographics-gallery">
+            <img src="Слайд4.webp" alt="Инфографика - Галерея 1" usemap="#slide4-map">
+        </section>
+        <section class="slide" id="infographics-gallery-2">
+            <img src="Слайд5.webp" alt="Инфографика - Галерея 2" usemap="#slide5-map">
+        </section>
+        <section class="slide" id="lab">
+            <img src="Слайд6.webp" alt="Лаборатория 1" usemap="#slide6-map">
+        </section>
+        <section class="slide" id="lab-2">
+            <img src="Слайд7.webp" alt="Лаборатория 2" usemap="#slide7-map">
+        </section>
+        <section class="slide" id="templates-gallery">
+            <img src="Слайд8.webp" alt="Шаблоны - Галерея 1" usemap="#slide8-map">
+        </section>
+        <section class="slide" id="templates-gallery-2">
+            <img src="Слайд9.webp" alt="Шаблоны - Галерея 2" usemap="#slide9-map">
+        </section>
+        <section class="slide" id="templates-gallery-3">
+            <img src="Слайд10.webp" alt="Шаблоны - Галерея 3" usemap="#slide10-map">
+        </section>
+        <section class="slide" id="contacts">
+            <img src="Слайд11.webp" alt="Контакты" usemap="#menu-map">
+        </section>
+    </div>
+
+    <!-- Подсказка для мобильных -->
+    <div class="nav-hint">← → на клавиатуре • ESC для выхода</div>
+
+    <!-- Image Maps -->
+    <map name="slide1-map">
+        <area shape="rect" coords="73,210,261,253" href="#" data-target="main-menu" class="nav-btn" alt="Обо мне" title="Обо мне">
+        <area shape="rect" coords="73,270,261,313" href="#" data-target="before-after" class="nav-btn" alt="До/после" title="До/после">
+        <area shape="rect" coords="73,325,261,368" href="#" data-target="infographics-gallery" class="nav-btn" alt="Инфографика" title="Инфографика">
+        <area shape="rect" coords="73,379,261,422" href="#" data-target="lab" class="nav-btn" alt="Лаборатория" title="Лаборатория">
+        <area shape="rect" coords="73,430,261,473" href="#" data-target="templates-gallery" class="nav-btn" alt="Готовые решения" title="Готовые решения">
+        <area shape="rect" coords="73,485,261,528" href="#" data-target="contacts" class="nav-btn" alt="Контакты" title="Контакты">
+    </map>
+    <map name="menu-map">
+        <area shape="rect" coords="73,210,261,253" href="#" data-target="main-menu" class="nav-btn" alt="Обо мне" title="Обо мне">
+        <area shape="rect" coords="73,270,261,313" href="#" data-target="before-after" class="nav-btn" alt="До/после" title="До/после">
+        <area shape="rect" coords="73,325,261,368" href="#" data-target="infographics-gallery" class="nav-btn" alt="Инфографика" title="Инфографика">
+        <area shape="rect" coords="73,379,261,422" href="#" data-target="lab" class="nav-btn" alt="Лаборатория" title="Лаборатория">
+        <area shape="rect" coords="73,430,261,473" href="#" data-target="templates-gallery" class="nav-btn" alt="Готовые решения" title="Готовые решения">
+        <area shape="rect" coords="73,485,261,528" href="#" data-target="contacts" class="nav-btn" alt="Контакты" title="Контакты">
+    </map>
+    <map name="slide4-map">
+        <area shape="rect" coords="73,210,261,253" href="#" data-target="main-menu" class="nav-btn" alt="Обо мне" title="Обо мне">
+        <area shape="rect" coords="73,270,261,313" href="#" data-target="before-after" class="nav-btn" alt="До/после" title="До/после">
+        <area shape="rect" coords="73,325,261,368" href="#" data-target="infographics-gallery" class="nav-btn" alt="Инфографика" title="Инфографика">
+        <area shape="rect" coords="73,379,261,422" href="#" data-target="lab" class="nav-btn" alt="Лаборатория" title="Лаборатория">
+        <area shape="rect" coords="73,430,261,473" href="#" data-target="templates-gallery" class="nav-btn" alt="Готовые решения" title="Готовые решения">
+        <area shape="rect" coords="73,485,261,528" href="#" data-target="contacts" class="nav-btn" alt="Контакты" title="Контакты">
+        <area shape="rect" coords="522,236,842,417" data-large="Слайд13.webp" class="zoom-image" alt="Инфографика 1" title="Увеличить">
+        <area shape="rect" coords="522,468,842,649" data-large="Слайд14.webp" class="zoom-image" alt="Инфографика 2" title="Увеличить">
+        <area shape="rect" coords="886,46,1206,227" data-large="Слайд12.webp" class="zoom-image" alt="Инфографика 3" title="Увеличить">
+        <area shape="rect" coords="886,236,1206,417" data-large="Слайд15.webp" class="zoom-image" alt="Инфографика 4" title="Увеличить">
+        <area shape="rect" coords="1104,648,1203,673" href="#" data-target="infographics-gallery-2" class="nav-btn" alt="Далее" title="Далее">
+    </map>
+    <map name="slide5-map">
+        <area shape="rect" coords="73,210,261,253" href="#" data-target="main-menu" class="nav-btn" alt="Обо мне" title="Обо мне">
+        <area shape="rect" coords="73,270,261,313" href="#" data-target="before-after" class="nav-btn" alt="До/после" title="До/после">
+        <area shape="rect" coords="73,325,261,368" href="#" data-target="infographics-gallery" class="nav-btn" alt="Инфографика" title="Инфографика">
+        <area shape="rect" coords="73,379,261,422" href="#" data-target="lab" class="nav-btn" alt="Лаборатория" title="Лаборатория">
+        <area shape="rect" coords="73,430,261,473" href="#" data-target="templates-gallery" class="nav-btn" alt="Готовые решения" title="Готовые решения">
+        <area shape="rect" coords="73,485,261,528" href="#" data-target="contacts" class="nav-btn" alt="Контакты" title="Контакты">
+        <area shape="rect" coords="522,228,844,408" data-large="Слайд17.webp" class="zoom-image" alt="Инфографика 5" title="Увеличить">
+        <area shape="rect" coords="520,468,842,648" data-large="Слайд18.webp" class="zoom-image" alt="Инфографика 6" title="Увеличить">
+        <area shape="rect" coords="885,47,1207,227" data-large="Слайд16.webp" class="zoom-image" alt="Инфографика 7" title="Увеличить">
+        <area shape="rect" coords="1104,648,1203,673" href="#" data-target="infographics-gallery" class="nav-btn" alt="Назад" title="Назад">
+    </map>
+    <map name="slide6-map">
+        <area shape="rect" coords="73,210,261,253" href="#" data-target="main-menu" class="nav-btn" alt="Обо мне" title="Обо мне">
+        <area shape="rect" coords="73,270,261,313" href="#" data-target="before-after" class="nav-btn" alt="До/после" title="До/после">
+        <area shape="rect" coords="73,325,261,368" href="#" data-target="infographics-gallery" class="nav-btn" alt="Инфографика" title="Инфографика">
+        <area shape="rect" coords="73,379,261,422" href="#" data-target="lab" class="nav-btn" alt="Лаборатория" title="Лаборатория">
+        <area shape="rect" coords="73,430,261,473" href="#" data-target="templates-gallery" class="nav-btn" alt="Готовые решения" title="Готовые решения">
+        <area shape="rect" coords="73,485,261,528" href="#" data-target="contacts" class="nav-btn" alt="Контакты" title="Контакты">
+        <area shape="rect" coords="1104,648,1203,673" href="#" data-target="lab-2" class="nav-btn" alt="Далее" title="Далее">
+    </map>
+    <map name="slide7-map">
+        <area shape="rect" coords="73,210,261,253" href="#" data-target="main-menu" class="nav-btn" alt="Обо мне" title="Обо мне">
+        <area shape="rect" coords="73,270,261,313" href="#" data-target="before-after" class="nav-btn" alt="До/после" title="До/после">
+        <area shape="rect" coords="73,325,261,368" href="#" data-target="infographics-gallery" class="nav-btn" alt="Инфографика" title="Инфографика">
+        <area shape="rect" coords="73,379,261,422" href="#" data-target="lab" class="nav-btn" alt="Лаборатория" title="Лаборатория">
+        <area shape="rect" coords="73,430,261,473" href="#" data-target="templates-gallery" class="nav-btn" alt="Готовые решения" title="Готовые решения">
+        <area shape="rect" coords="73,485,261,528" href="#" data-target="contacts" class="nav-btn" alt="Контакты" title="Контакты">
+        <area shape="rect" coords="1104,648,1203,673" href="#" data-target="lab" class="nav-btn" alt="Назад" title="Назад">
+    </map>
+    <map name="slide8-map">
+        <area shape="rect" coords="73,210,261,253" href="#" data-target="main-menu" class="nav-btn" alt="Обо мне" title="Обо мне">
+        <area shape="rect" coords="73,270,261,313" href="#" data-target="before-after" class="nav-btn" alt="До/после" title="До/после">
+        <area shape="rect" coords="73,325,261,368" href="#" data-target="infographics-gallery" class="nav-btn" alt="Инфографика" title="Инфографика">
+        <area shape="rect" coords="73,379,261,422" href="#" data-target="lab" class="nav-btn" alt="Лаборатория" title="Лаборатория">
+        <area shape="rect" coords="73,430,261,473" href="#" data-target="templates-gallery" class="nav-btn" alt="Готовые решения" title="Готовые решения">
+        <area shape="rect" coords="73,485,261,528" href="#" data-target="contacts" class="nav-btn" alt="Контакты" title="Контакты">
+        <area shape="rect" coords="294,158,613,337" data-large="Слайд19.webp" class="zoom-image" alt="Шаблон 1" title="Увеличить">
+        <area shape="rect" coords="614,158,933,337" data-large="Слайд20.webp" class="zoom-image" alt="Шаблон 2" title="Увеличить">
+        <area shape="rect" coords="933,158,1252,337" data-large="Слайд21.webp" class="zoom-image" alt="Шаблон 3" title="Увеличить">
+        <area shape="rect" coords="294,424,613,603" data-large="Слайд22.webp" class="zoom-image" alt="Шаблон 4" title="Увеличить">
+        <area shape="rect" coords="614,424,933,603" data-large="Слайд23.webp" class="zoom-image" alt="Шаблон 5" title="Увеличить">
+        <area shape="rect" coords="933,424,1252,603" data-large="Слайд24.webp" class="zoom-image" alt="Шаблон 6" title="Увеличить">
+        <area shape="rect" coords="1104,648,1203,673" href="#" data-target="templates-gallery-2" class="nav-btn" alt="Далее" title="Далее">
+    </map>
+    <map name="slide9-map">
+        <area shape="rect" coords="73,210,261,253" href="#" data-target="main-menu" class="nav-btn" alt="Обо мне" title="Обо мне">
+        <area shape="rect" coords="73,270,261,313" href="#" data-target="before-after" class="nav-btn" alt="До/после" title="До/после">
+        <area shape="rect" coords="73,325,261,368" href="#" data-target="infographics-gallery" class="nav-btn" alt="Инфографика" title="Инфографика">
+        <area shape="rect" coords="73,379,261,422" href="#" data-target="lab" class="nav-btn" alt="Лаборатория" title="Лаборатория">
+        <area shape="rect" coords="73,430,261,473" href="#" data-target="templates-gallery" class="nav-btn" alt="Готовые решения" title="Готовые решения">
+        <area shape="rect" coords="73,485,261,528" href="#" data-target="contacts" class="nav-btn" alt="Контакты" title="Контакты">
+        <area shape="rect" coords="294,158,613,337" data-large="Слайд25.webp" class="zoom-image" alt="Шаблон 7" title="Увеличить">
+        <area shape="rect" coords="614,158,933,337" data-large="Слайд26.webp" class="zoom-image" alt="Шаблон 8" title="Увеличить">
+        <area shape="rect" coords="933,158,1252,337" data-large="Слайд27.webp" class="zoom-image" alt="Шаблон 9" title="Увеличить">
+        <area shape="rect" coords="294,424,613,603" data-large="Слайд28.webp" class="zoom-image" alt="Шаблон 10" title="Увеличить">
+        <area shape="rect" coords="614,424,933,603" data-large="Слайд29.webp" class="zoom-image" alt="Шаблон 11" title="Увеличить">
+        <area shape="rect" coords="933,424,1252,603" data-large="Слайд30.webp" class="zoom-image" alt="Шаблон 12" title="Увеличить">
+        <area shape="rect" coords="289,650,390,672" href="#" data-target="templates-gallery" class="nav-btn" alt="Назад" title="Назад">
+        <area shape="rect" coords="1104,648,1203,673" href="#" data-target="templates-gallery-3" class="nav-btn" alt="Далее" title="Далее">
+    </map>
+    <map name="slide10-map">
+        <area shape="rect" coords="73,210,261,253" href="#" data-target="main-menu" class="nav-btn" alt="Обо мне" title="Обо мне">
+        <area shape="rect" coords="73,270,261,313" href="#" data-target="before-after" class="nav-btn" alt="До/после" title="До/после">
+        <area shape="rect" coords="73,325,261,368" href="#" data-target="infographics-gallery" class="nav-btn" alt="Инфографика" title="Инфографика">
+        <area shape="rect" coords="73,379,261,422" href="#" data-target="lab" class="nav-btn" alt="Лаборатория" title="Лаборатория">
+        <area shape="rect" coords="73,430,261,473" href="#" data-target="templates-gallery" class="nav-btn" alt="Готовые решения" title="Готовые решения">
+        <area shape="rect" coords="73,485,261,528" href="#" data-target="contacts" class="nav-btn" alt="Контакты" title="Контакты">
+        <area shape="rect" coords="294,158,613,337" data-large="Слайд31.webp" class="zoom-image" alt="Шаблон 13" title="Увеличить">
+        <area shape="rect" coords="614,158,933,337" data-large="Слайд32.webp" class="zoom-image" alt="Шаблон 14" title="Увеличить">
+        <area shape="rect" coords="933,158,1252,337" data-large="Слайд33.webp" class="zoom-image" alt="Шаблон 15" title="Увеличить">
+        <area shape="rect" coords="294,424,613,603" data-large="Слайд34.webp" class="zoom-image" alt="Шаблон 16" title="Увеличить">
+        <area shape="rect" coords="614,424,933,603" data-large="Слайд35.webp" class="zoom-image" alt="Шаблон 17" title="Увеличить">
+        <area shape="rect" coords="933,424,1252,603" data-large="Слайд36.webp" class="zoom-image" alt="Шаблон 18" title="Увеличить">
+        <area shape="rect" coords="1104,648,1203,673" href="#" data-target="templates-gallery-2" class="nav-btn" alt="Назад" title="Назад">
+    </map>
+
     <script>
-        // Навигация по разделам
-        const navItems = document.querySelectorAll('.nav-item');
-        const slideItems = document.querySelectorAll('.slide-item');
-        const currentTitle = document.getElementById('current-title');
-        const currentSubtitle = document.getElementById('current-subtitle');
-        const currentSlide = document.getElementById('current-slide');
-
-        // Данные для разделов (заголовки, подзаголовки и изображения WebP)
-        const contentData = {
-            design: {
-                title: 'Дизайн презентаций',
-                subtitle: 'Создаю визуально привлекательные и функциональные слайды',
-                image: 'Слайд1.webp'
-            },
-            typography: {
-                title: 'Типографика и вёрстка',
-                subtitle: 'Читабельные тексты, правильные акценты и гармоничная компоновка',
-                image: 'Слайд2.webp'
-            },
-            infographics: {
-                title: 'Инфографика и визуализация',
-                subtitle: 'Превращаю цифры и процессы в понятные графики и схемы',
-                image: 'Слайд2.webp'
-            },
-            icons: {
-                title: 'Иконки и иллюстрации',
-                subtitle: 'Уникальные графические элементы, усиливающие сообщение',
-                image: 'Слайд3.webp'
-            },
-            animation: {
-                title: 'Анимация и переходы',
-                subtitle: 'Динамичные эффекты, которые удерживают внимание аудитории',
-                image: 'Слайд4.webp'
-            },
-            presentation: {
-                title: 'Полный цикл презентации',
-                subtitle: 'От идеи до готового выступления с речевыми заметками',
-                image: 'Слайд5.webp'
+        // ==================== ПОЛИФИЛ ДЛА ПЛАВНОСТИ ====================
+        (function() {
+            var lastTime = 0;
+            var vendors = ['ms', 'moz', 'webkit', 'o'];
+            for(var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
+                window.requestAnimationFrame = window[vendors[x]+'RequestAnimationFrame'];
+                window.cancelAnimationFrame = window[vendors[x]+'CancelAnimationFrame'] || window[vendors[x]+'CancelRequestAnimationFrame'];
             }
-        };
+            if (!window.requestAnimationFrame)
+                window.requestAnimationFrame = function(callback, element) {
+                    var currTime = new Date().getTime();
+                    var timeToCall = Math.max(0, 16 - (currTime - lastTime));
+                    var id = window.setTimeout(function() { callback(currTime + timeToCall); }, timeToCall);
+                    lastTime = currTime + timeToCall;
+                    return id;
+                };
+            if (!window.cancelAnimationFrame)
+                window.cancelAnimationFrame = function(id) {
+                    clearTimeout(id);
+                };
+        }());
 
-        // Обработчики для навигации
-        navItems.forEach(item => {
-            item.addEventListener('click', () => {
-                const target = item.getAttribute('data-target');
-                
-                // Обновляем активный элемент в навигации
-                navItems.forEach(nav => nav.classList.remove('active'));
-                item.classList.add('active');
-                
-                // Обновляем контент
-                if(contentData[target]) {
-                    currentTitle.textContent = contentData[target].title;
-                    currentSubtitle.textContent = contentData[target].subtitle;
-                    currentSlide.src = contentData[target].image;
-                    currentSlide.alt = contentData[target].title;
+        // ==================== ПРЕЛОАДЕР ====================
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                const loader = document.getElementById('site-loader');
+                if (loader) {
+                    loader.classList.add('hidden');
+                    setTimeout(() => loader.remove(), 900);
                 }
-            });
+            }, 800);
         });
 
-        // Обработчики для слайдов
-        slideItems.forEach(item => {
-            item.addEventListener('click', () => {
-                const slide = item.getAttribute('data-slide');
-                
-                // Обновляем активный слайд
-                slideItems.forEach(slideItem => slideItem.classList.remove('active'));
-                item.classList.add('active');
-                
-                // Обновляем изображение
-                if(slide === 'slide1') currentSlide.src = 'Слайд1.webp';
-                else if(slide === 'slide2') currentSlide.src = 'Слайд2.webp';
-                else if(slide === 'slide3') currentSlide.src = 'Слайд3.webp';
-                else if(slide === 'slide4') currentSlide.src = 'Слайд4.webp';
-                else if(slide === 'slide5') currentSlide.src = 'Слайд5.webp';
-                else if(slide === 'slide6') currentSlide.src = 'Слайд6.webp';
-                
-                currentSlide.alt = `Слайд ${slide.slice(-1)}`;
-            });
-        });
-
-        // Имитация загрузки WebP с проверкой поддержки браузером
-        function checkWebPSupport() {
-            const webP = new Image();
-            webP.onload = webP.onerror = function() {
-                const isSupported = (webP.height === 2);
-                if (!isSupported) {
-                    // Если WebP не поддерживается, заменяем на JPG
-                    const allImages = document.querySelectorAll('img[src$=".webp"]');
-                    allImages.forEach(img => {
-                        img.src = img.src.replace('.webp', '.jpg');
-                    });
-                    console.log('WebP не поддерживается, загружаем JPG версии');
-                }
+        // ==================== ЭФФЕКТ ПЛАВНОГО УВЕЛИЧЕНИЯ ====================
+        function zoomImageFromThumbnail(areaElement) {
+            const coords = areaElement.getAttribute('coords').split(',').map(Number);
+            const imageUrl = areaElement.getAttribute('data-large');
+            const altText = areaElement.getAttribute('alt');
+            
+            // Получаем позицию и размер миниатюры
+            const rect = {
+                left: coords[0],
+                top: coords[1],
+                width: coords[2] - coords[0],
+                height: coords[3] - coords[1]
             };
-            webP.src = 'data:image/webp;base64,UklGRjoAAABXRUJQVlA4IC4AAACyAgCdASoCAAIALmk0mk0iIiIiIgBoSygABc6WWgAA/veff/0PP8bA//LwYAAA';
+            
+            // Получаем элементы
+            const zoomContainer = document.getElementById('zoomContainer');
+            const zoomImage = document.getElementById('zoomImage');
+            const zoomCaption = document.getElementById('zoomCaption');
+            const zoomClose = document.getElementById('zoomClose');
+            const zoomOverlay = document.getElementById('zoomOverlay');
+            
+            // Сбрасываем стили
+            zoomContainer.classList.remove('expanded');
+            zoomImage.classList.remove('loaded');
+            zoomCaption.classList.remove('visible');
+            zoomClose.classList.remove('visible');
+            
+            // Убираем border-radius и другие ограничения
+            zoomContainer.style.borderRadius = '0';
+            zoomContainer.style.boxShadow = 'none';
+            
+            // Устанавливаем начальную позицию (точно на месте миниатюры)
+            zoomContainer.style.width = rect.width + 'px';
+            zoomContainer.style.height = rect.height + 'px';
+            zoomContainer.style.left = rect.left + 'px';
+            zoomContainer.style.top = rect.top + 'px';
+            zoomContainer.style.transform = 'scale(1)';
+            
+            // Устанавливаем подпись
+            zoomCaption.textContent = altText;
+            
+            // Показываем оверлей (прозрачный)
+            zoomOverlay.style.display = 'flex';
+            
+            // Загружаем изображение
+            const img = new Image();
+            img.onload = function() {
+                // Устанавливаем загруженное изображение
+                zoomImage.src = imageUrl;
+                
+                // Даем время браузеру обработать DOM
+                setTimeout(() => {
+                    // РАСЧЕТ НА ВЕСЬ ЭКРАН БЕЗ ОГРАНИЧЕНИЙ
+                    const targetWidth = window.innerWidth; // 100% ширины экрана
+                    const targetHeight = window.innerHeight; // 100% высоты экрана
+                    
+                    const targetLeft = 0; // С самого левого края
+                    const targetTop = 0; // С самого верха
+                    
+                    // Активируем фон оверлея
+                    zoomOverlay.classList.add('active');
+                    
+                    // Анимация увеличения и перемещения
+                    requestAnimationFrame(() => {
+                        // Плавное перемещение и масштабирование НА ВЕСЬ ЭКРАН
+                        zoomContainer.style.left = targetLeft + 'px';
+                        zoomContainer.style.top = targetTop + 'px';
+                        zoomContainer.style.width = targetWidth + 'px';
+                        zoomContainer.style.height = targetHeight + 'px';
+                        
+                        // Добавляем класс для дополнительных стилей
+                        setTimeout(() => {
+                            zoomContainer.classList.add('expanded');
+                            zoomImage.classList.add('loaded');
+                            
+                            // Показываем кнопку закрытия и подпись
+                            setTimeout(() => {
+                                zoomClose.classList.add('visible');
+                                zoomCaption.classList.add('visible');
+                            }, 300);
+                        }, 50);
+                    });
+                }, 50);
+            };
+            img.src = imageUrl;
         }
 
-        // Проверяем поддержку WebP при загрузке страницы
-        window.addEventListener('DOMContentLoaded', checkWebPSupport);
+        // ==================== ЗАКРЫТИЕ ЭФФЕКТА УВЕЛИЧЕНИЯ ====================
+        function closeZoom() {
+            const zoomOverlay = document.getElementById('zoomOverlay');
+            const zoomContainer = document.getElementById('zoomContainer');
+            const zoomCaption = document.getElementById('zoomCaption');
+            const zoomClose = document.getElementById('zoomClose');
+            
+            // Скрываем элементы
+            zoomCaption.classList.remove('visible');
+            zoomClose.classList.remove('visible');
+            zoomContainer.classList.remove('expanded');
+            
+            // Убираем фон оверлея
+            zoomOverlay.classList.remove('active');
+            
+            // Скрываем оверлей после анимации
+            setTimeout(() => {
+                zoomOverlay.style.display = 'none';
+                zoomImage.src = ''; // Очищаем изображение
+            }, 500);
+        }
+
+        // ==================== ОБРАБОТЧИКИ ДЛЯ МИНИАТЮР ====================
+        document.querySelectorAll('.zoom-image').forEach(area => {
+            area.addEventListener('click', function(e) {
+                e.preventDefault();
+                zoomImageFromThumbnail(this);
+            });
+        });
+
+        // Закрытие по кнопке
+        document.getElementById('zoomClose').addEventListener('click', closeZoom);
+
+        // Закрытие по клику на оверлей
+        document.getElementById('zoomOverlay').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeZoom();
+            }
+        });
+
+        // Закрытие по ESC
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeZoom();
+            }
+        });
+
+        // ==================== ВОЛШЕБНАЯ ФУНКЦИЯ ПЕРЕХОДА ====================
+        function switchSlideWithMagic(newSlideId) {
+            const currentSlide = document.querySelector('.slide.active');
+            const newSlide = document.getElementById(newSlideId);
+            
+            if (!currentSlide || !newSlide || currentSlide === newSlide) return;
+            
+            // 1. Помечаем текущий слайд как "уходящий"
+            currentSlide.classList.remove('active');
+            currentSlide.classList.add('leaving');
+            
+            // 2. Через небольшой промежуток начинаем показ нового слайда
+            setTimeout(() => {
+                newSlide.classList.add('active');
+            }, 150); // Задержка для наложения анимаций
+            
+            // 3. Убираем класс "leaving" после завершения анимации
+            setTimeout(() => {
+                currentSlide.classList.remove('leaving');
+            }, 850);
+        }
+
+        // ==================== НАВИГАЦИЯ ПО СЛАЙДАМ ====================
+        document.querySelectorAll('.nav-btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('data-target');
+                switchSlideWithMagic(targetId);
+            });
+        });
+
+        // ==================== КЛАВИАТУРНАЯ НАВИГАЦИЯ ====================
+        document.addEventListener('keydown', function(event) {
+            const slides = Array.from(document.querySelectorAll('.slide'));
+            const currentIndex = slides.findIndex(slide => slide.classList.contains('active'));
+            
+            if (event.key === 'ArrowRight' || event.key === 'PageDown' || event.key === ' ') {
+                // Следующий слайд
+                const nextIndex = (currentIndex + 1) % slides.length;
+                switchSlideWithMagic(slides[nextIndex].id);
+            } else if (event.key === 'ArrowLeft' || event.key === 'PageUp') {
+                // Предыдущий слайд
+                const prevIndex = (currentIndex - 1 + slides.length) % slides.length;
+                switchSlideWithMagic(slides[prevIndex].id);
+            } else if (event.key === 'Home') {
+                // На первый слайд
+                switchSlideWithMagic(slides[0].id);
+            } else if (event.key === 'End') {
+                // На последний слайд
+                switchSlideWithMagic(slides[slides.length - 1].id);
+            }
+        });
+
+        // ==================== ПЛАВНЫЙ СКРОЛЛ ДЛЯ МОБИЛЬНЫХ ====================
+        if (window.innerWidth <= 768) {
+            document.querySelectorAll('area').forEach(area => {
+                area.addEventListener('click', function() {
+                    setTimeout(() => {
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }, 300);
+                });
+            });
+        }
+
+        // ==================== ОТКЛЮЧЕНИЕ ПРОКРУТКИ НА ДЕСКТОПЕ ====================
+        if (window.innerWidth > 768) {
+            document.addEventListener('wheel', function(e) {
+                e.preventDefault();
+            }, { passive: false });
+        }
     </script>
 </body>
 </html>
