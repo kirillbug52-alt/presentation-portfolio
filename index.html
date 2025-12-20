@@ -1,681 +1,492 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
-    <title>Портфолио дизайнера презентаций</title>
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Подключаем шрифт Raleway -->
-    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <title>Презентации для бизнеса</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* БАЗОВЫЕ СТИЛИ */
-        body, html {
+        * {
             margin: 0;
             padding: 0;
-            overflow: hidden;
-            font-family: 'Segoe UI', system-ui, sans-serif;
-            background: #0a0a0a;
-            height: 100%;
-            perspective: 1200px;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-        .slides-container {
-            width: 100vw;
-            height: 100vh;
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(90deg, #1a237e 0%, #283593 100%);
+            color: white;
+            padding: 40px;
             position: relative;
             overflow: hidden;
-        }
-        .slide {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: #000;
-            pointer-events: none;
-            opacity: 0;
-            transform: translateX(80px) scale(0.96) rotateY(-5deg);
-            filter: blur(8px);
-            transition: none;
-            z-index: 1;
-            will-change: transform, opacity, filter;
-        }
-        .slide.active {
-            opacity: 1;
-            transform: translateX(0) scale(1) rotateY(0deg);
-            filter: blur(0);
-            pointer-events: all;
-            z-index: 3;
-            transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1),
-                        opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
-                        filter 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        .slide.leaving {
-            opacity: 0;
-            transform: translateX(-80px) scale(0.96) rotateY(5deg);
-            filter: blur(8px);
-            z-index: 2;
-            transition: transform 0.8s cubic-bezier(0.7, 0, 0.84, 0),
-                        opacity 0.7s cubic-bezier(0.7, 0, 0.84, 0),
-                        filter 0.7s cubic-bezier(0.7, 0, 0.84, 0);
-        }
-        
-        /* КОНТЕЙНЕР ДЛЯ ИЗОБРАЖЕНИЯ И КНОПОК */
-        .slide-content {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        
-        .slide-content img {
-            max-width: 100%;
-            max-height: 100vh;
-            display: block;
-            user-select: none;
-            -webkit-user-select: none;
-        }
-        
-        /* СТИЛИ ДЛЯ НАВИГАЦИОННЫХ ОВЕРЛЕЕВ ПОВЕРХ ИЗОБРАЖЕНИЯ */
-        .nav-overlay {
-            position: absolute;
-            background: transparent;
-            cursor: pointer;
-            z-index: 10;
-            transition: all 0.2s ease;
-            border-radius: 2px;
-        }
-        .nav-overlay:hover {
-            background: rgba(226, 155, 23, 0.15);
-            box-shadow: 0 0 0 2px rgba(226, 155, 23, 0.3);
-        }
-        
-        .zoom-overlay {
-            background: transparent;
-            cursor: zoom-in;
-        }
-        .zoom-overlay:hover {
-            background: rgba(255, 255, 255, 0.05);
-        }
-        
-        /* АНИМИРОВАННЫЙ ЗУМ-ЭФФЕКТ */
-        .zoom-overlay-full {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0);
-            z-index: 1000;
-            display: none;
-            justify-content: center;
-            align-items: center;
-            transition: background 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        .zoom-overlay-full.active {
-            background: rgba(0, 0, 0, 0.96);
-        }
-        .zoom-image-animating {
-            position: absolute;
-            z-index: 1001;
-            overflow: hidden;
-            transform-origin: center center;
-            transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
-            border-radius: 0 !important;
-            box-shadow: none !important;
-        }
-        .zoom-image-animating.expanded {
-            box-shadow: none;
-        }
-        .zoom-image-animating img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            object-position: center;
-            opacity: 0;
-            transition: opacity 0.4s ease 0.2s;
-            max-width: none !important;
-            max-height: none !important;
-        }
-        .zoom-image-animating img.loaded {
-            opacity: 1;
-        }
-        
-        /* КНОПКА ЗАКРЫТИЯ */
-        .zoom-close {
-            position: absolute;
-            top: 25px;
-            right: 35px;
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 45px;
-            font-weight: 300;
-            cursor: pointer;
-            z-index: 1002;
-            opacity: 0;
-            transition: all 0.3s ease;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
-            padding: 10px;
-            transform: translateY(-10px);
-        }
-        .zoom-close.visible {
-            opacity: 1;
-            transform: translateY(0);
-            transition-delay: 0.4s;
-        }
-        .zoom-close:hover {
-            color: #E29B17;
-            transform: scale(1.1);
-        }
-        
-        .zoom-caption {
-            position: absolute;
-            bottom: 40px;
-            color: rgba(255, 255, 255, 0.85);
             text-align: center;
-            width: 100%;
-            font-size: 18px;
-            font-weight: 400;
-            padding: 0 20px;
-            text-shadow: 0 2px 15px rgba(0,0,0,0.5);
-            letter-spacing: 0.3px;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            z-index: 1002;
         }
-        .zoom-caption.visible {
-            opacity: 1;
-            transition-delay: 0.5s;
-        }
-        
-        /* ПРЕЛОАДЕР */
-        .site-loader {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: #0a0a0a;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            transition: opacity 1.2s ease, visibility 1.2s ease;
-        }
-        .site-loader::before {
-            content: '';
+
+        .gold-circle {
             position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background-image: url('ОБЛОЖКА.jpg');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            filter: brightness(0.85);
-        }
-        .site-loader.hidden {
-            opacity: 0;
-            visibility: hidden;
-        }
-        .loader-content {
-            text-align: center;
-            transform: translateY(-20px);
-            position: relative;
-            z-index: 1;
-        }
-        .loader-spinner {
-            width: 72px;
-            height: 72px;
-            margin: 0 auto 30px;
-            border: 3px solid rgba(226, 155, 23, 0.15);
-            border-top-color: #E29B17;
-            border-right-color: #F8C462;
+            width: 350px;
+            height: 350px;
+            background: radial-gradient(circle, #FFD700 0%, #FFA500 70%, transparent 100%);
             border-radius: 50%;
-            animation: spin 1.4s cubic-bezier(0.68, -0.55, 0.27, 1.55) infinite;
-            background: transparent;
+            top: -100px;
+            right: -100px;
+            opacity: 0.4;
+            filter: blur(15px);
+            animation: pulse 8s infinite alternate;
         }
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-        .loader-text {
-            color: #FFFFFF;
-            font-family: 'Raleway', 'Segoe UI', sans-serif;
-            letter-spacing: 4px;
-            font-size: 18px;
-            font-weight: 500;
-            opacity: 0.9;
-            animation: pulse 2s ease-in-out infinite;
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
-        }
+
         @keyframes pulse {
-            0%, 100% { opacity: 0.7; text-shadow: 0 0 5px rgba(255, 255, 255, 0.3); }
-            50% { opacity: 1; text-shadow: 0 0 15px rgba(255, 255, 255, 0.6); }
+            0% { transform: scale(1); opacity: 0.3; }
+            100% { transform: scale(1.1); opacity: 0.5; }
         }
 
-        /* АДАПТИВНОСТЬ */
-        @media (max-width: 768px) {
-            body, html { overflow-y: auto; perspective: none; }
-            .slides-container { overflow-y: auto; height: auto; min-height: 100vh; }
-            .slide { position: relative; min-height: 100vh; padding: 10px 0;
-                    transform: translateY(25px) scale(0.98) !important; filter: blur(4px) !important; }
-            .slide.active { transform: translateY(0) scale(1) !important; filter: blur(0) !important; }
-            .slide.leaving { transform: translateY(-25px) scale(0.98) !important; filter: blur(4px) !important; }
-            .slide-content img { max-width: 96vw; max-height: none; height: auto; }
-            .zoom-close { top: 15px; right: 20px; font-size: 40px; padding: 8px; }
-            .zoom-caption { bottom: 25px; font-size: 16px; padding: 0 15px; }
-            .loader-spinner { width: 60px; height: 60px; }
-            .loader-text { font-size: 16px; letter-spacing: 3px; }
-            .nav-hint { font-size: 12px; padding: 8px; bottom: 15px; }
-        }
-
-        /* ПОДСКАЗКА ДЛЯ МОБИЛЬНЫХ */
-        .nav-hint {
-            position: fixed;
-            bottom: 25px;
-            left: 0;
-            right: 0;
-            text-align: center;
-            color: rgba(255, 255, 255, 0.35);
-            font-size: 13px;
-            font-weight: 300;
-            padding: 12px;
-            z-index: 99;
-            font-family: 'Segoe UI', sans-serif;
+        .logo {
+            font-size: 2.8rem;
+            font-weight: 800;
+            margin-bottom: 15px;
             letter-spacing: 1px;
-            pointer-events: none;
+            position: relative;
+            display: inline-block;
         }
-        @media (min-width: 769px) {
-            .nav-hint { display: none; }
+
+        .logo span {
+            color: #FFD700;
+        }
+
+        .tagline {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* Navigation */
+        .nav {
+            background: #f8f9fa;
+            border-bottom: 1px solid #eaeaea;
+            padding: 0 40px;
+        }
+
+        .nav-list {
+            display: flex;
+            list-style: none;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .nav-item {
+            padding: 20px 25px;
+            position: relative;
+            cursor: pointer;
+            font-weight: 600;
+            color: #555;
+            transition: all 0.3s;
+        }
+
+        .nav-item:hover {
+            color: #1a237e;
+            background: #edf2ff;
+        }
+
+        .nav-item.active {
+            color: #1a237e;
+            border-bottom: 3px solid #FFD700;
+        }
+
+        /* Main Content */
+        .main-content {
+            display: flex;
+            min-height: 600px;
+        }
+
+        /* Slides Panel */
+        .slides-panel {
+            width: 280px;
+            background: #f8f9fa;
+            border-right: 1px solid #eaeaea;
+            padding: 25px 0;
+            overflow-y: auto;
+        }
+
+        .slides-panel h3 {
+            padding: 0 25px 15px;
+            color: #1a237e;
+            font-size: 1.3rem;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 15px;
+        }
+
+        .slide-item {
+            padding: 15px 25px;
+            border-left: 4px solid transparent;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            color: #555;
+        }
+
+        .slide-item:hover {
+            background: #edf2ff;
+            border-left-color: #1a237e;
+        }
+
+        .slide-item.active {
+            background: #e3f2fd;
+            border-left-color: #FFD700;
+            color: #1a237e;
+            font-weight: 600;
+        }
+
+        .slide-icon {
+            margin-right: 12px;
+            color: #666;
+        }
+
+        .slide-item.active .slide-icon {
+            color: #1a237e;
+        }
+
+        /* Content Area */
+        .content-area {
+            flex: 1;
+            padding: 40px;
+        }
+
+        .slide-title {
+            font-size: 2.2rem;
+            color: #1a237e;
+            margin-bottom: 10px;
+        }
+
+        .slide-subtitle {
+            font-size: 1.1rem;
+            color: #666;
+            margin-bottom: 30px;
+            font-weight: 400;
+        }
+
+        .slide-image-container {
+            text-align: center;
+            margin: 30px 0;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+            background: #fafafa;
+            padding: 20px;
+        }
+
+        .slide-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 40px;
+        }
+
+        .feature {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 12px;
+            border-left: 5px solid #FFD700;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .feature:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .feature h4 {
+            color: #1a237e;
+            margin-bottom: 10px;
+            font-size: 1.4rem;
+        }
+
+        /* Footer */
+        .footer {
+            background: #1a237e;
+            color: white;
+            padding: 30px 40px;
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        .footer-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .footer h3 {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+        }
+
+        .contact-btn {
+            display: inline-block;
+            background: #FFD700;
+            color: #1a237e;
+            padding: 15px 35px;
+            border-radius: 50px;
+            font-weight: 700;
+            text-decoration: none;
+            margin-top: 20px;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3);
+        }
+
+        .contact-btn:hover {
+            background: #ffed4e;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(255, 215, 0, 0.4);
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .main-content {
+                flex-direction: column;
+            }
+            .slides-panel {
+                width: 100%;
+                border-right: none;
+                border-bottom: 1px solid #eaeaea;
+                max-height: 250px;
+            }
+            .nav-list {
+                justify-content: flex-start;
+                overflow-x: auto;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                padding: 30px 20px;
+            }
+            .gold-circle {
+                width: 250px;
+                height: 250px;
+                top: -70px;
+                right: -70px;
+            }
+            .content-area {
+                padding: 30px 20px;
+            }
+            .features {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- ПРЕЛОАДЕР -->
-    <div id="site-loader" class="site-loader">
-        <div class="loader-content">
-            <div class="loader-spinner"></div>
-            <p class="loader-text">ЗАГРУЗКА ПОРТФОЛИО</p>
-        </div>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="gold-circle"></div>
+            <h1 class="logo">Презентации<span>PRO</span></h1>
+            <p class="tagline">Оформляю презентации, которые помогут заработать и эффективно выступить на любых мероприятиях.</p>
+        </header>
+
+        <!-- Navigation -->
+        <nav class="nav">
+            <ul class="nav-list">
+                <li class="nav-item active" data-target="design">Дизайн</li>
+                <li class="nav-item" data-target="typography">Типографика</li>
+                <li class="nav-item" data-target="infographics">Инфографика</li>
+                <li class="nav-item" data-target="icons">Иконки</li>
+                <li class="nav-item" data-target="animation">Анимация</li>
+                <li class="nav-item" data-target="presentation">Презентация</li>
+            </ul>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Slides Panel -->
+            <div class="slides-panel">
+                <h3>Слайды презентации</h3>
+                <div class="slide-item active" data-slide="slide1">
+                    <i class="slide-icon fas fa-image"></i>Слайд 1: Обложка
+                </div>
+                <div class="slide-item" data-slide="slide2">
+                    <i class="slide-icon fas fa-chart-bar"></i>Слайд 2: Инфографика
+                </div>
+                <div class="slide-item" data-slide="slide3">
+                    <i class="slide-icon fas fa-list-check"></i>Слайд 3: Структура
+                </div>
+                <div class="slide-item" data-slide="slide4">
+                    <i class="slide-icon fas fa-lightbulb"></i>Слайд 4: Идеи
+                </div>
+                <div class="slide-item" data-slide="slide5">
+                    <i class="slide-icon fas fa-rocket"></i>Слайд 5: Результаты
+                </div>
+                <div class="slide-item" data-slide="slide6">
+                    <i class="slide-icon fas fa-handshake"></i>Слайд 6: Контакты
+                </div>
+            </div>
+
+            <!-- Content Area -->
+            <div class="content-area">
+                <h2 class="slide-title" id="current-title">Дизайн презентаций</h2>
+                <p class="slide-subtitle" id="current-subtitle">Создаю визуально привлекательные и функциональные слайды</p>
+                
+                <div class="slide-image-container">
+                    <!-- WebP изображение -->
+                    <img src="Слайд1.webp" alt="Слайд презентации" class="slide-image" id="current-slide">
+                    <p style="margin-top: 10px; color: #666; font-size: 0.9rem;">Формат: WebP | Оптимизированный размер</p>
+                </div>
+
+                <div class="features">
+                    <div class="feature">
+                        <h4><i class="fas fa-gem" style="color:#FFD700; margin-right:10px;"></i>Уникальный дизайн</h4>
+                        <p>Каждая презентация создаётся с нуля под ваши задачи и корпоративный стиль. Никаких шаблонов.</p>
+                    </div>
+                    <div class="feature">
+                        <h4><i class="fas fa-bolt" style="color:#FFD700; margin-right:10px;"></i>Быстрая реализация</h4>
+                        <p>Соблюдаю сроки, оперативно вношу правки. От концепции до готовой презентации за 3-5 дней.</p>
+                    </div>
+                    <div class="feature">
+                        <h4><i class="fas fa-chart-line" style="color:#FFD700; margin-right:10px;"></i>Эффект на результат</h4>
+                        <p>Слайды, которые убеждают инвесторов, мотивируют команду и закрывают сделки.</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-content">
+                <h3>Готовы работать с профессиональными презентациями?</h3>
+                <p>Выступление с моими слайдами запоминается надолго. Превращаю сложные данные в ясные и убедительные решения.</p>
+                <a href="#contact" class="contact-btn">Обсудить проект</a>
+            </div>
+        </footer>
     </div>
-
-    <!-- ОВЕРЛЕЙ ДЛЯ ЗУМА -->
-    <div id="zoomOverlay" class="zoom-overlay-full">
-        <div id="zoomContainer" class="zoom-image-animating">
-            <img id="zoomImage" src="" alt="">
-        </div>
-        <div id="zoomClose" class="zoom-close">&times;</div>
-        <div id="zoomCaption" class="zoom-caption"></div>
-    </div>
-
-    <div class="slides-container">
-        <!-- СЛАЙД 1: Главное меню -->
-        <section class="slide active" id="main-menu">
-            <div class="slide-content">
-                <img src="Слайд1.JPG" alt="Главное меню">
-                <!-- Кнопки меню ПОВЕРХ изображения -->
-                <div class="nav-overlay" data-target="main-menu" style="left: 5.7%; top: 29.2%; width: 14.7%; height: 6%;"></div>
-                <div class="nav-overlay" data-target="before-after" style="left: 5.7%; top: 37.5%; width: 14.7%; height: 6%;"></div>
-                <div class="nav-overlay" data-target="infographics-gallery" style="left: 5.7%; top: 45.1%; width: 14.7%; height: 6%;"></div>
-                <div class="nav-overlay" data-target="lab" style="left: 5.7%; top: 52.6%; width: 14.7%; height: 6%;"></div>
-                <div class="nav-overlay" data-target="templates-gallery" style="left: 5.7%; top: 59.7%; width: 14.7%; height: 6%;"></div>
-                <div class="nav-overlay" data-target="contacts" style="left: 5.7%; top: 67.4%; width: 14.7%; height: 6%;"></div>
-            </div>
-        </section>
-
-        <!-- СЛАЙД 2: До/После 1 -->
-        <section class="slide" id="before-after">
-            <div class="slide-content">
-                <img src="Слайд2.JPG" alt="До/После 1">
-                <div class="nav-overlay" data-target="main-menu" style="left: 5.7%; top: 29.2%; width: 14.7%; height: 6%;"></div>
-                <div class="nav-overlay" data-target="before-after" style="left: 5.7%; top: 37.5%; width: 14.7%; height: 6%;"></div>
-                <div class="nav-overlay" data-target="infographics-gallery" style="left: 5.7%; top: 45.1%; width: 14.7%; height: 6%;"></div>
-                <div class="nav-overlay" data-target="lab" style="left: 5.7%; top: 52.6%; width: 14.7%; height: 6%;"></div>
-                <div class="nav-overlay" data-target="templates-gallery" style="left: 5.7%; top: 59.7%; width: 14.7%; height: 6%;"></div>
-                <div class="nav-overlay" data-target="contacts" style="left: 5.7%; top: 67.4%; width: 14.7%; height: 6%;"></div>
-            </div>
-        </section>
-
-        <!-- СЛАЙД 3: До/После 2 -->
-        <section class="slide">
-            <div class="slide-content">
-                <img src="Слайд3.JPG" alt="До/После 2">
-                <div class="nav-overlay" data-target="main-menu" style="left: 5.7%; top: 29.2%; width: 14.7%; height: 6%;"></div>
-                <div class="nav-overlay" data-target="before-after" style="left: 5.7%; top: 37.5%; width: 14.7%; height: 6%;"></div>
-                <div class="nav-overlay" data-target="infographics-gallery" style="left: 5.7%; top: 45.1%; width: 14.7%; height: 6%;"></div>
-                <div class="nav-overlay" data-target="lab" style="left: 5.7%; top: 52.6%; width: 14.7%; height: 6%;"></div>
-                <div class="nav-overlay" data-target="templates-gallery" style="left: 5.7%; top: 59.7%; width: 14.7%; height: 6%;"></div>
-                <div class="nav-overlay" data-target="contacts" style="left: 5.7%; top: 67.4%; width: 14.7%; height: 6%;"></div>
-            </div>
-        </section>
-
-        <!-- СЛАЙД 4: Инфографика - Галерея 1 -->
-        <section class="slide" id="infographics-gallery">
-            <div class="slide-content">
-                <img src="Слайд4.JPG" alt="Инфографика - Галерея 1">
-                <div class="nav-overlay" data-target="main-menu" style="left: 5.7%; top: 29.2%; width: 14.7%; height: 6%;"></div>
-                <div class="nav-overlay" data-target="before-after" style="left: 5.7%; top: 37.5%; width: 14.7%; height: 6%;"></div>
-                <div class="nav-overlay" data-target="infographics-gallery" style="left: 5.7%; top: 45.1%; width: 14.7%; height: 6%;"></div>
-                <div class="nav-overlay" data-target="lab" style="left: 5.7%; top: 52.6%; width: 14.7%; height: 6%;"></div>
-                <div class="nav-overlay" data-target="templates-gallery" style="left: 5.7%; top: 59.7%; width: 14.7%; height: 6%;"></div>
-                <div class="nav-overlay" data-target="contacts" style="left: 5.7%; top: 67.4%; width: 14.7%; height: 6%;"></div>
-                <!-- Зум-кнопки -->
-                <div class="nav-overlay zoom-overlay" data-large="Слайд13.JPG" data-alt="Инфографика 1" style="left: 40.8%; top: 32.8%; width: 25%; height: 25.1%;"></div>
-                <div class="nav-overlay zoom-overlay" data-large="Слайд14.JPG" data-alt="Инфографика 2" style="left: 40.8%; top: 65%; width: 25%; height: 25.1%;"></div>
-                <div class="nav-overlay zoom-overlay" data-large="Слайд12.JPG" data-alt="Инфографика 3" style="left: 69.2%; top: 6.4%; width: 25%; height: 25.1%;"></div>
-                <div class="nav-overlay zoom-overlay" data-large="Слайд15.JPG" data-alt="Инфографика 4" style="left: 69.2%; top: 32.8%; width: 25%; height: 25.1%;"></div>
-                <div class="nav-overlay" data-target="infographics-gallery-2" style="left: 86.3%; top: 90%; width: 7.7%; height: 3.5%;"></div>
-            </div>
-        </section>
-
-        <!-- СЛАЙД 5: Инфографика - Галерея 2 -->
-        <section class="slide" id="infographics-gallery-2">
-            <div class="slide-content">
-                <img src="Слайд5.JPG" alt="Инфографика - Галерея 2">
-                <div class="nav-overlay" data-target="main-menu" style="left: 5.7%; top: 29.2%; width: 14.7%; height: 6%;"></div>
-                <div class="nav-overlay" data-target="before-after" style="left: 5.7%; top: 37.5%; width: 14.7%; height: 6%;"></div>
-                <div class="nav-overlay" data-target="infographics-gallery" style="left: 5.7%; top: 45.1%; width: 14.7%; height: 6%;"></div>
-                <div class="nav-overlay" data-target="lab" style="left: 5.7%; top: 52.6%; width: 14.7%; height: 6%;"></div>
-                <div class="nav-overlay" data-target="templates-gallery" style="left: 5.7%; top: 59.7%; width: 14.7%; height: 6%;"></div>
-                <div class="nav-overlay" data-target="contacts" style="left: 5.7%; top: 67.4%; width: 14.7%; height: 6%;"></div>
-                <div class="nav-overlay zoom-overlay" data-large="Слайд17.JPG" data-alt="Инфографика 5" style="left: 40.8%; top: 31.7%; width: 25.2%; height: 25%;"></div>
-                <div class="nav-overlay zoom-overlay" data-large="Слайд18.JPG" data-alt="Инфографика 6" style="left: 40.6%; top: 65%; width: 25.2%; height: 25%;"></div>
-                <div class="nav-overlay zoom-overlay" data-large="Слайд16.JPG" data-alt="Инфографика 7" style="left: 69.1%; top: 6.5%; width: 25.2%; height: 25%;"></div>
-                <div class="nav-overlay" data-target="infographics-gallery" style="left: 86.3%; top: 90%; width: 7.7%; height: 3.5%;"></div>
-            </div>
-        </section>
-
-        <!-- СЛАЙД 6: Лаборатория 1 -->
-        <section class="slide" id="lab">
-            <div class="slide-content">
-                <img src="Слайд6.JPG" alt="Лаборатория 1">
-                <div class="nav-overlay" data-target="main-menu" style="left: 5.7%; top: 29.2%; width: 14.7%; height: 6%;"></div>
-                <div class="nav-overlay" data-target="before-after" style="left: 5.7%; top: 37.5%; width: 14.7%; height: 6%;"></div>
-                <div class="nav-overlay" data-target="infographics-gallery" style="left: 5.7%; top: 45.1%; width: 14.7%; height: 6%;"></div>
-                <div class="nav-overlay" data-target="lab" style="left: 5.7%; top: 52.6%; width: 14.7%; height: 6%;"></div>
-                <div class="nav-overlay" data-target="templates-gallery" style="left: 5.7%; top: 59.7%; width: 14.7%; height: 6%;"></div>
-                <div class="nav-overlay" data-target="contacts" style="left: 5.7%; top: 67.4%; width: 14.7%; height: 6%;"></div>
-                <div class="nav-overlay" data-target="lab-2" style="left: 86.3%; top: 90%; width: 7.7%; height: 3.5%;"></div>
-            </div>
-        </section>
-
-        <!-- СЛАЙД 7: Лаборатория 2 -->
-        <section class="slide" id="lab-2">
-            <div class="slide-content">
-                <img src="Слайд7.JPG" alt="Лаборатория 2">
-                <div class="nav-overlay" data-target="main-menu" style="left: 5.7%; top: 29.2%; width: 14.7%; height: 6%;"></div>
-                <div class="nav-overlay" data-target="before-after" style="left: 5.7%; top: 37.5%; width: 14.7%; height: 6%;"></div>
-                <div class="nav-overlay" data-target="infographics-gallery" style="left: 5.7%; top: 45.1%; width: 14.7%; height: 6%;"></div>
-                <div class="nav-overlay" data-target="lab" style="left: 5.7%; top: 52.6%; width: 14.7%; height: 6%;"></div>
-                <div class="nav-overlay" data-target="templates-gallery" style="left: 5.7%; top: 59.7%; width: 14.7%; height: 6%;"></div>
-                <div class="nav-overlay" data-target="contacts" style="left: 5.7%; top: 67.4%; width: 14.7%; height: 6%;"></div>
-                <div class="nav-overlay" data-target="lab" style="left: 86.3%; top: 90%; width: 7.7%; height: 3.5%;"></div>
-            </div>
-        </section>
-
-        <!-- СЛАЙД 8: Шаблоны - Галерея 1 -->
-        <section class="slide" id="templates-gallery">
-            <div class="slide-content">
-                <img src="Слайд8.JPG" alt="Шаблоны - Галерея 1">
-                <div class="nav-overlay" data-target="main-menu" style="left: 5.7%; top: 29.2%; width: 14.7%; height: 6%;"></div>
-                <div class="nav-overlay" data-target="before-after" style="left: 5.7%; top: 37.5%; width: 14.7%; height: 6%;"></div>
-                <div class="nav-overlay" data-target="infographics-gallery" style="left: 5.7%; top: 45.1%; width: 14.7%; height: 6%;"></div>
-                <div class="nav-overlay" data-target="lab" style="left: 5.7%; top: 52.6%; width: 14.7%; height: 6%;"></div>
-                <div class="nav-overlay" data-target="templates-gallery" style="left: 5.7%; top: 59.7%; width: 14.7%; height: 6%;"></div>
-                <div class="nav-overlay" data-target="contacts" style="left: 5.7%; top: 67.4%; width: 14.7%; height: 6%;"></div>
-                <div class="nav-overlay zoom-overlay" data-large="Слайд19.JPG" data-alt="Шаблон 1" style="left: 23%; top: 21.9%; width: 25%; height: 24.9%;"></div>
-                <div class="nav-overlay zoom-overlay" data-large="Слайд20.JPG" data-alt="Шаблон 2" style="left: 48%; top: 21.9%; width: 25%; height: 24.9%;"></div>
-                <div class="nav-overlay zoom-overlay" data-large="Слайд21.JPG" data-alt="Шаблон 3" style="left: 72.9%; top: 21.9%; width: 25%; height: 24.9%;"></div>
-                <div class="nav-overlay zoom-overlay" data-large="Слайд22.JPG" data-alt="Шаблон 4" style="left: 23%; top: 58.9%; width: 25%; height: 24.9%;"></div>
-                <div class="nav-overlay zoom-overlay" data-large="Слайд23.JPG" data-alt="Шаблон 5" style="left: 48%; top: 58.9%; width: 25%; height: 24.9%;"></div>
-                <div class="nav-overlay zoom-overlay" data-large="Слайд24.JPG" data-alt="Шаблон 6" style="left: 72.9%; top: 58.9%; width: 25%; height: 24.9%;"></div>
-                <div class="nav-overlay" data-target="templates-gallery-2" style="left: 86.3%; top: 90%; width: 7.7%; height: 3.5%;"></div>
-            </div>
-        </section>
-
-        <!-- СЛАЙД 9: Шаблоны - Галерея 2 -->
-        <section class="slide" id="templates-gallery-2">
-            <div class="slide-content">
-                <img src="Слайд9.JPG" alt="Шаблоны - Галерея 2">
-                <div class="nav-overlay" data-target="main-menu" style="left: 5.7%; top: 29.2%; width: 14.7%; height: 6%;"></div>
-                <div class="nav-overlay" data-target="before-after" style="left: 5.7%; top: 37.5%; width: 14.7%; height: 6%;"></div>
-                <div class="nav-overlay" data-target="infographics-gallery" style="left: 5.7%; top: 45.1%; width: 14.7%; height: 6%;"></div>
-                <div class="nav-overlay" data-target="lab" style="left: 5.7%; top: 52.6%; width: 14.7%; height: 6%;"></div>
-                <div class="nav-overlay" data-target="templates-gallery" style="left: 5.7%; top: 59.7%; width: 14.7%; height: 6%;"></div>
-                <div class="nav-overlay" data-target="contacts" style="left: 5.7%; top: 67.4%; width: 14.7%; height: 6%;"></div>
-                <div class="nav-overlay zoom-overlay" data-large="Слайд25.JPG" data-alt="Шаблон 7" style="left: 23%; top: 21.9%; width: 25%; height: 24.9%;"></div>
-                <div class="nav-overlay zoom-overlay" data-large="Слайд26.JPG" data-alt="Шаблон 8" style="left: 48%; top: 21.9%; width: 25%; height: 24.9%;"></div>
-                <div class="nav-overlay zoom-overlay" data-large="Слайд27.JPG" data-alt="Шаблон 9" style="left: 72.9%; top: 21.9%; width: 25%; height: 24.9%;"></div>
-                <div class="nav-overlay zoom-overlay" data-large="Слайд28.JPG" data-alt="Шаблон 10" style="left: 23%; top: 58.9%; width: 25%; height: 24.9%;"></div>
-                <div class="nav-overlay zoom-overlay" data-large="Слайд29.JPG" data-alt="Шаблон 11" style="left: 48%; top: 58.9%; width: 25%; height: 24.9%;"></div>
-                <div class="nav-overlay zoom-overlay" data-large="Слайд30.JPG" data-alt="Шаблон 12" style="left: 72.9%; top: 58.9%; width: 25%; height: 24.9%;"></div>
-                <div class="nav-overlay" data-target="templates-gallery" style="left: 22.6%; top: 90.3%; width: 7.9%; height: 3.1%;"></div>
-                <div class="nav-overlay" data-target="templates-gallery-3" style="left: 86.3%; top: 90%; width: 7.7%; height: 3.5%;"></div>
-            </div>
-        </section>
-
-        <!-- СЛАЙД 10: Шаблоны - Галерея 3 -->
-        <section class="slide" id="templates-gallery-3">
-            <div class="slide-content">
-                <img src="Слайд10.JPG" alt="Шаблоны - Галерея 3">
-                <div class="nav-overlay" data-target="main-menu" style="left: 5.7%; top: 29.2%; width: 14.7%; height: 6%;"></div>
-                <div class="nav-overlay" data-target="before-after" style="left: 5.7%; top: 37.5%; width: 14.7%; height: 6%;"></div>
-                <div class="nav-overlay" data-target="infographics-gallery" style="left: 5.7%; top: 45.1%; width: 14.7%; height: 6%;"></div>
-                <div class="nav-overlay" data-target="lab" style="left: 5.7%; top: 52.6%; width: 14.7%; height: 6%;"></div>
-                <div class="nav-overlay" data-target="templates-gallery" style="left: 5.7%; top: 59.7%; width: 14.7%; height: 6%;"></div>
-                <div class="nav-overlay" data-target="contacts" style="left: 5.7%; top: 67.4%; width: 14.7%; height: 6%;"></div>
-                <div class="nav-overlay zoom-overlay" data-large="Слайд31.JPG" data-alt="Шаблон 13" style="left: 23%; top: 21.9%; width: 25%; height: 24.9%;"></div>
-                <div class="nav-overlay zoom-overlay" data-large="Слайд32.JPG" data-alt="Шаблон 14" style="left: 48%; top: 21.9%; width: 25%; height: 24.9%;"></div>
-                <div class="nav-overlay zoom-overlay" data-large="Слайд33.JPG" data-alt="Шаблон 15" style="left: 72.9%; top: 21.9%; width: 25%; height: 24.9%;"></div>
-                <div class="nav-overlay zoom-overlay" data-large="Слайд34.JPG" data-alt="Шаблон 16" style="left: 23%; top: 58.9%; width: 25%; height: 24.9%;"></div>
-                <div class="nav-overlay zoom-overlay" data-large="Слайд35.JPG" data-alt="Шаблон 17" style="left: 48%; top: 58.9%; width: 25%; height: 24.9%;"></div>
-                <div class="nav-overlay zoom-overlay" data-large="Слайд36.JPG" data-alt="Шаблон 18" style="left: 72.9%; top: 58.9%; width: 25%; height: 24.9%;"></div>
-                <div class="nav-overlay" data-target="templates-gallery-2" style="left: 86.3%; top: 90%; width: 7.7%; height: 3.5%;"></div>
-            </div>
-        </section>
-
-        <!-- СЛАЙД 11: Контакты -->
-        <section class="slide" id="contacts">
-            <div class="slide-content">
-                <img src="Слайд11.JPG" alt="Контакты">
-                <div class="nav-overlay" data-target="main-menu" style="left: 5.7%; top: 29.2%; width: 14.7%; height: 6%;"></div>
-                <div class="nav-overlay" data-target="before-after" style="left: 5.7%; top: 37.5%; width: 14.7%; height: 6%;"></div>
-                <div class="nav-overlay" data-target="infographics-gallery" style="left: 5.7%; top: 45.1%; width: 14.7%; height: 6%;"></div>
-                <div class="nav-overlay" data-target="lab" style="left: 5.7%; top: 52.6%; width: 14.7%; height: 6%;"></div>
-                <div class="nav-overlay" data-target="templates-gallery" style="left: 5.7%; top: 59.7%; width: 14.7%; height: 6%;"></div>
-                <div class="nav-overlay" data-target="contacts" style="left: 5.7%; top: 67.4%; width: 14.7%; height: 6%;"></div>
-            </div>
-        </section>
-    </div>
-
-    <!-- Подсказка для мобильных -->
-    <div class="nav-hint">← → на клавиатуре • ESC для выхода</div>
 
     <script>
-        // ==================== ПОЛИФИЛ ====================
-        (function() {
-            var lastTime = 0;
-            var vendors = ['ms', 'moz', 'webkit', 'o'];
-            for(var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
-                window.requestAnimationFrame = window[vendors[x]+'RequestAnimationFrame'];
-                window.cancelAnimationFrame = window[vendors[x]+'CancelAnimationFrame'] || window[vendors[x]+'CancelRequestAnimationFrame'];
+        // Навигация по разделам
+        const navItems = document.querySelectorAll('.nav-item');
+        const slideItems = document.querySelectorAll('.slide-item');
+        const currentTitle = document.getElementById('current-title');
+        const currentSubtitle = document.getElementById('current-subtitle');
+        const currentSlide = document.getElementById('current-slide');
+
+        // Данные для разделов (заголовки, подзаголовки и изображения WebP)
+        const contentData = {
+            design: {
+                title: 'Дизайн презентаций',
+                subtitle: 'Создаю визуально привлекательные и функциональные слайды',
+                image: 'Слайд1.webp'
+            },
+            typography: {
+                title: 'Типографика и вёрстка',
+                subtitle: 'Читабельные тексты, правильные акценты и гармоничная компоновка',
+                image: 'Слайд2.webp'
+            },
+            infographics: {
+                title: 'Инфографика и визуализация',
+                subtitle: 'Превращаю цифры и процессы в понятные графики и схемы',
+                image: 'Слайд2.webp'
+            },
+            icons: {
+                title: 'Иконки и иллюстрации',
+                subtitle: 'Уникальные графические элементы, усиливающие сообщение',
+                image: 'Слайд3.webp'
+            },
+            animation: {
+                title: 'Анимация и переходы',
+                subtitle: 'Динамичные эффекты, которые удерживают внимание аудитории',
+                image: 'Слайд4.webp'
+            },
+            presentation: {
+                title: 'Полный цикл презентации',
+                subtitle: 'От идеи до готового выступления с речевыми заметками',
+                image: 'Слайд5.webp'
             }
-            if (!window.requestAnimationFrame)
-                window.requestAnimationFrame = function(callback, element) {
-                    var currTime = new Date().getTime();
-                    var timeToCall = Math.max(0, 16 - (currTime - lastTime));
-                    var id = window.setTimeout(function() { callback(currTime + timeToCall); }, timeToCall);
-                    lastTime = currTime + timeToCall;
-                    return id;
-                };
-            if (!window.cancelAnimationFrame)
-                window.cancelAnimationFrame = function(id) {
-                    clearTimeout(id);
-                };
-        }());
+        };
 
-        // ==================== ПРЕЛОАДЕР ====================
-        window.addEventListener('load', function() {
-            setTimeout(function() {
-                const loader = document.getElementById('site-loader');
-                if (loader) {
-                    loader.classList.add('hidden');
-                    setTimeout(() => loader.remove(), 1200);
-                }
-            }, 1800);
-        });
-
-        // ==================== ЭФФЕКТ ПЛАВНОГО УВЕЛИЧЕНИЯ ====================
-        function zoomImageFromThumbnail(element) {
-            const rect = element.getBoundingClientRect();
-            const imageUrl = element.getAttribute('data-large');
-            const altText = element.getAttribute('data-alt') || 'Изображение';
-            
-            const zoomContainer = document.getElementById('zoomContainer');
-            const zoomImage = document.getElementById('zoomImage');
-            const zoomCaption = document.getElementById('zoomCaption');
-            const zoomClose = document.getElementById('zoomClose');
-            const zoomOverlay = document.getElementById('zoomOverlay');
-            
-            zoomContainer.classList.remove('expanded');
-            zoomImage.classList.remove('loaded');
-            zoomCaption.classList.remove('visible');
-            zoomClose.classList.remove('visible');
-            
-            zoomContainer.style.borderRadius = '0';
-            zoomContainer.style.boxShadow = 'none';
-            
-            zoomContainer.style.width = rect.width + 'px';
-            zoomContainer.style.height = rect.height + 'px';
-            zoomContainer.style.left = rect.left + 'px';
-            zoomContainer.style.top = rect.top + 'px';
-            zoomContainer.style.transform = 'scale(1)';
-            
-            zoomCaption.textContent = altText;
-            zoomOverlay.style.display = 'flex';
-            
-            const img = new Image();
-            img.onload = function() {
-                zoomImage.src = imageUrl;
-                setTimeout(() => {
-                    const targetWidth = window.innerWidth;
-                    const targetHeight = window.innerHeight;
-                    
-                    zoomOverlay.classList.add('active');
-                    requestAnimationFrame(() => {
-                        zoomContainer.style.left = '0px';
-                        zoomContainer.style.top = '0px';
-                        zoomContainer.style.width = targetWidth + 'px';
-                        zoomContainer.style.height = targetHeight + 'px';
-                        
-                        setTimeout(() => {
-                            zoomContainer.classList.add('expanded');
-                            zoomImage.classList.add('loaded');
-                            setTimeout(() => {
-                                zoomClose.classList.add('visible');
-                                zoomCaption.classList.add('visible');
-                            }, 300);
-                        }, 50);
-                    });
-                }, 50);
-            };
-            img.src = imageUrl;
-        }
-
-        // ==================== ЗАКРЫТИЕ ЗУМА ====================
-        function closeZoom() {
-            const zoomOverlay = document.getElementById('zoomOverlay');
-            const zoomContainer = document.getElementById('zoomContainer');
-            const zoomCaption = document.getElementById('zoomCaption');
-            const zoomClose = document.getElementById('zoomClose');
-            
-            zoomCaption.classList.remove('visible');
-            zoomClose.classList.remove('visible');
-            zoomContainer.classList.remove('expanded');
-            zoomOverlay.classList.remove('active');
-            
-            setTimeout(() => {
-                zoomOverlay.style.display = 'none';
-                document.getElementById('zoomImage').src = '';
-            }, 500);
-        }
-
-        // ==================== ОБРАБОТЧИКИ ====================
-        document.addEventListener('click', function(e) {
-            const target = e.target;
-            
-            if (target.classList.contains('nav-overlay')) {
-                e.preventDefault();
+        // Обработчики для навигации
+        navItems.forEach(item => {
+            item.addEventListener('click', () => {
+                const target = item.getAttribute('data-target');
                 
-                if (target.classList.contains('zoom-overlay')) {
-                    zoomImageFromThumbnail(target);
-                } else {
-                    const targetId = target.getAttribute('data-target');
-                    if (targetId) {
-                        switchSlideWithMagic(targetId);
-                    }
+                // Обновляем активный элемент в навигации
+                navItems.forEach(nav => nav.classList.remove('active'));
+                item.classList.add('active');
+                
+                // Обновляем контент
+                if(contentData[target]) {
+                    currentTitle.textContent = contentData[target].title;
+                    currentSubtitle.textContent = contentData[target].subtitle;
+                    currentSlide.src = contentData[target].image;
+                    currentSlide.alt = contentData[target].title;
                 }
-            }
-        });
-
-        document.getElementById('zoomClose').addEventListener('click', closeZoom);
-        document.getElementById('zoomOverlay').addEventListener('click', function(e) {
-            if (e.target === this) closeZoom();
-        });
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') closeZoom();
-        });
-
-        // ==================== ВОЛШЕБНАЯ ФУНКЦИЯ ПЕРЕХОДА ====================
-        function switchSlideWithMagic(newSlideId) {
-            const currentSlide = document.querySelector('.slide.active');
-            const newSlide = document.getElementById(newSlideId);
-            
-            if (!currentSlide || !newSlide || currentSlide === newSlide) return;
-            
-            currentSlide.classList.remove('active');
-            currentSlide.classList.add('leaving');
-            
-            setTimeout(() => {
-                newSlide.classList.add('active');
-            }, 150);
-            
-            setTimeout(() => {
-                currentSlide.classList.remove('leaving');
-            }, 850);
-        }
-
-        // ==================== КЛАВИАТУРНАЯ НАВИГАЦИЯ ====================
-        document.addEventListener('keydown', function(event) {
-            const slides = Array.from(document.querySelectorAll('.slide'));
-            const currentIndex = slides.findIndex(slide => slide.classList.contains('active'));
-            
-            if (event.key === 'ArrowRight' || event.key === 'PageDown' || event.key === ' ') {
-                const nextIndex = (currentIndex + 1) % slides.length;
-                switchSlideWithMagic(slides[nextIndex].id);
-            } else if (event.key === 'ArrowLeft' || event.key === 'PageUp') {
-                const prevIndex = (currentIndex - 1 + slides.length) % slides.length;
-                switchSlideWithMagic(slides[prevIndex].id);
-            } else if (event.key === 'Home') {
-                switchSlideWithMagic(slides[0].id);
-            } else if (event.key === 'End') {
-                switchSlideWithMagic(slides[slides.length - 1].id);
-            }
-        });
-
-        // ==================== ПЛАВНЫЙ СКРОЛЛ ДЛЯ МОБИЛЬНЫХ ====================
-        if (window.innerWidth <= 768) {
-            document.querySelectorAll('.nav-overlay').forEach(overlay => {
-                overlay.addEventListener('click', function() {
-                    setTimeout(() => {
-                        window.scrollTo({ top: 0, behavior: 'smooth' });
-                    }, 300);
-                });
             });
+        });
+
+        // Обработчики для слайдов
+        slideItems.forEach(item => {
+            item.addEventListener('click', () => {
+                const slide = item.getAttribute('data-slide');
+                
+                // Обновляем активный слайд
+                slideItems.forEach(slideItem => slideItem.classList.remove('active'));
+                item.classList.add('active');
+                
+                // Обновляем изображение
+                if(slide === 'slide1') currentSlide.src = 'Слайд1.webp';
+                else if(slide === 'slide2') currentSlide.src = 'Слайд2.webp';
+                else if(slide === 'slide3') currentSlide.src = 'Слайд3.webp';
+                else if(slide === 'slide4') currentSlide.src = 'Слайд4.webp';
+                else if(slide === 'slide5') currentSlide.src = 'Слайд5.webp';
+                else if(slide === 'slide6') currentSlide.src = 'Слайд6.webp';
+                
+                currentSlide.alt = `Слайд ${slide.slice(-1)}`;
+            });
+        });
+
+        // Имитация загрузки WebP с проверкой поддержки браузером
+        function checkWebPSupport() {
+            const webP = new Image();
+            webP.onload = webP.onerror = function() {
+                const isSupported = (webP.height === 2);
+                if (!isSupported) {
+                    // Если WebP не поддерживается, заменяем на JPG
+                    const allImages = document.querySelectorAll('img[src$=".webp"]');
+                    allImages.forEach(img => {
+                        img.src = img.src.replace('.webp', '.jpg');
+                    });
+                    console.log('WebP не поддерживается, загружаем JPG версии');
+                }
+            };
+            webP.src = 'data:image/webp;base64,UklGRjoAAABXRUJQVlA4IC4AAACyAgCdASoCAAIALmk0mk0iIiIiIgBoSygABc6WWgAA/veff/0PP8bA//LwYAAA';
         }
 
-        // ==================== ОТКЛЮЧЕНИЕ ПРОКРУТКИ НА ДЕСКТОПЕ ====================
-        if (window.innerWidth > 768) {
-            document.addEventListener('wheel', function(e) {
-                e.preventDefault();
-            }, { passive: false });
-        }
+        // Проверяем поддержку WebP при загрузке страницы
+        window.addEventListener('DOMContentLoaded', checkWebPSupport);
     </script>
 </body>
 </html>
