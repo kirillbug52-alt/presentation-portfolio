@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
-        /* БАЗОВЫЕ СТИЛИ */
         body, html {
             margin: 0;
             padding: 0;
@@ -13,7 +12,6 @@
             font-family: 'Segoe UI', system-ui, sans-serif;
             background: #0a0a0a;
             height: 100%;
-            perspective: 1200px;
         }
         .slides-container {
             width: 100vw;
@@ -31,15 +29,14 @@
             background: #000;
             pointer-events: none;
             opacity: 0;
-            transform: translateX(80px) scale(0.96) rotateY(-5deg);
+            transform: translateX(80px) scale(0.96);
             filter: blur(8px);
             transition: none;
             z-index: 1;
-            will-change: transform, opacity, filter;
         }
         .slide.active {
             opacity: 1;
-            transform: translateX(0) scale(1) rotateY(0deg);
+            transform: translateX(0) scale(1);
             filter: blur(0);
             pointer-events: all;
             z-index: 3;
@@ -49,39 +46,23 @@
         }
         .slide.leaving {
             opacity: 0;
-            transform: translateX(-80px) scale(0.96) rotateY(5deg);
+            transform: translateX(-80px) scale(0.96);
             filter: blur(8px);
             z-index: 2;
             transition: transform 0.8s cubic-bezier(0.7, 0, 0.84, 0),
                         opacity 0.7s cubic-bezier(0.7, 0, 0.84, 0),
                         filter 0.7s cubic-bezier(0.7, 0, 0.84, 0);
         }
-        /* ИЗМЕНЕНИЕ: растягиваем изображение на весь экран */
         .slide img {
             width: 100vw;
             height: 100vh;
             object-fit: contain;
-            object-position: center center;
+            object-position: center;
             display: block;
-            margin: 0 auto;
-            outline: none;
-            border: none;
-            user-select: none;
-            -webkit-user-select: none;
-            -ms-user-select: none;
-            /* Убираем старые ограничения */
-            max-width: none !important;
-            max-height: none !important;
         }
         area {
             cursor: pointer;
-            outline: none;
-            transition: opacity 0.2s ease;
         }
-        area:hover {
-            opacity: 0.85;
-        }
-        
         .zoom-overlay {
             position: fixed;
             top: 0;
@@ -93,7 +74,7 @@
             display: none;
             justify-content: center;
             align-items: center;
-            transition: background 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: background 0.5s;
         }
         .zoom-overlay.active {
             background: rgba(0, 0, 0, 0.96);
@@ -101,54 +82,34 @@
         .zoom-image-animating {
             position: absolute;
             z-index: 1001;
-            overflow: hidden;
-            transform-origin: center center;
-            transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
-            border-radius: 0 !important;
-            box-shadow: none !important;
-        }
-        .zoom-image-animating.expanded {
-            box-shadow: none;
+            transform-origin: center;
+            transition: all 0.7s;
         }
         .zoom-image-animating img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            object-position: center;
             opacity: 0;
-            transition: opacity 0.4s ease 0.2s;
-            max-width: none !important;
-            max-height: none !important;
+            transition: opacity 0.4s 0.2s;
         }
         .zoom-image-animating img.loaded {
             opacity: 1;
         }
-        
         .zoom-close {
             position: absolute;
             top: 25px;
             right: 35px;
             color: rgba(255, 255, 255, 0.7);
             font-size: 45px;
-            font-weight: 300;
             cursor: pointer;
             z-index: 1002;
             opacity: 0;
-            transition: all 0.3s ease;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
-            padding: 10px;
-            transform: translateY(-10px);
+            transition: all 0.3s;
         }
         .zoom-close.visible {
             opacity: 1;
-            transform: translateY(0);
             transition-delay: 0.4s;
         }
-        .zoom-close:hover {
-            color: #E29B17;
-            transform: scale(1.1);
-        }
-        
         .zoom-caption {
             position: absolute;
             bottom: 40px;
@@ -156,19 +117,15 @@
             text-align: center;
             width: 100%;
             font-size: 18px;
-            font-weight: 400;
             padding: 0 20px;
-            text-shadow: 0 2px 15px rgba(0,0,0,0.5);
-            letter-spacing: 0.3px;
             opacity: 0;
-            transition: opacity 0.3s ease;
+            transition: opacity 0.3s;
             z-index: 1002;
         }
         .zoom-caption.visible {
             opacity: 1;
             transition-delay: 0.5s;
         }
-        
         .site-loader {
             position: fixed;
             top: 0; left: 0;
@@ -178,15 +135,11 @@
             justify-content: center;
             align-items: center;
             z-index: 9999;
-            transition: opacity 0.9s ease, visibility 0.9s ease;
+            transition: opacity 0.9s, visibility 0.9s;
         }
         .site-loader.hidden {
             opacity: 0;
             visibility: hidden;
-        }
-        .loader-content {
-            text-align: center;
-            transform: translateY(-20px);
         }
         .loader-spinner {
             width: 72px;
@@ -194,108 +147,23 @@
             margin: 0 auto 30px;
             border: 3px solid rgba(226, 155, 23, 0.15);
             border-top-color: #E29B17;
-            border-right-color: #F8C462;
             border-radius: 50%;
-            animation: spin 1.4s cubic-bezier(0.68, -0.55, 0.27, 1.55) infinite;
-            box-shadow: 0 0 20px rgba(226, 155, 23, 0.3);
+            animation: spin 1.4s infinite;
         }
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
         .loader-text {
             color: #E29B17;
-            font-family: 'Raleway', 'Segoe UI', sans-serif;
+            font-family: 'Raleway', sans-serif;
             letter-spacing: 4px;
             font-size: 18px;
-            font-weight: 500;
-            opacity: 0.9;
-            animation: pulse 2s ease-in-out infinite;
-            text-shadow: 0 0 10px rgba(226, 155, 23, 0.4);
+            animation: pulse 2s infinite;
         }
         @keyframes pulse {
-            0%, 100% { 
-                opacity: 0.7;
-                text-shadow: 0 0 5px rgba(226, 155, 23, 0.3);
-            }
-            50% { 
-                opacity: 1;
-                text-shadow: 0 0 15px rgba(226, 155, 23, 0.6);
-            }
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 1; }
         }
-
-        /* ДОБАВЛЕНО: Золотой ободок вокруг активной области при наведении */
-        .area-highlight {
-            position: absolute;
-            border: 2px solid rgba(226, 155, 23, 0);
-            border-radius: 3px;
-            pointer-events: none;
-            z-index: 10;
-            transition: border-color 0.3s ease, box-shadow 0.3s ease;
-        }
-        .area-highlight.visible {
-            border-color: rgba(226, 155, 23, 0.8);
-            box-shadow: 0 0 15px rgba(226, 155, 23, 0.4);
-        }
-
-        @media (max-width: 768px) {
-            body, html {
-                overflow-y: auto;
-                perspective: none;
-            }
-            .slides-container {
-                overflow-y: auto;
-                height: auto;
-                min-height: 100vh;
-            }
-            .slide {
-                position: relative;
-                min-height: 100vh;
-                padding: 10px 0;
-                transform: translateY(25px) scale(0.98) !important;
-                filter: blur(4px) !important;
-            }
-            .slide.active {
-                transform: translateY(0) scale(1) !important;
-                filter: blur(0) !important;
-            }
-            .slide.leaving {
-                transform: translateY(-25px) scale(0.98) !important;
-                filter: blur(4px) !important;
-            }
-            .slide img {
-                width: 100%;
-                height: auto;
-                max-width: 96vw;
-            }
-            .zoom-close {
-                top: 15px;
-                right: 20px;
-                font-size: 40px;
-                padding: 8px;
-            }
-            .zoom-caption {
-                bottom: 25px;
-                font-size: 16px;
-                padding: 0 15px;
-            }
-            .loader-spinner {
-                width: 60px;
-                height: 60px;
-            }
-            .loader-text {
-                font-size: 16px;
-                letter-spacing: 3px;
-            }
-            .nav-hint {
-                font-size: 12px;
-                padding: 8px;
-                bottom: 15px;
-            }
-            .area-highlight {
-                display: none; /* Скрываем на мобильных */
-            }
-        }
-
         .nav-hint {
             position: fixed;
             bottom: 25px;
@@ -304,12 +172,16 @@
             text-align: center;
             color: rgba(255, 255, 255, 0.35);
             font-size: 13px;
-            font-weight: 300;
             padding: 12px;
             z-index: 99;
-            font-family: 'Segoe UI', sans-serif;
-            letter-spacing: 1px;
             pointer-events: none;
+        }
+        @media (max-width: 768px) {
+            .nav-hint {
+                font-size: 12px;
+                padding: 8px;
+                bottom: 15px;
+            }
         }
         @media (min-width: 769px) {
             .nav-hint {
@@ -372,186 +244,114 @@
 
     <div class="nav-hint">← → на клавиатуре • ESC для выхода</div>
 
-    <!-- ВСЕ КООРДИНАТЫ ПЕРЕСЧИТАНЫ ПОД 1920x1080 -->
+    <!-- ВСЕ КООРДИНАТЫ В ПРОЦЕНТАХ (1920×1080 → %) -->
     <map name="slide1-map">
-        <area shape="rect" coords="109,315,392,380" href="#" data-target="main-menu" class="nav-btn" alt="Обо мне" title="Обо мне">
-        <area shape="rect" coords="109,405,392,470" href="#" data-target="before-after" class="nav-btn" alt="До/после" title="До/после">
-        <area shape="rect" coords="109,488,392,552" href="#" data-target="infographics-gallery" class="nav-btn" alt="Инфографика" title="Инфографика">
-        <area shape="rect" coords="109,569,392,633" href="#" data-target="lab" class="nav-btn" alt="Лаборатория" title="Лаборатория">
-        <area shape="rect" coords="109,645,392,709" href="#" data-target="templates-gallery" class="nav-btn" alt="Готовые решения" title="Готовые решения">
-        <area shape="rect" coords="109,727,392,792" href="#" data-target="contacts" class="nav-btn" alt="Контакты" title="Контакты">
+        <area shape="rect" coords="5.68%,29.17%,20.42%,35.19%" href="#" data-target="main-menu" class="nav-btn" alt="Обо мне" title="Обо мне">
+        <area shape="rect" coords="5.68%,37.50%,20.42%,43.52%" href="#" data-target="before-after" class="nav-btn" alt="До/после" title="До/после">
+        <area shape="rect" coords="5.68%,45.19%,20.42%,51.11%" href="#" data-target="infographics-gallery" class="nav-btn" alt="Инфографика" title="Инфографика">
+        <area shape="rect" coords="5.68%,52.69%,20.42%,58.61%" href="#" data-target="lab" class="nav-btn" alt="Лаборатория" title="Лаборатория">
+        <area shape="rect" coords="5.68%,59.72%,20.42%,65.65%" href="#" data-target="templates-gallery" class="nav-btn" alt="Готовые решения" title="Готовые решения">
+        <area shape="rect" coords="5.68%,67.31%,20.42%,73.33%" href="#" data-target="contacts" class="nav-btn" alt="Контакты" title="Контакты">
     </map>
     <map name="menu-map">
-        <area shape="rect" coords="109,315,392,380" href="#" data-target="main-menu" class="nav-btn" alt="Обо мне" title="Обо мне">
-        <area shape="rect" coords="109,405,392,470" href="#" data-target="before-after" class="nav-btn" alt="До/после" title="До/после">
-        <area shape="rect" coords="109,488,392,552" href="#" data-target="infographics-gallery" class="nav-btn" alt="Инфографика" title="Инфографика">
-        <area shape="rect" coords="109,569,392,633" href="#" data-target="lab" class="nav-btn" alt="Лаборатория" title="Лаборатория">
-        <area shape="rect" coords="109,645,392,709" href="#" data-target="templates-gallery" class="nav-btn" alt="Готовые решения" title="Готовые решения">
-        <area shape="rect" coords="109,727,392,792" href="#" data-target="contacts" class="nav-btn" alt="Контакты" title="Контакты">
+        <area shape="rect" coords="5.68%,29.17%,20.42%,35.19%" href="#" data-target="main-menu" class="nav-btn" alt="Обо мне" title="Обо мне">
+        <area shape="rect" coords="5.68%,37.50%,20.42%,43.52%" href="#" data-target="before-after" class="nav-btn" alt="До/после" title="До/после">
+        <area shape="rect" coords="5.68%,45.19%,20.42%,51.11%" href="#" data-target="infographics-gallery" class="nav-btn" alt="Инфографика" title="Инфографика">
+        <area shape="rect" coords="5.68%,52.69%,20.42%,58.61%" href="#" data-target="lab" class="nav-btn" alt="Лаборатория" title="Лаборатория">
+        <area shape="rect" coords="5.68%,59.72%,20.42%,65.65%" href="#" data-target="templates-gallery" class="nav-btn" alt="Готовые решения" title="Готовые решения">
+        <area shape="rect" coords="5.68%,67.31%,20.42%,73.33%" href="#" data-target="contacts" class="nav-btn" alt="Контакты" title="Контакты">
     </map>
     <map name="slide4-map">
-        <area shape="rect" coords="109,315,392,380" href="#" data-target="main-menu" class="nav-btn" alt="Обо мне" title="Обо мне">
-        <area shape="rect" coords="109,405,392,470" href="#" data-target="before-after" class="nav-btn" alt="До/после" title="До/после">
-        <area shape="rect" coords="109,488,392,552" href="#" data-target="infographics-gallery" class="nav-btn" alt="Инфографика" title="Инфографика">
-        <area shape="rect" coords="109,569,392,633" href="#" data-target="lab" class="nav-btn" alt="Лаборатория" title="Лаборатория">
-        <area shape="rect" coords="109,645,392,709" href="#" data-target="templates-gallery" class="nav-btn" alt="Готовые решения" title="Готовые решения">
-        <area shape="rect" coords="109,727,392,792" href="#" data-target="contacts" class="nav-btn" alt="Контакты" title="Контакты">
-        <area shape="rect" coords="783,354,1263,625" data-large="Слайд13.webp" class="zoom-image" alt="Инфографика 1" title="Увеличить">
-        <area shape="rect" coords="783,702,1263,974" data-large="Слайд14.webp" class="zoom-image" alt="Инфографика 2" title="Увеличить">
-        <area shape="rect" coords="1329,69,1809,341" data-large="Слайд12.webp" class="zoom-image" alt="Инфографика 3" title="Увеличить">
-        <area shape="rect" coords="1329,354,1809,625" data-large="Слайд15.webp" class="zoom-image" alt="Инфографика 4" title="Увеличить">
-        <area shape="rect" coords="1656,972,1805,1010" href="#" data-target="infographics-gallery-2" class="nav-btn" alt="Далее" title="Далее">
+        <area shape="rect" coords="5.68%,29.17%,20.42%,35.19%" href="#" data-target="main-menu" class="nav-btn" alt="Обо мне" title="Обо мне">
+        <area shape="rect" coords="5.68%,37.50%,20.42%,43.52%" href="#" data-target="before-after" class="nav-btn" alt="До/после" title="До/после">
+        <area shape="rect" coords="5.68%,45.19%,20.42%,51.11%" href="#" data-target="infographics-gallery" class="nav-btn" alt="Инфографика" title="Инфографика">
+        <area shape="rect" coords="5.68%,52.69%,20.42%,58.61%" href="#" data-target="lab" class="nav-btn" alt="Лаборатория" title="Лаборатория">
+        <area shape="rect" coords="5.68%,59.72%,20.42%,65.65%" href="#" data-target="templates-gallery" class="nav-btn" alt="Готовые решения" title="Готовые решения">
+        <area shape="rect" coords="5.68%,67.31%,20.42%,73.33%" href="#" data-target="contacts" class="nav-btn" alt="Контакты" title="Контакты">
+        <area shape="rect" coords="40.78%,32.78%,65.78%,57.87%" data-large="Слайд13.webp" class="zoom-image" alt="Инфографика 1" title="Увеличить">
+        <area shape="rect" coords="40.78%,65.00%,65.78%,90.19%" data-large="Слайд14.webp" class="zoom-image" alt="Инфографика 2" title="Увеличить">
+        <area shape="rect" coords="69.22%,6.39%,94.22%,31.57%" data-large="Слайд12.webp" class="zoom-image" alt="Инфографика 3" title="Увеличить">
+        <area shape="rect" coords="69.22%,32.78%,94.22%,57.87%" data-large="Слайд15.webp" class="zoom-image" alt="Инфографика 4" title="Увеличить">
+        <area shape="rect" coords="86.25%,90.00%,94.06%,93.52%" href="#" data-target="infographics-gallery-2" class="nav-btn" alt="Далее" title="Далее">
     </map>
     <map name="slide5-map">
-        <area shape="rect" coords="109,315,392,380" href="#" data-target="main-menu" class="nav-btn" alt="Обо мне" title="Обо мне">
-        <area shape="rect" coords="109,405,392,470" href="#" data-target="before-after" class="nav-btn" alt="До/после" title="До/после">
-        <area shape="rect" coords="109,488,392,552" href="#" data-target="infographics-gallery" class="nav-btn" alt="Инфографика" title="Инфографика">
-        <area shape="rect" coords="109,569,392,633" href="#" data-target="lab" class="nav-btn" alt="Лаборатория" title="Лаборатория">
-        <area shape="rect" coords="109,645,392,709" href="#" data-target="templates-gallery" class="nav-btn" alt="Готовые решения" title="Готовые решения">
-        <area shape="rect" coords="109,727,392,792" href="#" data-target="contacts" class="nav-btn" alt="Контакты" title="Контакты">
-        <area shape="rect" coords="783,342,1266,612" data-large="Слайд17.webp" class="zoom-image" alt="Инфографика 5" title="Увеличить">
-        <area shape="rect" coords="780,702,1263,972" data-large="Слайд18.webp" class="zoom-image" alt="Инфографика 6" title="Увеличить">
-        <area shape="rect" coords="1328,71,1811,341" data-large="Слайд16.webp" class="zoom-image" alt="Инфографика 7" title="Увеличить">
-        <area shape="rect" coords="1656,972,1805,1010" href="#" data-target="infographics-gallery" class="nav-btn" alt="Назад" title="Назад">
+        <area shape="rect" coords="5.68%,29.17%,20.42%,35.19%" href="#" data-target="main-menu" class="nav-btn" alt="Обо мне" title="Обо мне">
+        <area shape="rect" coords="5.68%,37.50%,20.42%,43.52%" href="#" data-target="before-after" class="nav-btn" alt="До/после" title="До/после">
+        <area shape="rect" coords="5.68%,45.19%,20.42%,51.11%" href="#" data-target="infographics-gallery" class="nav-btn" alt="Инфографика" title="Инфографика">
+        <area shape="rect" coords="5.68%,52.69%,20.42%,58.61%" href="#" data-target="lab" class="nav-btn" alt="Лаборатория" title="Лаборатория">
+        <area shape="rect" coords="5.68%,59.72%,20.42%,65.65%" href="#" data-target="templates-gallery" class="nav-btn" alt="Готовые решения" title="Готовые решения">
+        <area shape="rect" coords="5.68%,67.31%,20.42%,73.33%" href="#" data-target="contacts" class="nav-btn" alt="Контакты" title="Контакты">
+        <area shape="rect" coords="40.78%,31.67%,65.94%,56.67%" data-large="Слайд17.webp" class="zoom-image" alt="Инфографика 5" title="Увеличить">
+        <area shape="rect" coords="40.63%,65.00%,65.78%,90.00%" data-large="Слайд18.webp" class="zoom-image" alt="Инфографика 6" title="Увеличить">
+        <area shape="rect" coords="69.17%,6.57%,94.32%,31.57%" data-large="Слайд16.webp" class="zoom-image" alt="Инфографика 7" title="Увеличить">
+        <area shape="rect" coords="86.25%,90.00%,94.06%,93.52%" href="#" data-target="infographics-gallery" class="nav-btn" alt="Назад" title="Назад">
     </map>
     <map name="slide6-map">
-        <area shape="rect" coords="109,315,392,380" href="#" data-target="main-menu" class="nav-btn" alt="Обо мне" title="Обо мне">
-        <area shape="rect" coords="109,405,392,470" href="#" data-target="before-after" class="nav-btn" alt="До/после" title="До/после">
-        <area shape="rect" coords="109,488,392,552" href="#" data-target="infographics-gallery" class="nav-btn" alt="Инфографика" title="Инфографика">
-        <area shape="rect" coords="109,569,392,633" href="#" data-target="lab" class="nav-btn" alt="Лаборатория" title="Лаборатория">
-        <area shape="rect" coords="109,645,392,709" href="#" data-target="templates-gallery" class="nav-btn" alt="Готовые решения" title="Готовые решения">
-        <area shape="rect" coords="109,727,392,792" href="#" data-target="contacts" class="nav-btn" alt="Контакты" title="Контакты">
-        <area shape="rect" coords="1656,972,1805,1010" href="#" data-target="lab-2" class="nav-btn" alt="Далее" title="Далее">
+        <area shape="rect" coords="5.68%,29.17%,20.42%,35.19%" href="#" data-target="main-menu" class="nav-btn" alt="Обо мне" title="Обо мне">
+        <area shape="rect" coords="5.68%,37.50%,20.42%,43.52%" href="#" data-target="before-after" class="nav-btn" alt="До/после" title="До/после">
+        <area shape="rect" coords="5.68%,45.19%,20.42%,51.11%" href="#" data-target="infographics-gallery" class="nav-btn" alt="Инфографика" title="Инфографика">
+        <area shape="rect" coords="5.68%,52.69%,20.42%,58.61%" href="#" data-target="lab" class="nav-btn" alt="Лаборатория" title="Лаборатория">
+        <area shape="rect" coords="5.68%,59.72%,20.42%,65.65%" href="#" data-target="templates-gallery" class="nav-btn" alt="Готовые решения" title="Готовые решения">
+        <area shape="rect" coords="5.68%,67.31%,20.42%,73.33%" href="#" data-target="contacts" class="nav-btn" alt="Контакты" title="Контакты">
+        <area shape="rect" coords="86.25%,90.00%,94.06%,93.52%" href="#" data-target="lab-2" class="nav-btn" alt="Далее" title="Далее">
     </map>
     <map name="slide7-map">
-        <area shape="rect" coords="109,315,392,380" href="#" data-target="main-menu" class="nav-btn" alt="Обо мне" title="Обо мне">
-        <area shape="rect" coords="109,405,392,470" href="#" data-target="before-after" class="nav-btn" alt="До/после" title="До/после">
-        <area shape="rect" coords="109,488,392,552" href="#" data-target="infographics-gallery" class="nav-btn" alt="Инфографика" title="Инфографика">
-        <area shape="rect" coords="109,569,392,633" href="#" data-target="lab" class="nav-btn" alt="Лаборатория" title="Лаборатория">
-        <area shape="rect" coords="109,645,392,709" href="#" data-target="templates-gallery" class="nav-btn" alt="Готовые решения" title="Готовые решения">
-        <area shape="rect" coords="109,727,392,792" href="#" data-target="contacts" class="nav-btn" alt="Контакты" title="Контакты">
-        <area shape="rect" coords="1656,972,1805,1010" href="#" data-target="lab" class="nav-btn" alt="Назад" title="Назад">
+        <area shape="rect" coords="5.68%,29.17%,20.42%,35.19%" href="#" data-target="main-menu" class="nav-btn" alt="Обо мне" title="Обо мне">
+        <area shape="rect" coords="5.68%,37.50%,20.42%,43.52%" href="#" data-target="before-after" class="nav-btn" alt="До/после" title="До/после">
+        <area shape="rect" coords="5.68%,45.19%,20.42%,51.11%" href="#" data-target="infographics-gallery" class="nav-btn" alt="Инфографика" title="Инфографика">
+        <area shape="rect" coords="5.68%,52.69%,20.42%,58.61%" href="#" data-target="lab" class="nav-btn" alt="Лаборатория" title="Лаборатория">
+        <area shape="rect" coords="5.68%,59.72%,20.42%,65.65%" href="#" data-target="templates-gallery" class="nav-btn" alt="Готовые решения" title="Готовые решения">
+        <area shape="rect" coords="5.68%,67.31%,20.42%,73.33%" href="#" data-target="contacts" class="nav-btn" alt="Контакты" title="Контакты">
+        <area shape="rect" coords="86.25%,90.00%,94.06%,93.52%" href="#" data-target="lab" class="nav-btn" alt="Назад" title="Назад">
     </map>
     <map name="slide8-map">
-        <area shape="rect" coords="109,315,392,380" href="#" data-target="main-menu" class="nav-btn" alt="Обо мне" title="Обо мне">
-        <area shape="rect" coords="109,405,392,470" href="#" data-target="before-after" class="nav-btn" alt="До/после" title="До/после">
-        <area shape="rect" coords="109,488,392,552" href="#" data-target="infographics-gallery" class="nav-btn" alt="Инфографика" title="Инфографика">
-        <area shape="rect" coords="109,569,392,633" href="#" data-target="lab" class="nav-btn" alt="Лаборатория" title="Лаборатория">
-        <area shape="rect" coords="109,645,392,709" href="#" data-target="templates-gallery" class="nav-btn" alt="Готовые решения" title="Готовые решения">
-        <area shape="rect" coords="109,727,392,792" href="#" data-target="contacts" class="nav-btn" alt="Контакты" title="Контакты">
-        <area shape="rect" coords="441,237,920,506" data-large="Слайд19.webp" class="zoom-image" alt="Шаблон 1" title="Увеличить">
-        <area shape="rect" coords="921,237,1400,506" data-large="Слайд20.webp" class="zoom-image" alt="Шаблон 2" title="Увеличить">
-        <area shape="rect" coords="1400,237,1879,506" data-large="Слайд21.webp" class="zoom-image" alt="Шаблон 3" title="Увеличить">
-        <area shape="rect" coords="441,636,920,905" data-large="Слайд22.webp" class="zoom-image" alt="Шаблон 4" title="Увеличить">
-        <area shape="rect" coords="921,636,1400,905" data-large="Слайд23.webp" class="zoom-image" alt="Шаблон 5" title="Увеличить">
-        <area shape="rect" coords="1400,636,1879,905" data-large="Слайд24.webp" class="zoom-image" alt="Шаблон 6" title="Увеличить">
-        <area shape="rect" coords="1656,972,1805,1010" href="#" data-target="templates-gallery-2" class="nav-btn" alt="Далее" title="Далее">
+        <area shape="rect" coords="5.68%,29.17%,20.42%,35.19%" href="#" data-target="main-menu" class="nav-btn" alt="Обо мне" title="Обо мне">
+        <area shape="rect" coords="5.68%,37.50%,20.42%,43.52%" href="#" data-target="before-after" class="nav-btn" alt="До/после" title="До/после">
+        <area shape="rect" coords="5.68%,45.19%,20.42%,51.11%" href="#" data-target="infographics-gallery" class="nav-btn" alt="Инфографика" title="Инфографика">
+        <area shape="rect" coords="5.68%,52.69%,20.42%,58.61%" href="#" data-target="lab" class="nav-btn" alt="Лаборатория" title="Лаборатория">
+        <area shape="rect" coords="5.68%,59.72%,20.42%,65.65%" href="#" data-target="templates-gallery" class="nav-btn" alt="Готовые решения" title="Готовые решения">
+        <area shape="rect" coords="5.68%,67.31%,20.42%,73.33%" href="#" data-target="contacts" class="nav-btn" alt="Контакты" title="Контакты">
+        <area shape="rect" coords="22.97%,21.94%,47.92%,46.85%" data-large="Слайд19.webp" class="zoom-image" alt="Шаблон 1" title="Увеличить">
+        <area shape="rect" coords="47.97%,21.94%,72.92%,46.85%" data-large="Слайд20.webp" class="zoom-image" alt="Шаблон 2" title="Увеличить">
+        <area shape="rect" coords="72.92%,21.94%,97.86%,46.85%" data-large="Слайд21.webp" class="zoom-image" alt="Шаблон 3" title="Увеличить">
+        <area shape="rect" coords="22.97%,58.89%,47.92%,83.80%" data-large="Слайд22.webp" class="zoom-image" alt="Шаблон 4" title="Увеличить">
+        <area shape="rect" coords="47.97%,58.89%,72.92%,83.80%" data-large="Слайд23.webp" class="zoom-image" alt="Шаблон 5" title="Увеличить">
+        <area shape="rect" coords="72.92%,58.89%,97.86%,83.80%" data-large="Слайд24.webp" class="zoom-image" alt="Шаблон 6" title="Увеличить">
+        <area shape="rect" coords="86.25%,90.00%,94.06%,93.52%" href="#" data-target="templates-gallery-2" class="nav-btn" alt="Далее" title="Далее">
     </map>
     <map name="slide9-map">
-        <area shape="rect" coords="109,315,392,380" href="#" data-target="main-menu" class="nav-btn" alt="Обо мне" title="Обо мне">
-        <area shape="rect" coords="109,405,392,470" href="#" data-target="before-after" class="nav-btn" alt="До/после" title="До/после">
-        <area shape="rect" coords="109,488,392,552" href="#" data-target="infographics-gallery" class="nav-btn" alt="Инфографика" title="Инфографика">
-        <area shape="rect" coords="109,569,392,633" href="#" data-target="lab" class="nav-btn" alt="Лаборатория" title="Лаборатория">
-        <area shape="rect" coords="109,645,392,709" href="#" data-target="templates-gallery" class="nav-btn" alt="Готовые решения" title="Готовые решения">
-        <area shape="rect" coords="109,727,392,792" href="#" data-target="contacts" class="nav-btn" alt="Контакты" title="Контакты">
-        <area shape="rect" coords="441,237,920,506" data-large="Слайд25.webp" class="zoom-image" alt="Шаблон 7" title="Увеличить">
-        <area shape="rect" coords="921,237,1400,506" data-large="Слайд26.webp" class="zoom-image" alt="Шаблон 8" title="Увеличить">
-        <area shape="rect" coords="1400,237,1879,506" data-large="Слайд27.webp" class="zoom-image" alt="Шаблон 9" title="Увеличить">
-        <area shape="rect" coords="441,636,920,905" data-large="Слайд28.webp" class="zoom-image" alt="Шаблон 10" title="Увеличить">
-        <area shape="rect" coords="921,636,1400,905" data-large="Слайд29.webp" class="zoom-image" alt="Шаблон 11" title="Увеличить">
-        <area shape="rect" coords="1400,636,1879,905" data-large="Слайд30.webp" class="zoom-image" alt="Шаблон 12" title="Увеличить">
-        <area shape="rect" coords="434,975,585,1008" href="#" data-target="templates-gallery" class="nav-btn" alt="Назад" title="Назад">
-        <area shape="rect" coords="1656,972,1805,1010" href="#" data-target="templates-gallery-3" class="nav-btn" alt="Далее" title="Далее">
+        <area shape="rect" coords="5.68%,29.17%,20.42%,35.19%" href="#" data-target="main-menu" class="nav-btn" alt="Обо мне" title="Обо мне">
+        <area shape="rect" coords="5.68%,37.50%,20.42%,43.52%" href="#" data-target="before-after" class="nav-btn" alt="До/после" title="До/после">
+        <area shape="rect" coords="5.68%,45.19%,20.42%,51.11%" href="#" data-target="infographics-gallery" class="nav-btn" alt="Инфографика" title="Инфографика">
+        <area shape="rect" coords="5.68%,52.69%,20.42%,58.61%" href="#" data-target="lab" class="nav-btn" alt="Лаборатория" title="Лаборатория">
+        <area shape="rect" coords="5.68%,59.72%,20.42%,65.65%" href="#" data-target="templates-gallery" class="nav-btn" alt="Готовые решения" title="Готовые решения">
+        <area shape="rect" coords="5.68%,67.31%,20.42%,73.33%" href="#" data-target="contacts" class="nav-btn" alt="Контакты" title="Контакты">
+        <area shape="rect" coords="22.97%,21.94%,47.92%,46.85%" data-large="Слайд25.webp" class="zoom-image" alt="Шаблон 7" title="Увеличить">
+        <area shape="rect" coords="47.97%,21.94%,72.92%,46.85%" data-large="Слайд26.webp" class="zoom-image" alt="Шаблон 8" title="Увеличить">
+        <area shape="rect" coords="72.92%,21.94%,97.86%,46.85%" data-large="Слайд27.webp" class="zoom-image" alt="Шаблон 9" title="Увеличить">
+        <area shape="rect" coords="22.97%,58.89%,47.92%,83.80%" data-large="Слайд28.webp" class="zoom-image" alt="Шаблон 10" title="Увеличить">
+        <area shape="rect" coords="47.97%,58.89%,72.92%,83.80%" data-large="Слайд29.webp" class="zoom-image" alt="Шаблон 11" title="Увеличить">
+        <area shape="rect" coords="72.92%,58.89%,97.86%,83.80%" data-large="Слайд30.webp" class="zoom-image" alt="Шаблон 12" title="Увеличить">
+        <area shape="rect" coords="22.60%,90.28%,30.47%,93.33%" href="#" data-target="templates-gallery" class="nav-btn" alt="Назад" title="Назад">
+        <area shape="rect" coords="86.25%,90.00%,94.06%,93.52%" href="#" data-target="templates-gallery-3" class="nav-btn" alt="Далее" title="Далее">
     </map>
     <map name="slide10-map">
-        <area shape="rect" coords="109,315,392,380" href="#" data-target="main-menu" class="nav-btn" alt="Обо мне" title="Обо мне">
-        <area shape="rect" coords="109,405,392,470" href="#" data-target="before-after" class="nav-btn" alt="До/после" title="До/после">
-        <area shape="rect" coords="109,488,392,552" href="#" data-target="infographics-gallery" class="nav-btn" alt="Инфографика" title="Инфографика">
-        <area shape="rect" coords="109,569,392,633" href="#" data-target="lab" class="nav-btn" alt="Лаборатория" title="Лаборатория">
-        <area shape="rect" coords="109,645,392,709" href="#" data-target="templates-gallery" class="nav-btn" alt="Готовые решения" title="Готовые решения">
-        <area shape="rect" coords="109,727,392,792" href="#" data-target="contacts" class="nav-btn" alt="Контакты" title="Контакты">
-        <area shape="rect" coords="441,237,920,506" data-large="Слайд31.webp" class="zoom-image" alt="Шаблон 13" title="Увеличить">
-        <area shape="rect" coords="921,237,1400,506" data-large="Слайд32.webp" class="zoom-image" alt="Шаблон 14" title="Увеличить">
-        <area shape="rect" coords="1400,237,1879,506" data-large="Слайд33.webp" class="zoom-image" alt="Шаблон 15" title="Увеличить">
-        <area shape="rect" coords="441,636,920,905" data-large="Слайд34.webp" class="zoom-image" alt="Шаблон 16" title="Увеличить">
-        <area shape="rect" coords="921,636,1400,905" data-large="Слайд35.webp" class="zoom-image" alt="Шаблон 17" title="Увеличить">
-        <area shape="rect" coords="1400,636,1879,905" data-large="Слайд36.webp" class="zoom-image" alt="Шаблон 18" title="Увеличить">
-        <area shape="rect" coords="1656,972,1805,1010" href="#" data-target="templates-gallery-2" class="nav-btn" alt="Назад" title="Назад">
+        <area shape="rect" coords="5.68%,29.17%,20.42%,35.19%" href="#" data-target="main-menu" class="nav-btn" alt="Обо мне" title="Обо мне">
+        <area shape="rect" coords="5.68%,37.50%,20.42%,43.52%" href="#" data-target="before-after" class="nav-btn" alt="До/после" title="До/после">
+        <area shape="rect" coords="5.68%,45.19%,20.42%,51.11%" href="#" data-target="infographics-gallery" class="nav-btn" alt="Инфографика" title="Инфографика">
+        <area shape="rect" coords="5.68%,52.69%,20.42%,58.61%" href="#" data-target="lab" class="nav-btn" alt="Лаборатория" title="Лаборатория">
+        <area shape="rect" coords="5.68%,59.72%,20.42%,65.65%" href="#" data-target="templates-gallery" class="nav-btn" alt="Готовые решения" title="Готовые решения">
+        <area shape="rect" coords="5.68%,67.31%,20.42%,73.33%" href="#" data-target="contacts" class="nav-btn" alt="Контакты" title="Контакты">
+        <area shape="rect" coords="22.97%,21.94%,47.92%,46.85%" data-large="Слайд31.webp" class="zoom-image" alt="Шаблон 13" title="Увеличить">
+        <area shape="rect" coords="47.97%,21.94%,72.92%,46.85%" data-large="Слайд32.webp" class="zoom-image" alt="Шаблон 14" title="Увеличить">
+        <area shape="rect" coords="72.92%,21.94%,97.86%,46.85%" data-large="Слайд33.webp" class="zoom-image" alt="Шаблон 15" title="Увеличить">
+        <area shape="rect" coords="22.97%,58.89%,47.92%,83.80%" data-large="Слайд34.webp" class="zoom-image" alt="Шаблон 16" title="Увеличить">
+        <area shape="rect" coords="47.97%,58.89%,72.92%,83.80%" data-large="Слайд35.webp" class="zoom-image" alt="Шаблон 17" title="Увеличить">
+        <area shape="rect" coords="72.92%,58.89%,97.86%,83.80%" data-large="Слайд36.webp" class="zoom-image" alt="Шаблон 18" title="Увеличить">
+        <area shape="rect" coords="86.25%,90.00%,94.06%,93.52%" href="#" data-target="templates-gallery-2" class="nav-btn" alt="Назад" title="Назад">
     </map>
 
     <script>
-        // ПОЛИФИЛ ДЛЯ ПЛАВНОСТИ
-        (function() {
-            var lastTime = 0;
-            var vendors = ['ms', 'moz', 'webkit', 'o'];
-            for(var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
-                window.requestAnimationFrame = window[vendors[x]+'RequestAnimationFrame'];
-                window.cancelAnimationFrame = window[vendors[x]+'CancelAnimationFrame'] || window[vendors[x]+'CancelRequestAnimationFrame'];
-            }
-            if (!window.requestAnimationFrame)
-                window.requestAnimationFrame = function(callback, element) {
-                    var currTime = new Date().getTime();
-                    var timeToCall = Math.max(0, 16 - (currTime - lastTime));
-                    var id = window.setTimeout(function() { callback(currTime + timeToCall); }, timeToCall);
-                    lastTime = currTime + timeToCall;
-                    return id;
-                };
-            if (!window.cancelAnimationFrame)
-                window.cancelAnimationFrame = function(id) {
-                    clearTimeout(id);
-                };
-        }());
-
-        // ДОБАВЛЕНО: Визуальное выделение активных областей
-        function createAreaHighlights() {
-            if (window.innerWidth <= 768) return; // Не показываем на мобильных
-            
-            const areas = document.querySelectorAll('area');
-            areas.forEach(area => {
-                const highlight = document.createElement('div');
-                highlight.className = 'area-highlight';
-                
-                const updatePosition = () => {
-                    const coords = area.getAttribute('coords').split(',').map(Number);
-                    if (coords.length === 4) {
-                        highlight.style.left = coords[0] + 'px';
-                        highlight.style.top = coords[1] + 'px';
-                        highlight.style.width = (coords[2] - coords[0]) + 'px';
-                        highlight.style.height = (coords[3] - coords[1]) + 'px';
-                    }
-                };
-                
-                area.addEventListener('mouseenter', () => {
-                    updatePosition();
-                    highlight.classList.add('visible');
-                });
-                
-                area.addEventListener('mouseleave', () => {
-                    highlight.classList.remove('visible');
-                });
-                
-                document.body.appendChild(highlight);
-            });
-        }
-
-        // АВТОМАТИЧЕСКИЙ ПЕРЕСЧЁТ КООРДИНАТ ПОД ТЕКУЩИЙ РАЗМЕР ОКНА
-        function recalculateMapCoordinates() {
-            const scaleX = window.innerWidth / 1920;
-            const scaleY = window.innerHeight / 1080;
-            
-            document.querySelectorAll('area').forEach(area => {
-                const old = area.getAttribute('coords');
-                if (old) {
-                    const coords = old.split(',').map(Number);
-                    const newCoords = coords.map((c, i) => 
-                        Math.round(c * (i % 2 === 0 ? scaleX : scaleY))
-                    );
-                    area.setAttribute('coords', newCoords.join(','));
-                }
-            });
-        }
-
-        // ПРЕЛОАДЕР
         window.addEventListener('load', function() {
             setTimeout(function() {
                 const loader = document.getElementById('site-loader');
@@ -559,28 +359,13 @@
                     loader.classList.add('hidden');
                     setTimeout(() => loader.remove(), 900);
                 }
-                // Пересчитываем координаты после загрузки
-                recalculateMapCoordinates();
-                // Создаем визуальные подсказки
-                createAreaHighlights();
             }, 800);
         });
 
-        // Пересчёт при изменении размера окна
-        window.addEventListener('resize', recalculateMapCoordinates);
-
-        // ЭФФЕКТ ПЛАВНОГО УВЕЛИЧЕНИЯ
         function zoomImageFromThumbnail(areaElement) {
-            const coords = areaElement.getAttribute('coords').split(',').map(Number);
+            const coords = areaElement.getAttribute('coords').split(',').map(c => parseFloat(c));
             const imageUrl = areaElement.getAttribute('data-large');
             const altText = areaElement.getAttribute('alt');
-            
-            const rect = {
-                left: coords[0],
-                top: coords[1],
-                width: coords[2] - coords[0],
-                height: coords[3] - coords[1]
-            };
             
             const zoomContainer = document.getElementById('zoomContainer');
             const zoomImage = document.getElementById('zoomImage');
@@ -596,45 +381,39 @@
             zoomContainer.style.borderRadius = '0';
             zoomContainer.style.boxShadow = 'none';
             
+            const rect = {
+                left: (coords[0] / 100) * window.innerWidth,
+                top: (coords[1] / 100) * window.innerHeight,
+                width: ((coords[2] - coords[0]) / 100) * window.innerWidth,
+                height: ((coords[3] - coords[1]) / 100) * window.innerHeight
+            };
+            
             zoomContainer.style.width = rect.width + 'px';
             zoomContainer.style.height = rect.height + 'px';
             zoomContainer.style.left = rect.left + 'px';
             zoomContainer.style.top = rect.top + 'px';
-            zoomContainer.style.transform = 'scale(1)';
             
             zoomCaption.textContent = altText;
-            
             zoomOverlay.style.display = 'flex';
             
             const img = new Image();
             img.onload = function() {
                 zoomImage.src = imageUrl;
-                
                 setTimeout(() => {
-                    const targetWidth = window.innerWidth;
-                    const targetHeight = window.innerHeight;
-                    
-                    const targetLeft = 0;
-                    const targetTop = 0;
-                    
                     zoomOverlay.classList.add('active');
+                    zoomContainer.style.left = '0px';
+                    zoomContainer.style.top = '0px';
+                    zoomContainer.style.width = window.innerWidth + 'px';
+                    zoomContainer.style.height = window.innerHeight + 'px';
                     
-                    requestAnimationFrame(() => {
-                        zoomContainer.style.left = targetLeft + 'px';
-                        zoomContainer.style.top = targetTop + 'px';
-                        zoomContainer.style.width = targetWidth + 'px';
-                        zoomContainer.style.height = targetHeight + 'px';
-                        
+                    setTimeout(() => {
+                        zoomContainer.classList.add('expanded');
+                        zoomImage.classList.add('loaded');
                         setTimeout(() => {
-                            zoomContainer.classList.add('expanded');
-                            zoomImage.classList.add('loaded');
-                            
-                            setTimeout(() => {
-                                zoomClose.classList.add('visible');
-                                zoomCaption.classList.add('visible');
-                            }, 300);
-                        }, 50);
-                    });
+                            zoomClose.classList.add('visible');
+                            zoomCaption.classList.add('visible');
+                        }, 300);
+                    }, 50);
                 }, 50);
             };
             img.src = imageUrl;
@@ -649,7 +428,6 @@
             zoomCaption.classList.remove('visible');
             zoomClose.classList.remove('visible');
             zoomContainer.classList.remove('expanded');
-            
             zoomOverlay.classList.remove('active');
             
             setTimeout(() => {
@@ -658,7 +436,6 @@
             }, 500);
         }
 
-        // ОБРАБОТЧИКИ
         document.querySelectorAll('.zoom-image').forEach(area => {
             area.addEventListener('click', function(e) {
                 e.preventDefault();
@@ -668,22 +445,16 @@
 
         document.getElementById('zoomClose').addEventListener('click', closeZoom);
         document.getElementById('zoomOverlay').addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeZoom();
-            }
+            if (e.target === this) closeZoom();
         });
 
         document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                closeZoom();
-            }
+            if (e.key === 'Escape') closeZoom();
         });
 
-        // ПЕРЕХОД МЕЖДУ СЛАЙДАМИ
         function switchSlideWithMagic(newSlideId) {
             const currentSlide = document.querySelector('.slide.active');
             const newSlide = document.getElementById(newSlideId);
-            
             if (!currentSlide || !newSlide || currentSlide === newSlide) return;
             
             currentSlide.classList.remove('active');
@@ -701,12 +472,10 @@
         document.querySelectorAll('.nav-btn').forEach(btn => {
             btn.addEventListener('click', function(e) {
                 e.preventDefault();
-                const targetId = this.getAttribute('data-target');
-                switchSlideWithMagic(targetId);
+                switchSlideWithMagic(this.getAttribute('data-target'));
             });
         });
 
-        // КЛАВИАТУРНАЯ НАВИГАЦИЯ
         document.addEventListener('keydown', function(event) {
             const slides = Array.from(document.querySelectorAll('.slide'));
             const currentIndex = slides.findIndex(slide => slide.classList.contains('active'));
@@ -724,18 +493,6 @@
             }
         });
 
-        // АДАПТИВНОСТЬ ДЛЯ МОБИЛЬНЫХ
-        if (window.innerWidth <= 768) {
-            document.querySelectorAll('area').forEach(area => {
-                area.addEventListener('click', function() {
-                    setTimeout(() => {
-                        window.scrollTo({ top: 0, behavior: 'smooth' });
-                    }, 300);
-                });
-            });
-        }
-
-        // ОТКЛЮЧЕНИЕ ПРОКРУТКИ НА ДЕСКТОПЕ
         if (window.innerWidth > 768) {
             document.addEventListener('wheel', function(e) {
                 e.preventDefault();
